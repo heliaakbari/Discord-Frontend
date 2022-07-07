@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="532.8888676961263" minWidth="10.0" prefWidth="371.44443766276044" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="286.4444681803385" minHeight="10.0" prefHeight="214.44446818033853" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="335.4444529215495" minHeight="10.0" prefHeight="148.33332316080728" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="211.7777811686198" minHeight="10.0" prefHeight="202.00001017252606" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Login" textAlignment="CENTER" wrappingWidth="247.22119140625" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+            <font>
+                <Font size="45.0" />
+            </font>
+        </Text>
+        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="208.0" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.valignment="TOP">
+            <GridPane.margin>
+                <Insets top="10.0" />
+            </GridPane.margin>
+            <children>
+                <TextField fx:id="username" promptText="username">
+                    <VBox.margin>
+                        <Insets top="20.0" />
+                    </VBox.margin>
+                </TextField>
+                <Text fx:id="login_username_description" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0" VBox.vgrow="ALWAYS" />
+                <TextField fx:id="password" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" promptText="password">
+                    <VBox.margin>
+                        <Insets top="20.0" />
+                    </VBox.margin>
+                </TextField>
+                <Button fx:id="login_button" mnemonicParsing="false" onAction="#loginOnButton" text="login">
+                    <VBox.margin>
+                        <Insets top="20.0" />
+                    </VBox.margin>
+                </Button>
+            </children>
+        </VBox>
+
+        <Text fx:id="login_signup" accessibleRole="HYPERLINK" onMouseClicked="#changeToSignUp" strokeType="OUTSIDE" strokeWidth="0.0" text="don't have an account? SignUp" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <font>
+                <Font size="15.0" />
+            </font>
+            <GridPane.margin>
+                <Insets top="20.0" />
+            </GridPane.margin>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+        </Text>
+    </children>
+</GridPane>
