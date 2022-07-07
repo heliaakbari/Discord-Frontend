@@ -24,8 +24,8 @@ public class HelloApplication extends Application {
     private static ObjectInputStream in;
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-        fxmlLoader.setController(new LoginController(in,out));
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("channel-view.fxml"));
+        fxmlLoader.setController(new ChannelController());
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
         Image logo = new Image("C:\\Jetbrains\\AP\\DiscordGUI\\Discord-Frontend\\logo.png");
         stage.getIcons().add(logo);

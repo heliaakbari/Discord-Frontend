@@ -1,0 +1,5 @@
+#hello{
+  -fx-width: fit-content;
+  -fx-min-width: fit-content;
+  -fx-max-width: fit-content;
+}
