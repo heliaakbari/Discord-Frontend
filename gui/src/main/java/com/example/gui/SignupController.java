@@ -50,7 +50,7 @@ public class SignupController implements Initializable {
         fxmlLoader.setController(new LoginController(in,out));
         stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
         try {
-            scene = new Scene(fxmlLoader.load(), 800, 600);
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
         } catch (IOException e) {
             e.printStackTrace();
         }

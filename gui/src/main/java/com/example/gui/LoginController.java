@@ -74,7 +74,7 @@ public class LoginController {
         fxmlLoader.setController(new SignupController(in,out));
         stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
         try {
-            scene = new Scene(fxmlLoader.load(), 800, 600);
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
         } catch (IOException e) {
             e.printStackTrace();
         }
