@@ -24,8 +24,21 @@
    <children>
       <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="100.0">
          <content>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="90.0" text="Discord" />
-         </content></ScrollPane>
+            <GridPane fx:id="servers_grid" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="90.0">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="discord" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addServers" prefHeight="40.0" prefWidth="90.0" text="Discord" />
+               </children>
+            </GridPane>
+         </content>
+         <padding>
+            <Insets left="5.0" />
+         </padding></ScrollPane>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="200.0">
          <children>
             <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="200.0">
@@ -37,7 +50,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="setting" GridPane.columnIndex="1" GridPane.halignment="LEFT" />
+                  <Button fx:id="server_setting" mnemonicParsing="false" prefHeight="25.0" prefWidth="53.0" text="setting" GridPane.columnIndex="1" GridPane.halignment="LEFT" />
                   <Label text="server name">
                      <font>
                         <Font size="20.0" />
@@ -48,7 +61,21 @@
                   </Label>
                </children>
             </GridPane>
-            <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="200.0" />
+            <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="200.0">
+               <content>
+                  <GridPane fx:id="channels_grid" alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </GridPane>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="500.0">
@@ -94,14 +121,6 @@
                      <children>
                         <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0" GridPane.valignment="TOP">
                            <children>
-                              <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="-2.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../../../../../logo.png" />
-                                 </image>
-                                 <viewport>
-                                    <Rectangle2D />
-                                 </viewport>
-                              </ImageView>
                               <Circle fill="DODGERBLUE" layoutX="39.0" layoutY="37.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
                            </children>
                            <GridPane.margin>
