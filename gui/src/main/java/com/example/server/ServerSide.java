@@ -23,7 +23,7 @@ public class ServerSide {
     private ObjectInputStream in;
     private ObjectOutputStream fout;
     private ObjectInputStream fin;
-    private DatabaseManager dbm = new DatabaseManager();
+    private DatabaseManager dbm = new DatabaseManager(this);
     //first one is the person and the other is their friend
     private HashMap<String, String> activePvs = new HashMap<>();
     //first one is the user and the other is array [server,channel] form
@@ -37,6 +37,10 @@ public class ServerSide {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public HashMap<String, ClientHandler> getClientHandlers() {
+        return clientHandlers;
     }
 
     /**

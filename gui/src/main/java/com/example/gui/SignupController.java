@@ -26,6 +26,8 @@ public class SignupController implements Initializable {
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    private ObjectInputStream fin;
+    private ObjectOutputStream fout;
 
     private String[] statuses = {"online","idle","do not disturb","invisible","none"};
 
@@ -33,9 +35,11 @@ public class SignupController implements Initializable {
         ;
     }
 
-    public SignupController(ObjectInputStream in, ObjectOutputStream out){
+    public SignupController(ObjectInputStream in, ObjectOutputStream out,ObjectInputStream fin, ObjectOutputStream fout){
         this.in = in;
         this.out = out;
+        this.fin = fin;
+        this.fout = fout;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class SignupController implements Initializable {
     @FXML
     public void changeToLogin(Event event){
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-        fxmlLoader.setController(new LoginController(in,out));
+       fxmlLoader.setController(new LoginController(in,out,fin,fout));
         stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);

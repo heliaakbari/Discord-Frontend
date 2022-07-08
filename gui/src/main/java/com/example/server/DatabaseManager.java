@@ -24,7 +24,11 @@ public class DatabaseManager {
     private String filespath = "C:\\DiscordFiles";
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public CmdManager cmdManager = null;
+    private ServerSide serverSide;
 
+    public DatabaseManager(ServerSide serverSide){
+        this.serverSide=serverSide;
+    }
     public void start() {
         try {
 
@@ -42,7 +46,7 @@ public class DatabaseManager {
             } else {
                 newDatabase();
             }
-            cmdManager = new CmdManager(con, stmt, filespath);
+            cmdManager = new CmdManager(con, stmt, filespath,serverSide);
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }

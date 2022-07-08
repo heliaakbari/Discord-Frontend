@@ -289,7 +289,7 @@ public class Data  implements Serializable {
      * @param members
      * @return
      */
-    public static @NotNull Data channelMembers(String user, String server, String channel, ArrayList<String> members){
+    public static @NotNull Data channelMembers(String user, String server, String channel, ArrayList<UserShort> members){
         Data data = new Data("channelMembers");
         data.user = user;
         data.server = server;

@@ -23,6 +23,8 @@ public class LoginController {
 
     private  ObjectOutputStream out;
     private  ObjectInputStream in;
+    private  ObjectOutputStream fout;
+    private  ObjectInputStream fin;
 
     private Stage stage;
     private Scene scene;
@@ -44,14 +46,15 @@ public class LoginController {
     }
 
 
-    public LoginController(ObjectInputStream in, ObjectOutputStream out){
+    public LoginController(ObjectInputStream in, ObjectOutputStream out,ObjectInputStream fin, ObjectOutputStream fout){
         this.in = in;
         this.out = out;
-        System.out.println("1");
+        this.fin = fin;
+        this.fout = fout;
     }
 
     @FXML
-    public void loginOnButton() {
+    public void loginOnButton(Event event) {
         try {
             out.writeObject(Command.login(username.getText(),password.getText()));
             Data data = (Data) in.readObject();
@@ -62,6 +65,17 @@ public class LoginController {
             else {
                 System.out.println("correct");
                 //and other actions
+                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("channel-view.fxml"));
+                ChannelController channelController = new ChannelController(in,out,fin,fout,username.getText(),"file test","c1");
+                fxmlLoader.setController(channelController);
+                stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+                try {
+                    scene = new Scene(fxmlLoader.load(), 1000, 600);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stage.setScene(scene);
+                stage.show();
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -71,7 +85,7 @@ public class LoginController {
     @FXML
     public void changeToSignUp(Event event){
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("signup-view.fxml"));
-        fxmlLoader.setController(new SignupController(in,out));
+        fxmlLoader.setController(new SignupController(in,out,fin,fout));
         stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);

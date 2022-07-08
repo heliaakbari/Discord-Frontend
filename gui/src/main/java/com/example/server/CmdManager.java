@@ -20,13 +20,15 @@ import static java.nio.file.Files.readAllBytes;
 
 public class CmdManager {
 
+    private ServerSide serverSide;
     private static Statement stmt = null;
     private Connection con = null;
     private static String filespath = null;
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss");
     private DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh-mm-ss");
 
-    public CmdManager(Connection con, Statement stmt, String filepath) {
+    public CmdManager(Connection con, Statement stmt, String filepath,ServerSide serverSide) {
+        this.serverSide = serverSide;
         this.stmt = stmt;
         this.con = con;
         this.filespath = filepath;
@@ -475,7 +477,11 @@ public class CmdManager {
         User user = (User) cmd.getPrimary();
         byte[] image = user.getProfilePhoto();
         String format = (String) cmd.getSecondary();
-        String address = filespath + "\\profilePhoto_" + user.getEmail() + "." + format;
+        String address = new String("");
+        if(image.length != 0) {
+            address = filespath + "\\profilePhoto_" + user.getEmail() + "." + format;
+        }
+
         try {
             ResultSet r = stmt.executeQuery(String.format("select count(*) as C1 from server_members where username='%s'", user.getUsername()));
             r.next();
@@ -488,10 +494,19 @@ public class CmdManager {
             return Data.checkSignUp(((User) cmd.getPrimary()).getUsername(), false);
         }
         try {
-            if (user.getProfilePhoto() != null) {
-                bytesToFile(user.getProfilePhoto(), address);
-                FeedBack.say("profile photo of " + user.getUsername() + " is saved");
+            if(image.length == 0){
+                try {
+                    image = readAllBytes(Paths.get("C:\\DiscordFiles\\default.png"));
+                } catch (NoSuchFileException e) {
+                    System.out.println("the file with path doesnt exists");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                address = filespath + "\\profilePhoto_" + user.getEmail() + ".png";
+
             }
+            bytesToFile(user.getProfilePhoto(), address);
+
         } catch (IOException e) {
             FeedBack.say("could not save profile photo of " + user.getUsername());
             return Data.checkSignUp(((User) cmd.getPrimary()).getUsername(), false);
@@ -831,7 +846,8 @@ public class CmdManager {
         } catch (SQLException s) {
             s.printStackTrace();
         }
-        return Data.channelMembers(cmd.getUser(), cmd.getServer(), cmd.getChannel(), members);
+        ArrayList<UserShort> guiMembers = stringToUserShort(members);
+        return Data.channelMembers(cmd.getUser(), cmd.getServer(), cmd.getChannel(), guiMembers);
     }
 
     public Data serverMembers(Command cmd) {
@@ -848,6 +864,42 @@ public class CmdManager {
             s.printStackTrace();
         }
         return Data.serverMembers(cmd.getUser(), cmd.getServer(), members);
+    }
+
+    public ArrayList<UserShort> stringToUserShort(ArrayList<String> people) {
+        ArrayList<UserShort> userShorts = new ArrayList<>();
+        Status status;
+        for (String username : people) {
+            try {
+                ResultSet rs = stmt.executeQuery(String.format("select PICTURELINK,STATUS from users where username='%s'", username));
+                rs.next();
+                UserShort userShort;
+                if (!rs.getString("STATUS").equals("NULL")) {
+                    status = Status.valueOf(rs.getString("STATUS"));
+                }
+                else{
+                    if (serverSide.getClientHandlers().containsKey(username)){
+                        status = Status.online;
+                    }
+                    else{
+                        status = Status.offline;
+                    }
+                }
+                byte[] bytes = new byte[0];
+                try {
+                    bytes = readAllBytes(Paths.get(rs.getString("PICTURELINK")));
+                } catch (NoSuchFileException e) {
+                    System.out.println("the file with path doesnt exists");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                userShort = new UserShort(username,bytes,status);
+                userShorts.add(userShort);
+            } catch (SQLException s) {
+            s.printStackTrace();
+            }
+        }
+        return userShorts;
     }
 
     public Data deleteServer(Command cmd) {
@@ -937,6 +989,7 @@ public class CmdManager {
         } catch (SQLException s) {
             return Data.checkNewServer(cmd.getUser(), cmd.getServer(), false);
         }
+        newChannel(Command.newChannel(cmd.getUser(),cmd.getServer(),"general"));
         return Data.checkNewServer(cmd.getUser(), cmd.getServer(), true);
     }
 

@@ -68,9 +68,7 @@ public abstract class Message implements Serializable {
      */
     public String getSourceInfoAsString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = sourceInfo.size() - 1; i >= 0; i--) {
-            stringBuilder.append(sourceInfo.get(i)).append("-> ");
-        }
+        stringBuilder.append(sourceInfo.get(0));
         stringBuilder.append(" : ");
         return stringBuilder.toString();
     }
