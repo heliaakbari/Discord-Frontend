@@ -69,7 +69,7 @@ public abstract class Message implements Serializable {
     public String getSourceInfoAsString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(sourceInfo.get(0));
-        stringBuilder.append(" : ");
+        stringBuilder.append(" : \n");
         return stringBuilder.toString();
     }
 
