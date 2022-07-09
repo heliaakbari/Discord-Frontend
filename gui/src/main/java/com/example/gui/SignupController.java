@@ -7,7 +7,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -24,6 +27,27 @@ public class SignupController implements Initializable {
     @FXML
     private ChoiceBox<String> statusChoiceBox;
 
+    @FXML
+    private Text login_signup;
+
+    @FXML
+    private TextField username;
+
+    @FXML
+    private TextField password;
+
+    @FXML
+    private TextField username1;
+
+    @FXML
+    private TextField password1;
+
+    @FXML
+    private Button signup_button;
+
+    @FXML
+    private Button imageButton;
+
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private ObjectInputStream fin;
@@ -31,8 +55,37 @@ public class SignupController implements Initializable {
 
     private String[] statuses = {"online","idle","do not disturb","invisible","none"};
 
+    @FXML
+    public void signupOnButton(Event event){
+        try {
+            out.writeObject(Command.newUser(new User(username.getText(), password.getText(), username1.getText())));
+            Data data = (Data) in.readObject();
+            if (!((boolean) data.getPrimary())) {
+                System.out.println("not successful");
+                // tell user
+            } else {
+                System.out.println("correct");
+                //and other actions
+                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("channel-view.fxml"));
+                ChannelController channelController = new ChannelController(in, out, fin, fout, username.getText(), "file test", "c1");
+                fxmlLoader.setController(channelController);
+                stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+                try {
+                    scene = new Scene(fxmlLoader.load(), 1000, 600);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stage.setScene(scene);
+                stage.show();
+            }
+        } catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
+
     public SignupController(){
-        ;
+
     }
 
     public SignupController(ObjectInputStream in, ObjectOutputStream out,ObjectInputStream fin, ObjectOutputStream fout){

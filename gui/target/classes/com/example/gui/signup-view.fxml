@@ -56,11 +56,11 @@
             <Text fx:id="login_username_description1111" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0" />
             <HBox prefHeight="38.0" prefWidth="300.0">
                <children>
-                  <Button mnemonicParsing="false" text="Choose Image" />
+                  <Button fx:id="imageButton" mnemonicParsing="false" text="Choose Image" />
                   <Text fx:id="login_username_description11112" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="198.66668701171875" />
                </children>
             </HBox>
-                <Button fx:id="signup_button" alignment="CENTER" mnemonicParsing="false" text="signup" />
+                <Button fx:id="signup_button" alignment="CENTER" mnemonicParsing="false" onAction="#signupOnButton" text="signup" />
             <Text fx:id="login_username_description11111" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0" />
             </children>
         </VBox>

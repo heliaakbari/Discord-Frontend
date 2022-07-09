@@ -4,7 +4,6 @@ import com.example.mutual.Command;
 import com.example.mutual.Data;
 import com.example.mutual.Message;
 import com.example.mutual.UserShort;
-import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -24,7 +23,6 @@ import javafx.scene.text.TextFlow;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 public class ChannelController {
 
@@ -69,7 +67,6 @@ public class ChannelController {
         this.fin = fin;
         this.fout = fout;
         this.currentUser = currentUser;
-        this.currentServer = currentServer;
         this.currentChannel= currentChannel;
         this.currentServer = currentServer;
     }
@@ -197,7 +194,6 @@ public class ChannelController {
     public void addNewMessage(){
 
     }
-
 }
 
 

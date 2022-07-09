@@ -21,10 +21,10 @@ import java.io.ObjectOutputStream;
 
 public class LoginController {
 
-    private  ObjectOutputStream out;
-    private  ObjectInputStream in;
-    private  ObjectOutputStream fout;
-    private  ObjectInputStream fin;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+    private ObjectOutputStream fout;
+    private ObjectInputStream fin;
 
     private Stage stage;
     private Scene scene;
@@ -41,12 +41,12 @@ public class LoginController {
     @FXML
     private Text login_signup;
 
-    public LoginController(){
-        ;
+    public LoginController() {
+
     }
 
 
-    public LoginController(ObjectInputStream in, ObjectOutputStream out,ObjectInputStream fin, ObjectOutputStream fout){
+    public LoginController(ObjectInputStream in, ObjectOutputStream out, ObjectInputStream fin, ObjectOutputStream fout) {
         this.in = in;
         this.out = out;
         this.fin = fin;
@@ -56,19 +56,18 @@ public class LoginController {
     @FXML
     public void loginOnButton(Event event) {
         try {
-            out.writeObject(Command.login(username.getText(),password.getText()));
+            out.writeObject(Command.login(username.getText(), password.getText()));
             Data data = (Data) in.readObject();
-            if((boolean) data.getPrimary()==false){
+            if (!((boolean) data.getPrimary())) {
                 System.out.println("not correct");
                 //and other actions
-            }
-            else {
+            } else {
                 System.out.println("correct");
                 //and other actions
                 FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("channel-view.fxml"));
-                ChannelController channelController = new ChannelController(in,out,fin,fout,username.getText(),"file test","c1");
+                ChannelController channelController = new ChannelController(in, out, fin, fout, username.getText(), "file test", "c1");
                 fxmlLoader.setController(channelController);
-                stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+                stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
                 try {
                     scene = new Scene(fxmlLoader.load(), 1000, 600);
                 } catch (IOException e) {
@@ -83,10 +82,10 @@ public class LoginController {
     }
 
     @FXML
-    public void changeToSignUp(Event event){
+    public void changeToSignUp(Event event) {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("signup-view.fxml"));
-        fxmlLoader.setController(new SignupController(in,out,fin,fout));
-        stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        fxmlLoader.setController(new SignupController(in, out, fin, fout));
+        stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);
         } catch (IOException e) {
