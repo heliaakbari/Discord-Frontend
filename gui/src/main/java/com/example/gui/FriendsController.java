@@ -298,6 +298,11 @@ class GetServers extends Service<Void>{
                 Data dt =(Data) fc.in.readObject();
                 System.out.println(dt.getKeyword());
                 fc.servers=(ArrayList<String>) dt.getPrimary();
+                cmd = Command.getDirectChats(fc.currentUser);
+                fc.out.writeObject(cmd);
+                dt =(Data) fc.in.readObject();
+                System.out.println(dt.getKeyword());
+                fc.directChats=(ArrayList<UserShort>) dt.getPrimary();
                 return null;
             }
         };
@@ -306,7 +311,7 @@ class GetServers extends Service<Void>{
     @Override
     protected void succeeded() {
         fc.addServers();
-        new GetDirectList(fc).restart();
+        fc.addDirects();
         super.succeeded();
     }
 }
