@@ -28,31 +28,30 @@ public class SignupController implements Initializable {
     private Stage stage;
     private Scene scene;
 
-   // private boolean ableToSignup = true;
+    private boolean ableToSignup;
 
     @FXML
     private ChoiceBox<String> statusChoiceBox;
-
     @FXML
     private Text login_signup;
-
     @FXML
     private TextField username;
-
     @FXML
     private TextField password;
-
     @FXML
     private TextField username1;
-
     @FXML
     private TextField password1;
-
     @FXML
     private Button signup_button;
-
     @FXML
     private Button imageButton;
+    @FXML
+    private Text login_username_description;
+    @FXML
+    private Text login_username_description1;
+    @FXML
+    private Text login_username_description11112;
 
     private byte[] photo;
     private String photoFormat;
@@ -62,13 +61,13 @@ public class SignupController implements Initializable {
     private ObjectInputStream fin;
     private ObjectOutputStream fout;
 
-    private String[] statuses = {"online","idle","do_not_disturb","invisible","none"};
+    private String[] statuses = {"online", "idle", "do_not_disturb", "invisible", "none"};
 
-    public SignupController(){
+    public SignupController() {
 
     }
 
-    public SignupController(ObjectInputStream in, ObjectOutputStream out,ObjectInputStream fin, ObjectOutputStream fout){
+    public SignupController(ObjectInputStream in, ObjectOutputStream out, ObjectInputStream fin, ObjectOutputStream fout) {
         this.in = in;
         this.out = out;
         this.fin = fin;
@@ -76,42 +75,77 @@ public class SignupController implements Initializable {
     }
 
     @FXML
-    public void signupOnButton(Event event){
-        try {
-            User newUser = new User(username.getText(), password.getText(), username1.getText());
-            newUser.setStatus(statusChoiceBox.getValue());
-            newUser.setProfilePhoto(photo, photoFormat);
-            newUser.setPhoneNum(password1.getText());
+    public void signupOnButton(Event event) {
+        ableToSignup = true;
+        login_username_description.setText(null);
+        login_username_description1.setText(null);
+        login_username_description11112.setText(null);
 
-            out.writeObject(Command.newUser(newUser));
-            Data data = (Data) in.readObject();
+        // regex checking
+        if (!username.getText().matches("^[0-9a-zA-Z]{6,20}$")) {
+            // tell user
+            login_username_description.setText("username must be at least 6 and at most 20 characters and only containing english alphabet and numbers");
+            ableToSignup = false;
+        }
+        if (!password.getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,20}$")) {
+            // tell user
+            login_username_description1.setText("password must be at least 8 and at most 20 characters and contain capital and small english alphabets and numbers");
+            ableToSignup = false;
+        }
+        if (photo != null && photo.length > 100000) {
+            // tell user
+            login_username_description11112.setText("photo must be smaller than 100k bytes");
+            ableToSignup = false;
+        }
 
-            if (!((boolean) data.getPrimary())) {
-                System.out.println("not successful");
-                // tell user
-            } else {
-                System.out.println("correct");
-                //and other actions
-                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("channel-view.fxml"));
-                ChannelController channelController = new ChannelController(in, out, fin, fout, username.getText(), "server1", "c1");
-                fxmlLoader.setController(channelController);
-                stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
-                try {
-                    scene = new Scene(fxmlLoader.load(), 1000, 600);
-                } catch (IOException e) {
-                    e.printStackTrace();
+        // signing up
+        if (ableToSignup) {
+
+            try {
+
+                User newUser = new User(username.getText(), password.getText(), username1.getText());
+
+                String status = statusChoiceBox.getValue();
+                if (status.equals("none"))
+                    newUser.setStatus(null);
+                else if (status.equals("do not disturb"))
+                    newUser.setStatus("do_not_disturb");
+                else
+                    newUser.setStatus(statusChoiceBox.getValue());
+
+                newUser.setProfilePhoto(photo, photoFormat);
+                newUser.setPhoneNum(password1.getText());
+
+                out.writeObject(Command.newUser(newUser));
+                Data data = (Data) in.readObject();
+
+                if (!((boolean) data.getPrimary())) {
+                    System.out.println("not successful");
+                    // tell user
+                } else {
+                    System.out.println("correct");
+                    //and other actions
+                    FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("channel-view.fxml"));
+                    ChannelController channelController = new ChannelController(in, out, fin, fout, username.getText(), "server1", "c1");
+                    fxmlLoader.setController(channelController);
+                    stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+                    try {
+                        scene = new Scene(fxmlLoader.load(), 1000, 600);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    stage.setScene(scene);
+                    stage.show();
                 }
-                stage.setScene(scene);
-                stage.show();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
         }
 
     }
 
     @FXML
-    public void imageOnButton(Event event){
+    public void imageOnButton(Event event) {
 
         FileDialog dialog = new FileDialog((Frame) null, "Select File to Open");
         dialog.setMode(FileDialog.LOAD);
@@ -132,15 +166,15 @@ public class SignupController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-            statusChoiceBox.getItems().addAll(statuses);
-            statusChoiceBox.setValue(statuses[4]);
+        statusChoiceBox.getItems().addAll(statuses);
+        statusChoiceBox.setValue(statuses[4]);
     }
 
     @FXML
-    public void changeToLogin(Event event){
+    public void changeToLogin(Event event) {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-       fxmlLoader.setController(new LoginController(in,out,fin,fout));
-        stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        fxmlLoader.setController(new LoginController(in, out, fin, fout));
+        stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);
         } catch (IOException e) {
