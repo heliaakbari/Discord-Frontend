@@ -477,7 +477,7 @@ public class CmdManager {
     public Data newUser(Command cmd) {
         User user = (User) cmd.getPrimary();
         byte[] image = user.getProfilePhoto();
-        String format = (String) cmd.getSecondary();
+        String format = user.getProfilePhotoFormat();
         String address = new String("");
         if(image.length != 0) {
             address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
