@@ -3,6 +3,7 @@ module com.example.gui {
     requires javafx.fxml;
     requires java.sql;
     requires org.jetbrains.annotations;
+    requires java.desktop;
 
 
     opens com.example.gui to javafx.fxml;

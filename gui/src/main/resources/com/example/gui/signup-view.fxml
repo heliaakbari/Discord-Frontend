@@ -56,7 +56,7 @@
             <Text fx:id="login_username_description1111" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0" />
             <HBox prefHeight="38.0" prefWidth="300.0">
                <children>
-                  <Button fx:id="imageButton" mnemonicParsing="false" text="Choose Image" />
+                  <Button fx:id="imageButton" mnemonicParsing="false" onAction="#imageOnButton" text="Choose Image" />
                   <Text fx:id="login_username_description11112" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="198.66668701171875" />
                </children>
             </HBox>

@@ -65,7 +65,7 @@ public class LoginController {
                 System.out.println("correct");
                 //and other actions
                 FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("channel-view.fxml"));
-                ChannelController channelController = new ChannelController(in, out, fin, fout, username.getText(), "file test", "c1");
+                ChannelController channelController = new ChannelController(in, out, fin, fout, username.getText(), "server1", "c1");
                 fxmlLoader.setController(channelController);
                 stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
                 try {

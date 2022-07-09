@@ -23,9 +23,15 @@
               </columnConstraints>
               <rowConstraints>
                   <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Button fx:id="discord" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addServers" prefHeight="40.0" prefWidth="90.0" text="Discord" />
+                  <Button fx:id="discord1" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addServers" prefHeight="40.0" prefWidth="90.0" text="add server" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets top="5.0" />
+                     </GridPane.margin>
+                  </Button>
                </children>
             </GridPane>
          </content>
@@ -100,7 +106,7 @@
             </GridPane>
             <ScrollPane fx:id="messages_scroll" hbarPolicy="NEVER" prefHeight="510.0" prefWidth="550.0" vbarPolicy="ALWAYS">
                <content>
-                  <GridPane fx:id="messages_grid" gridLinesVisible="true" prefHeight="8.0" prefWidth="480.0">
+                  <GridPane fx:id="messages_grid" prefHeight="8.0" prefWidth="480.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="50.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="380.0" />
@@ -122,8 +128,8 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="35.0" text="file" GridPane.halignment="RIGHT" />
-                  <TextArea maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="400.0" promptText="write a message . . ." scrollTop="100.0" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                  <Button fx:id="file_button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sendFileMessage" prefHeight="30.0" prefWidth="35.0" text="file" GridPane.halignment="RIGHT" />
+                  <TextArea fx:id="message_textField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="400.0" promptText="write a message . . ." scrollTop="100.0" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
@@ -131,7 +137,7 @@
                         <Font size="15.0" />
                      </font>
                   </TextArea>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="45.0" text="send" GridPane.columnIndex="2" />
+                  <Button fx:id="send_button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#sendTextMessage" prefHeight="30.0" prefWidth="45.0" text="send" GridPane.columnIndex="2" />
                </children>
             </GridPane>
          </children>
