@@ -92,9 +92,9 @@ public class SignupController implements Initializable {
             } else {
                 System.out.println("correct");
                 //and other actions
-                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("channel-view.fxml"));
-                ChannelController channelController = new ChannelController(in, out, fin, fout, username.getText(), "server1", "c1");
-                fxmlLoader.setController(channelController);
+                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
+               FriendsController friendsController = new FriendsController(in, out, fin, fout, username.getText());
+                fxmlLoader.setController(friendsController);
                 stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
                 try {
                     scene = new Scene(fxmlLoader.load(), 1000, 600);
