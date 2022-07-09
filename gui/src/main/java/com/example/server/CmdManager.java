@@ -338,7 +338,8 @@ public class CmdManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Data.directChats(cmd.getUser(), chatsArray);
+        ArrayList<UserShort> chatArrayGUI = stringToUserShort(chatsArray);
+        return Data.directChats(cmd.getUser(),chatArrayGUI);
     }
 
     public Data login(Command cmd) {
@@ -407,7 +408,7 @@ public class CmdManager {
         byte[] image = (byte[]) cmd.getPrimary();
         String format = (String) cmd.getSecondary();
 
-        String address = filespath + "\\profilePhoto_" + user.getEmail() + "." + format;
+        String address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
         Path url = Paths.get(address);
         File file = new File(address);
         file.delete();
@@ -478,8 +479,8 @@ public class CmdManager {
         byte[] image = user.getProfilePhoto();
         String format = (String) cmd.getSecondary();
         String address = new String("");
-        if(image != null && image.length != 0) {
-            address = filespath + "\\profilePhoto_" + user.getEmail() + "." + format;
+        if(image.length != 0) {
+            address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
         }
 
         try {
@@ -494,7 +495,7 @@ public class CmdManager {
             return Data.checkSignUp(((User) cmd.getPrimary()).getUsername(), false);
         }
         try {
-            if( image == null || image.length == 0){
+            if(image.length == 0){
                 try {
                     image = readAllBytes(Paths.get("C:\\DiscordFiles\\default.png"));
                 } catch (NoSuchFileException e) {
@@ -502,11 +503,10 @@ public class CmdManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                address = filespath + "\\profilePhoto_" + user.getEmail() + ".png";
+                address = filespath + "\\profilePhoto_" + user.getUsername() + ".png";
 
             }
-            else
-                bytesToFile(user.getProfilePhoto(), address);
+            bytesToFile(user.getProfilePhoto(), address);
 
         } catch (IOException e) {
             FeedBack.say("could not save profile photo of " + user.getUsername());
@@ -897,7 +897,7 @@ public class CmdManager {
                 userShort = new UserShort(username,bytes,status);
                 userShorts.add(userShort);
             } catch (SQLException s) {
-            s.printStackTrace();
+                s.printStackTrace();
             }
         }
         return userShorts;
@@ -1193,4 +1193,3 @@ public class CmdManager {
     }
 
 }
-
