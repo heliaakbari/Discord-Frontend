@@ -28,7 +28,7 @@ public class SignupController implements Initializable {
     private Stage stage;
     private Scene scene;
 
-   // private boolean ableToSignup = true;
+    private boolean ableToSignup = true;
 
     @FXML
     private ChoiceBox<String> statusChoiceBox;
@@ -152,7 +152,22 @@ public class SignupController implements Initializable {
         }
 
     }
+}
 
+    @FXML
+    public void changeToLogin(Event event){
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
+        fxmlLoader.setController(new LoginController(in,out,fin,fout));
+        stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        try {
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+    
     @FXML
     public void imageOnButton(Event event){
 
@@ -181,21 +196,8 @@ public class SignupController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-            statusChoiceBox.getItems().addAll(statuses);
-            statusChoiceBox.setValue(statuses[4]);
-    }
-
-    @FXML
-    public void changeToLogin(Event event){
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-        fxmlLoader.setController(new LoginController(in,out,fin,fout));
-        stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
-        try {
-            scene = new Scene(fxmlLoader.load(), 1000, 600);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        stage.setScene(scene);
-        stage.show();
+        statusChoiceBox.getItems().addAll(statuses);
+        statusChoiceBox.setValue(statuses[4]);
     }
 }
+
