@@ -54,6 +54,9 @@ public class SignupController implements Initializable {
     @FXML
     private Button imageButton;
 
+    @FXML
+    private Text image_warning;
+
     private byte[] photo;
     private String photoFormat;
 
@@ -79,7 +82,9 @@ public class SignupController implements Initializable {
     public void signupOnButton(Event event){
         try {
             User newUser = new User(username.getText(), password.getText(), username1.getText());
-            newUser.setStatus(statusChoiceBox.getValue());
+            if(!statusChoiceBox.getValue().equals("none")) {
+                newUser.setStatus(statusChoiceBox.getValue());
+            }
             newUser.setProfilePhoto(photo, photoFormat);
             newUser.setPhoneNum(password1.getText());
 
@@ -125,9 +130,15 @@ public class SignupController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        String[] splitName = fileNameAndType.split("\\.");
-        photoFormat = splitName[splitName.length - 1];
+        if(photo.length>100000){
+            image_warning.setText("your image size is more than 100kB");
+            photo = new byte[0];
+        }
+        else {
+            image_warning.setText("");
+            String[] splitName = fileNameAndType.split("\\.");
+            photoFormat = splitName[splitName.length - 1];
+        }
     }
 
     @Override
