@@ -64,7 +64,7 @@ public class CmdManager {
                 dt = getPinnedMsgs(cmd);
                 break;
             case "newRelation":
-                newRelation(cmd);
+                dt = newRelation(cmd);
                 break;
             case "newReaction":
                 newReaction(cmd);
@@ -551,13 +551,13 @@ public class CmdManager {
         }
     }
 
-    public void newRelation(Command cmd) {
+    public Data newRelation(Command cmd) {
 
         Relationship rel = (Relationship) cmd.getPrimary();
         String sender = cmd.getUser();
         String receiver = (String) cmd.getSecondary();
         if (receiver.equals(sender)) {
-            return;
+            return Data.checkNewRelation(cmd.getUser(),false);
         }
         String statement = new String();
         try {
@@ -567,12 +567,12 @@ public class CmdManager {
             System.out.println((int) r.getInt("C1"));
             System.out.println("receiver: " + receiver + " sender: " + sender);
             if ((int) r.getInt("C1") <= 0) {
-                throw new SQLException();
+                return Data.checkNewRelation(cmd.getUser(),false);
             }
         } catch (SQLException s) {
             FeedBack.say("such user doesnt exists");
             s.printStackTrace();
-            return;
+            return Data.checkNewRelation(cmd.getUser(),false);
         }
         if (rel == Relationship.Block) {
             String s1 = String.format("delete from relationships where (receiver='%s' and sender='%s') or (sender='%s' and receiver='%s');", receiver, sender, receiver, sender);
@@ -591,16 +591,16 @@ public class CmdManager {
                 res.next();
                 int count = res.getInt("C1");
                 if (count > 0) {
-                    throw new SQLException();
+                    return Data.checkNewRelation(cmd.getUser(),false);
                 }
                 String s1 = String.format("delete from relationships where receiver='%s' and sender='%s';", receiver, sender);
                 String s2 = String.format("insert into relationships values('%s','%s','%s');", sender, receiver, rel.toString());
                 statement = s1 + "\n" + s2;
             } catch (SQLException e) {
                 statement = null;
-                e.printStackTrace();
-                FeedBack.say("cannot send request bc they have blocked you");
+                return Data.checkNewRelation(cmd.getUser(),false);
             }
+
         }
 
         try {
@@ -611,7 +611,7 @@ public class CmdManager {
             e.printStackTrace();
             FeedBack.say("could not add this relationship");
         }
-
+        return Data.checkNewRelation(cmd.getUser(),true);
     }
 
     public void newReaction(Command cmd) {
