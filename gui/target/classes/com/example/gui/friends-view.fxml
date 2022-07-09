@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="100.0">
+         <content>
+            <GridPane fx:id="servers_grid" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="90.0">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="90.0" text="Discord" />
+                  <Button layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="90.0" text="add server" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets top="5.0" />
+                     </GridPane.margin>
+                  </Button>
+               </children>
+            </GridPane>
+         </content>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </ScrollPane>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="250.0">
+         <children>
+            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="243.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="189.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="-Infinity" prefWidth="165.33333333333334" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="96.88886769612631" minWidth="-Infinity" prefWidth="84.66666666666666" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="59.0" text="start" GridPane.columnIndex="2" />
+                  <TextField maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="143.0" promptText="find or start a chat" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </GridPane>
+            <ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="250.0">
+               <content>
+                  <GridPane fx:id="directs_grid" alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0">
+                     <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="50.0" prefWidth="50.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="200.0" prefWidth="200.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </GridPane>
+               </content>
+            </ScrollPane>
+         </children>
+      </VBox>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="650.0">
+         <children>
+            <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="701.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="582.6666666666667" minWidth="253.7777608235677" prefWidth="523.7777709960938" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.22216796875" minWidth="-Infinity" prefWidth="70.6666259765625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.1112060546875" minWidth="-Infinity" prefWidth="106.66670735677087" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="51.0" text="inbox" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+                  <Button mnemonicParsing="false" text="setting" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label prefHeight="30.0" prefWidth="276.0" text="Friends">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+            <TabPane prefHeight="560.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="all">
+                     <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane hbarPolicy="NEVER" prefHeight="530.0" prefWidth="650.0" vbarPolicy="ALWAYS">
+                                 <content>
+                                    <GridPane maxWidth="630.0" minWidth="630.0" prefWidth="630.0" vgap="20.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="50.0" prefWidth="50.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                    </GridPane>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                </Tab>
+                <Tab text="online">
+                     <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane hbarPolicy="NEVER" prefHeight="530.0" prefWidth="650.0" vbarPolicy="ALWAYS">
+                                 <content>
+                                    <GridPane maxWidth="630.0" minWidth="630.0" prefWidth="630.0" vgap="20.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="50.0" prefWidth="50.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                    </GridPane>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                </Tab>
+                  <Tab text="pending">
+                     <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane hbarPolicy="NEVER" prefHeight="530.0" prefWidth="650.0" vbarPolicy="ALWAYS">
+                                 <content>
+                                    <GridPane maxWidth="630.0" minWidth="630.0" prefWidth="630.0" vgap="20.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="50.0" prefWidth="50.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                    </GridPane>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                     </content></Tab>
+                  <Tab closable="false" text="blocked">
+                     <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane hbarPolicy="NEVER" prefHeight="530.0" prefWidth="650.0" vbarPolicy="ALWAYS">
+                                 <content>
+                                    <GridPane maxWidth="630.0" minWidth="630.0" prefWidth="630.0" vgap="20.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="50.0" prefWidth="50.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="70.0" prefWidth="70.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                    </GridPane>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                     </content></Tab>
+                  <Tab text="add friend">
+                     <content>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <GridPane layoutX="37.0" maxWidth="630.0" minWidth="561.0" prefHeight="50.0" prefWidth="561.0" vgap="3.0" AnchorPane.topAnchor="50.0">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="446.3333740234375" minWidth="10.0" prefWidth="446.3333740234375" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="273.8887939453125" minWidth="10.0" prefWidth="115.6666259765625" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" text="send request" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label text="ADD FRIEND">
+                                       <font>
+                                          <Font size="25.0" />
+                                       </font>
+                                    </Label>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="you can add a friend with their discord username. its case sensitive!" wrappingWidth="524.0313720703125" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="probable warning" GridPane.rowIndex="3">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Text>
+                                    <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="447.0" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                     </content></Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </VBox>
+   </children>
+</HBox>

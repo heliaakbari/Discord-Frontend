@@ -184,6 +184,7 @@ public class ServerSide {
 
             case "lastseenChannel":
                 activeChannels.remove(cmd.getUser());
+                System.out.println(cmd.getServer()+"/"+cmd.getChannel());
                 break;
 
             case "tellPv":
@@ -193,6 +194,7 @@ public class ServerSide {
             case "tellChannel":
                 ArrayList<String> place = new ArrayList<>(Arrays.asList(cmd.getServer(), cmd.getChannel()));
                 activeChannels.put(cmd.getUser(), place);
+                System.out.println(cmd.getServer()+"/"+cmd.getChannel());
                 break;
 
             case "newPvMsg":

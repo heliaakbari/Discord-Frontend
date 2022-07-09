@@ -338,7 +338,8 @@ public class CmdManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Data.directChats(cmd.getUser(), chatsArray);
+        ArrayList<UserShort> chatArrayGUI = stringToUserShort(chatsArray);
+        return Data.directChats(cmd.getUser(),chatArrayGUI);
     }
 
     public Data login(Command cmd) {
@@ -407,7 +408,7 @@ public class CmdManager {
         byte[] image = (byte[]) cmd.getPrimary();
         String format = (String) cmd.getSecondary();
 
-        String address = filespath + "\\profilePhoto_" + user.getEmail() + "." + format;
+        String address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
         Path url = Paths.get(address);
         File file = new File(address);
         file.delete();
@@ -479,7 +480,7 @@ public class CmdManager {
         String format = (String) cmd.getSecondary();
         String address = new String("");
         if(image.length != 0) {
-            address = filespath + "\\profilePhoto_" + user.getEmail() + "." + format;
+            address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
         }
 
         try {
@@ -502,7 +503,7 @@ public class CmdManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                address = filespath + "\\profilePhoto_" + user.getEmail() + ".png";
+                address = filespath + "\\profilePhoto_" + user.getUsername() + ".png";
 
             }
             bytesToFile(user.getProfilePhoto(), address);
