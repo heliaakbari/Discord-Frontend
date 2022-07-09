@@ -3,6 +3,7 @@ package com.example.gui;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.example.mutual.*;
 
@@ -30,11 +33,22 @@ public class FriendsController {
     protected String currentUser;
     protected ArrayList<String> servers = new ArrayList<>();
     protected ArrayList<UserShort> directChats = new ArrayList<>();
-
+    protected ArrayList<UserShort> allFriends = new ArrayList<>();
+    protected ArrayList<UserShort> allblocks = new ArrayList<>();
+    protected HashMap<UserShort,Boolean> allrequests = new HashMap<>();
     @FXML
     protected GridPane directs_grid;
     @FXML
     protected GridPane servers_grid;
+
+    @FXML
+    protected GridPane online_grid;
+
+    @FXML
+    protected GridPane block_grid;
+
+    @FXML
+    protected GridPane all_grid;
 
     public FriendsController(ObjectInputStream in, ObjectOutputStream out,ObjectInputStream fin,ObjectOutputStream fout,String username){
         this.out = out;
@@ -108,12 +122,140 @@ public class FriendsController {
         servers_grid.addColumn(0,btn);
 
     }
+
+    public void showalllist(Event e){
+        Tab tab = (Tab) e.getSource();
+        if(!tab.isSelected()){
+            return;
+        }
+        new AddAllFriends(this).restart();
+    }
+
+    public void showblocklist(Event e){
+        Tab tab = (Tab) e.getSource();
+        if(!tab.isSelected()){
+            return;
+        }
+        new AddBlockeds(this).restart();
+    }
+
+    public void showonlinelist(Event e){
+        Tab tab = (Tab) e.getSource();
+        if(!tab.isSelected()){
+            return;
+        }
+        new AddOnlineFriends(this).restart();
+    }
 }
+
+class AddAllFriends extends Service<Void>{
+    FriendsController fc;
+
+    public AddAllFriends(FriendsController fc){
+        this.fc=fc;
+    }
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Command cmd = Command.getFriends(fc.currentUser);
+                fc.out.writeObject(cmd);
+                Data dt =(Data) fc.in.readObject();
+                System.out.println(dt.getKeyword());
+                fc.allFriends=(ArrayList<UserShort>) dt.getPrimary();
+                return null;
+            }
+        };
+
+    }
+
+    @Override
+    protected void succeeded() {
+        fc.all_grid.getChildren().clear();
+        fc.all_grid.setVgap(5);
+        for(UserShort s : fc.allFriends){
+            fc.all_grid.addColumn(1,s.profileStatus(25.0));
+            fc.all_grid.addColumn(2,new Text(s.getUsername()));
+        }
+    }
+}
+
+class AddOnlineFriends extends Service<Void>{
+    FriendsController fc;
+
+    public AddOnlineFriends(FriendsController fc){
+        this.fc=fc;
+    }
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Command cmd = Command.getFriends(fc.currentUser);
+                fc.out.writeObject(cmd);
+                Data dt =(Data) fc.in.readObject();
+                System.out.println(dt.getKeyword());
+                fc.allFriends=(ArrayList<UserShort>) dt.getPrimary();
+                return null;
+            }
+        };
+
+    }
+
+    @Override
+    protected void succeeded() {
+        fc.online_grid.getChildren().clear();
+        fc.online_grid.setVgap(5);
+        for(UserShort s : fc.allFriends){
+            if(s.getStatus()==Status.online || s.getStatus()==Status.idle) {
+                fc.online_grid.addColumn(1, s.profileStatus(25.0));
+                fc.online_grid.addColumn(2, new Text(s.getUsername()));
+            }
+        }
+    }
+}
+
+class AddBlockeds extends Service<Void>{
+    FriendsController fc;
+
+    public AddBlockeds(FriendsController fc){
+        this.fc=fc;
+    }
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Command cmd = Command.getBlockList(fc.currentUser);
+                fc.out.writeObject(cmd);
+                Data dt =(Data) fc.in.readObject();
+                System.out.println(dt.getKeyword());
+                fc.allblocks=(ArrayList<UserShort>) dt.getPrimary();
+                return null;
+            }
+        };
+
+    }
+
+    @Override
+    protected void succeeded() {
+        fc.block_grid.getChildren().clear();
+        fc.block_grid.setVgap(5);
+        for(UserShort s : fc.allFriends){
+                fc.block_grid.addColumn(1, s.profileStatus(25.0));
+                fc.block_grid.addColumn(2, new Text(s.getUsername()));
+
+        }
+    }
+}
+
 
 class GetDirectList extends Service<Void>{
     FriendsController fc;
 
     public GetDirectList(FriendsController fc){
+
         this.fc=fc;
     }
     @Override
@@ -134,7 +276,8 @@ class GetDirectList extends Service<Void>{
     @Override
     protected void succeeded() {
         fc.addDirects();
-        super.succeeded();
+        new AddAllFriends(fc).restart();
+
     }
 }
 

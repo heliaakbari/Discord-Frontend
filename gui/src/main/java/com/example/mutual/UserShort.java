@@ -18,7 +18,11 @@ public class UserShort implements Serializable {
     private byte[] bytes;
     private Status status;
 
-    public UserShort(String username,byte[] bytes, Status status){
+    public Status getStatus() {
+        return status;
+    }
+
+    public UserShort(String username, byte[] bytes, Status status){
         this.bytes = bytes;
         this.username = username;
         this.status = status;
