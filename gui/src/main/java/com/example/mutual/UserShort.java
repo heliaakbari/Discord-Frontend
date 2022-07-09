@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 
 public class UserShort implements Serializable {
+    private static final long serialVersionUID = 838923986992328L;
     private String username;
     private byte[] bytes;
     private Status status;

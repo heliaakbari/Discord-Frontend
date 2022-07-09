@@ -431,7 +431,7 @@ public class Data  implements Serializable {
      * @param chats
      * @return
      */
-    public static @NotNull Data directChats(String user, ArrayList<String> chats){
+    public static @NotNull Data directChats(String user, ArrayList<UserShort> chats){
         Data data = new Data("directChats");
         data.primary = chats;
         data.user = user;

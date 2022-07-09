@@ -8,8 +8,10 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -20,6 +22,7 @@ import javafx.scene.text.TextFlow;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -36,6 +39,7 @@ public class ChannelController {
     protected ObjectInputStream in;
     protected ObjectOutputStream fout;
     protected ObjectInputStream fin;
+    protected Boolean isMessageReader=false;
     @FXML
     protected Label channel_name;
 
@@ -84,24 +88,10 @@ public class ChannelController {
     @FXML
     public void initialize() {
         new GoToServer(this,currentServer).restart();
-        new GoToChannel(this,currentChannel);
-    }
-
-    public void changeChannelFromGUI(Event event){
-        String channelName = ((Button)event.getSource()).getText();
-        new GoToChannel(this,channelName).restart();
-    }
-
-
-    public void changeServerFromGUI(Event event){
-        currentServer = ((Button)event.getSource()).getText();
-        new GoToServer(this,currentServer).restart();
-        new GoToChannel(this,"general");
     }
 
     public void addnewServer(){
         new GoToServer(this,currentServer).restart();
-        new GoToChannel(this,"general");
     }
 
     public void addMembers(){
@@ -120,6 +110,32 @@ public class ChannelController {
         servers_grid.getChildren().clear();
         servers_grid.setVgap(5);
         Button btn = new Button("Discord");
+        ChannelController ccOld = this;
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(isMessageReader) {
+                    try {
+                        out.writeObject(Command.lastseenChannel(currentUser,currentServer,currentChannel));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
+                FriendsController friendsController = new FriendsController(in,out,fin,fout,currentUser);
+                fxmlLoader.setController(friendsController);
+                Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 1000, 600);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stage.setScene(scene);
+                stage.show();
+            }
+        });
+
         //add eventhandler
         btn.setPrefHeight(40);
         btn.setPrefWidth(servers_grid.getPrefWidth());
@@ -130,8 +146,15 @@ public class ChannelController {
             btn.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    new GoToServer(cc,((Button)event.getSource()).getText()).restart();
-                    new GoToChannel(cc,"general");
+                    if(isMessageReader) {
+                        try {
+                            out.writeObject(Command.lastseenChannel(currentUser,currentServer,currentChannel));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    new GoToServer(cc, ((Button) event.getSource()).getText()).restart();
+
                 }
             });
 
@@ -158,7 +181,15 @@ public class ChannelController {
             btn.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    new GoToChannel(cc,((Button)event.getSource()).getText()).restart();
+                    if(isMessageReader) {
+                        try {
+                            out.writeObject(Command.lastseenChannel(currentUser,currentServer,currentChannel));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    new GoToChannel(cc, ((Button) event.getSource()).getText()).restart();
+
                 }
             });
             btn.setPrefWidth(channels_grid.getPrefWidth());
@@ -236,54 +267,6 @@ public class ChannelController {
     }
 }
 
-class TellChannel extends Service<Void>{
-    private ChannelController cc;
-    private String newChannel;
-    private String newServer;
-
-    public TellChannel(ChannelController cc, String newServer,String newChannel){
-        this.cc =cc;
-        this.newChannel = newChannel;
-        this.newServer = newServer;
-    }
-
-    @Override
-    protected Task<Void> createTask() {
-        return new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                cc.out.writeObject(Command.tellChannel(cc.currentUser,newServer,newChannel));
-                cc.in.readObject();
-                return null;
-            }
-        };
-    }
-}
-
-
-class LastseenChannel extends Service<Void>{
-    private ChannelController cc;
-    private String oldChannel;
-    private String oldServer;
-
-    public LastseenChannel(ChannelController cc, String oldServer,String oldChannel){
-        this.cc =cc;
-        this.oldChannel = oldChannel;
-        this.oldServer = oldServer;
-    }
-
-    @Override
-    protected Task<Void> createTask() {
-        return new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                cc.out.writeObject(Command.lastseenChannel(cc.currentUser,oldServer,oldChannel));
-                cc.in.readObject();
-                return null;
-            }
-        };
-    }
-}
 
 class SendText extends Service<Void>{
     private ChannelController cc;
@@ -322,11 +305,15 @@ class GoToServer extends Service<Void>{
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                cc.server_name.setText(servername);
+                cc.currentServer=servername;
+                cc.out.writeObject(Command.userServers(cc.currentUser));
+                System.out.println("got the servers");
+                Data dt = (Data) cc.in.readObject();
+                cc.servers =(ArrayList<String>) dt.getPrimary();
                 cc.out.writeObject(Command.userChannels(cc.currentUser,servername));
-                Data dt =(Data) cc.in.readObject();
+                dt =(Data) cc.in.readObject();
+                System.out.println(dt.getKeyword() +" instead of user channels");
                 cc.channels = (ArrayList<String>) dt.getPrimary();
-                cc.addChannels();
                 return null;
             }
         };
@@ -334,7 +321,10 @@ class GoToServer extends Service<Void>{
 
     @Override
     protected void succeeded() {
-        new TellChannel(cc,cc.currentServer,cc.currentChannel).restart();
+        cc.server_name.setText(servername);
+        cc.addServers();
+        cc.addChannels();
+        new GoToChannel(cc,"general").restart();
     }
 }
 
@@ -362,6 +352,8 @@ class GoToChannel extends Service<Void>{
                 dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword());
                 cc.members = (ArrayList<UserShort>) dt.getPrimary();
+                cc.out.writeObject(Command.tellChannel(cc.currentUser,cc.currentServer,channelName));
+                cc.in.readObject();
                 return null;
             }
 
@@ -371,7 +363,6 @@ class GoToChannel extends Service<Void>{
                 cc.addMembers();
                 cc.addMessages();
                 new MessageReader(cc).start();
-
             }
         };
 
@@ -389,30 +380,46 @@ class MessageReader extends Thread {
 
     @Override
     public void run() {
+        cc.isMessageReader=true;
         Message message = null;
-        Data data ;
+        Data data= null ;
 
         while (true) {
             System.out.print(" ");
             try {
-                data = (Data) cc.in.readObject();
-                System.out.println( data.getKeyword());
+                Object obj = cc.in.readObject();
+                if(  obj instanceof String){
+                    System.out.println("data is string "+obj);
+                }
+                else {
+                    data = (Data) obj;
+                    System.out.println(data.getKeyword() + " message reader");
+                }
+                if(data.getKeyword().equals("fake")){
+                    continue;
+                }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
+                cc.isMessageReader=false;
                 break;
             }
             if (data.getKeyword().equals("exitChat")) {
+                System.out.println("got the exit chat");
+                cc.isMessageReader=false;
                 return;
             }
-            message = (Message) data.getPrimary();
-            cc.messages.add(message);
-            final Message msg = message;
-            Platform.runLater(()->{
-                cc.addNewMessage(msg);
-            });
-
+            if(data.getKeyword().equals("newChannelMsg")){
+                message = (Message) data.getPrimary();
+                cc.messages.add(message);
+                final Message msg = message;
+                Platform.runLater(()->{
+                    cc.addNewMessage(msg);
+                });
+            }
 
         }
+
     }
+
 }
 

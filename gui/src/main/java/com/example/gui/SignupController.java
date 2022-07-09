@@ -62,7 +62,7 @@ public class SignupController implements Initializable {
     private ObjectInputStream fin;
     private ObjectOutputStream fout;
 
-    private String[] statuses = {"online","idle","do not disturb","invisible","none"};
+    private String[] statuses = {"online","idle","do_not_disturb","invisible","none"};
 
     public SignupController(){
 
