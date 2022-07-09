@@ -54,6 +54,13 @@ public class Data  implements Serializable {
         return data;
     }
 
+    public static @NotNull Data checkNewRelation(String user, Boolean isSuccessful){
+        Data data = new Data("checkNewRelation");
+        data.user = user;
+        data.primary = isSuccessful;
+        return data;
+    }
+
     public static @NotNull Data checkLogin(String user, Boolean isLoggedIn){
         Data data = new Data("checkLogin");
         data.user = user;

@@ -363,7 +363,8 @@ class GoToChannel extends Service<Void>{
                 cc.channel_name.setText(channelName);
                 cc.addMembers();
                 cc.addMessages();
-                new MessageReader(cc).start();
+                ////
+                new MessageReader1(cc).restart();
             }
         };
 
@@ -424,3 +425,60 @@ class MessageReader extends Thread {
 
 }
 
+class MessageReader1 extends Service<Void>{
+
+    private ChannelController cc;
+
+    public MessageReader1(ChannelController cc) {
+        this.cc = cc;
+    }
+
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                cc.isMessageReader=true;
+                Message message = null;
+                Data data= null ;
+
+                while (true) {
+                    System.out.print(" ");
+                    try {
+                        Object obj = cc.in.readObject();
+                        if(  obj instanceof String){
+                            System.out.println("data is string "+obj);
+                        }
+                        else {
+                            data = (Data) obj;
+                            System.out.println(data.getKeyword() + " message reader");
+                        }
+                        if(data.getKeyword().equals("fake")){
+                            continue;
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                        cc.isMessageReader=false;
+                        break;
+                    }
+                    if (data.getKeyword().equals("exitChat")) {
+                        System.out.println("got the exit chat");
+                        cc.isMessageReader=false;
+                        return null;
+                    }
+                    if(data.getKeyword().equals("newChannelMsg")){
+                        message = (Message) data.getPrimary();
+                        cc.messages.add(message);
+                        final Message msg = message;
+                        Platform.runLater(()->{
+                            cc.addNewMessage(msg);
+                        });
+                    }
+
+                }
+
+                return null;
+            }
+        };
+    }
+}

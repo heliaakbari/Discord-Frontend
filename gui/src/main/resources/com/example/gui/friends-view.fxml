@@ -109,7 +109,7 @@
             </GridPane>
             <TabPane prefHeight="560.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="all">
+                <Tab fx:id="tab_all" onSelectionChanged="#showalllist" text="all">
                      <content>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
@@ -135,7 +135,7 @@
                         </AnchorPane>
                      </content>
                 </Tab>
-                <Tab text="online">
+                <Tab fx:id="tab_online" onSelectionChanged="#showonlinelist" text="online">
                      <content>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
@@ -161,7 +161,7 @@
                         </AnchorPane>
                      </content>
                 </Tab>
-                  <Tab text="pending">
+                  <Tab fx:id="tab_pending" onSelectionChanged="#showpendinglist" text="pending">
                      <content>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
@@ -186,7 +186,7 @@
                            </children>
                         </AnchorPane>
                      </content></Tab>
-                  <Tab closable="false" text="blocked">
+                  <Tab fx:id="tab_blocked" closable="false" onSelectionChanged="#showblocklist" text="blocked">
                      <content>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
@@ -211,7 +211,7 @@
                            </children>
                         </AnchorPane>
                      </content></Tab>
-                  <Tab text="add friend">
+                  <Tab fx:id="tab_add" text="add friend">
                      <content>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
@@ -227,7 +227,7 @@
                                     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" text="send request" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Button fx:id="sendrequest_button" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="35.0" prefWidth="100.0" text="send request" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     <Label text="ADD FRIEND">
                                        <font>
                                           <Font size="25.0" />
@@ -243,7 +243,7 @@
                                           <Font size="16.0" />
                                        </font>
                                     </Text>
-                                    <TextField maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="447.0" GridPane.rowIndex="2">
+                                    <TextField fx:id="sendrequest_textfield" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="447.0" GridPane.rowIndex="2">
                                        <font>
                                           <Font size="15.0" />
                                        </font>
