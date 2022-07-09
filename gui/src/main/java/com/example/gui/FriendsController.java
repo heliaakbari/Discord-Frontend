@@ -45,6 +45,8 @@ public class FriendsController {
     protected GridPane online_grid;
 
     @FXML
+    protected GridPane pending_grid;
+    @FXML
     protected GridPane block_grid;
 
     @FXML
@@ -146,6 +148,14 @@ public class FriendsController {
         }
         new AddOnlineFriends(this).restart();
     }
+
+    public void showpendinglist(Event e){
+        Tab tab = (Tab) e.getSource();
+        if(!tab.isSelected()){
+            return;
+        }
+        new AddPending(this).restart();
+    }
 }
 
 class AddAllFriends extends Service<Void>{
@@ -180,6 +190,55 @@ class AddAllFriends extends Service<Void>{
         }
     }
 }
+
+
+class AddPending extends Service<Void>{
+    FriendsController fc;
+
+    public AddPending(FriendsController fc){
+        this.fc=fc;
+    }
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Command cmd = Command.getRequests(fc.currentUser);
+                fc.out.writeObject(cmd);
+                Data dt =(Data) fc.in.readObject();
+                System.out.println(dt.getKeyword());
+                fc.allrequests=(HashMap<UserShort, Boolean>) dt.getPrimary();
+                return null;
+            }
+        };
+
+    }
+
+    @Override
+    protected void succeeded() {
+        fc.pending_grid.getChildren().clear();
+        fc.pending_grid.setVgap(5);
+        for (HashMap.Entry<UserShort,Boolean> entry : fc.allrequests.entrySet()) {
+            Boolean value = entry.getValue();
+            if (value == true) {
+                fc.pending_grid.addColumn(1,entry.getKey().profileStatus(25.0));
+                fc.pending_grid.addColumn(2,new Text(entry.getKey().getUsername()));
+                fc.pending_grid.addColumn(3,new Text("incoming"));
+                fc.pending_grid.addColumn(4,new Button("accept"));
+                fc.pending_grid.addColumn(5,new Button("reject"));
+            }
+            else{
+                fc.pending_grid.addColumn(1,entry.getKey().profileStatus(25.0));
+                fc.pending_grid.addColumn(2,new Text(entry.getKey().getUsername()));
+                fc.pending_grid.addColumn(3,new Text("outgoing"));
+                fc.pending_grid.addColumn(4,new Text(""));
+                fc.pending_grid.addColumn(5,new Button("cancel"));
+            }
+        }
+    }
+}
+
+
 
 class AddOnlineFriends extends Service<Void>{
     FriendsController fc;
@@ -242,9 +301,10 @@ class AddBlockeds extends Service<Void>{
     protected void succeeded() {
         fc.block_grid.getChildren().clear();
         fc.block_grid.setVgap(5);
-        for(UserShort s : fc.allFriends){
+        for(UserShort s : fc.allblocks){
                 fc.block_grid.addColumn(1, s.profileStatus(25.0));
                 fc.block_grid.addColumn(2, new Text(s.getUsername()));
+                fc.block_grid.addColumn(5,new Button("unblock"));
 
         }
     }
@@ -276,7 +336,6 @@ class GetDirectList extends Service<Void>{
     @Override
     protected void succeeded() {
         fc.addDirects();
-        new AddAllFriends(fc).restart();
 
     }
 }
@@ -303,6 +362,11 @@ class GetServers extends Service<Void>{
                 dt =(Data) fc.in.readObject();
                 System.out.println(dt.getKeyword());
                 fc.directChats=(ArrayList<UserShort>) dt.getPrimary();
+                cmd = Command.getFriends(fc.currentUser);
+                fc.out.writeObject(cmd);
+                dt =(Data) fc.in.readObject();
+                System.out.println(dt.getKeyword());
+                fc.allFriends=(ArrayList<UserShort>) dt.getPrimary();
                 return null;
             }
         };
@@ -310,6 +374,12 @@ class GetServers extends Service<Void>{
 
     @Override
     protected void succeeded() {
+        fc.all_grid.getChildren().clear();
+        fc.all_grid.setVgap(5);
+        for(UserShort s : fc.allFriends){
+            fc.all_grid.addColumn(1,s.profileStatus(25.0));
+            fc.all_grid.addColumn(2,new Text(s.getUsername()));
+        }
         fc.addServers();
         fc.addDirects();
         super.succeeded();

@@ -895,7 +895,7 @@ public class CmdManager {
                 rs.next();
                 UserShort userShort;
                 if (!rs.getString("STATUS").equals("NULL")) {
-                    status = Status.valueOf(rs.getString("STATUS"));
+                    status = Status.valueOf(rs.getString("STATUS").toLowerCase());
                 }
                 else{
                     if (serverSide.getClientHandlers().containsKey(username)){
