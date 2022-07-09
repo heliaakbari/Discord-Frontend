@@ -28,7 +28,7 @@ public class SignupController implements Initializable {
     private Stage stage;
     private Scene scene;
 
-    private boolean ableToSignup = true;
+    private boolean ableToSignup;
 
     @FXML
     private ChoiceBox<String> statusChoiceBox;
@@ -57,9 +57,7 @@ public class SignupController implements Initializable {
     private Text login_username_description;
     @FXML
     private Text login_username_description1;
-    @FXML
-    private Text login_username_description11112;
-
+    
     @FXML
     private Text image_warning;
 
@@ -89,7 +87,6 @@ public class SignupController implements Initializable {
         ableToSignup = true;
         login_username_description.setText(null);
         login_username_description1.setText(null);
-        login_username_description11112.setText(null);
 
         // regex checking
         if (!username.getText().matches("^[0-9a-zA-Z]{6,20}$")) {
@@ -102,11 +99,7 @@ public class SignupController implements Initializable {
             login_username_description1.setText("password must be at least 8 and at most 20 characters and contain capital and small english alphabets and numbers");
             ableToSignup = false;
         }
-        if (photo != null && photo.length > 100000) {
-            // tell user
-            login_username_description11112.setText("photo must be smaller than 100k bytes");
-            ableToSignup = false;
-        }
+
 
         // signing up
         if (ableToSignup) {
@@ -167,7 +160,7 @@ public class SignupController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-    
+
     @FXML
     public void imageOnButton(Event event){
 
