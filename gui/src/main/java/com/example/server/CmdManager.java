@@ -1,7 +1,5 @@
-package com.example.server; /**
- *this class gets a command and implements changes in database
- * and then sends the result back to client using Data object
- */
+package com.example.server;
+
 import com.example.mutual.*;
 import java.io.File;
 import java.io.FileOutputStream;
