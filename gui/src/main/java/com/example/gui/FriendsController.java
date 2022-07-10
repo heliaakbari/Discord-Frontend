@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.example.mutual.*;
+import javafx.stage.WindowEvent;
 
 public class FriendsController {
     protected ObjectOutputStream out;
@@ -198,16 +199,29 @@ public class FriendsController {
 
     @FXML
     public void settingOnButton(Event e){
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("setting-view.fxml"));
-//        fxmlLoader.setController(new SettingController(out, in, , ));
-//        stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
-//        try {
-//            scene = new Scene(fxmlLoader.load(), 1000, 600);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        stage.setScene(scene);
-//        stage.show();
+        Data data = null;
+        try {
+            out.writeObject(Command.getUser(currentUser));
+            data = (Data) in.readObject();
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+        Stage stage = (Stage)(((Node) e.getSource()).getScene().getWindow());
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("setting-view.fxml"));
+        fxmlLoader.setController(new SettingController(out, in, fout,fin,(User) data.getPrimary(), (UserShort) data.getSecondary(),stage));
+        stage.setHeight(450);
+        stage.setWidth(600);
+        stage.centerOnScreen();
+        stage.setResizable(false);
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 600, 400);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
+
     }
 }
 

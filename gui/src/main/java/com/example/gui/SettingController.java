@@ -5,12 +5,19 @@ import com.example.mutual.Data;
 import com.example.mutual.User;
 import com.example.mutual.UserShort;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,13 +27,15 @@ import java.nio.file.Paths;
 import java.util.ResourceBundle;
 import static java.nio.file.Files.readAllBytes;
 
-public class SettingController implements Initializable {
+public class SettingController {
 
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    private ObjectOutputStream fout;
+    private ObjectInputStream fin;
     private User currentUser;
     private UserShort userShort;
-
+    private Stage myStage;
     @FXML
     private Pane imageHolder;
     @FXML
@@ -44,20 +53,42 @@ public class SettingController implements Initializable {
     @FXML
     private Text imageWarning;
 
-    public SettingController(ObjectOutputStream out, ObjectInputStream in, User currentUser, UserShort userShort) {
+    public SettingController(ObjectOutputStream out, ObjectInputStream in,ObjectOutputStream fout, ObjectInputStream fin, User currentUser, UserShort userShort,Stage stage) {
         this.out = out;
         this.in = in;
         this.currentUser = currentUser;
         this.userShort = userShort;
+        this.fin = fin;
+        this.fout = fout;
+        myStage = stage;
     }
 
     @FXML
-    public void initialize(URL url, ResourceBundle resourceBundle){
-        imageHolder.getChildren().add(userShort.profileStatus(60.0));
+    public void initialize(){
+        imageHolder.getChildren().add(userShort.profileStatus(100.0));
         currentUsername.setText(currentUser.getUsername());
         password.setText(currentUser.getPassword());
         email.setText(currentUser.getEmail());
         phoneNum.setText(currentUser.getPhoneNum());
+        myStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                System.out.println("closed");
+                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
+                FriendsController friendsController = new FriendsController(in,out,fin,fout, currentUser.getUsername());
+                fxmlLoader.setController(friendsController);
+                Stage newStage = new Stage();
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 1000, 600);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                newStage.setScene(scene);
+                myStage.close();
+                newStage.show();
+            }
+        });
     }
 
     @FXML
