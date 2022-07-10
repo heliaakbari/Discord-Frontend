@@ -53,11 +53,13 @@ public class SignupController implements Initializable {
 
     @FXML
     private Button imageButton;
+
     @FXML
     private Text login_username_description;
+
     @FXML
     private Text login_username_description1;
-    
+
     @FXML
     private Text image_warning;
 
@@ -124,7 +126,7 @@ public class SignupController implements Initializable {
 
             if (!((boolean) data.getPrimary())) {
                 System.out.println("not successful");
-                // tell user
+                login_username_description.setText("this username is taken, try another one");
             } else {
                 System.out.println("correct");
                 //and other actions

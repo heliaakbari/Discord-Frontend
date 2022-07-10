@@ -41,6 +41,9 @@ public class LoginController {
     @FXML
     private Text login_signup;
 
+    @FXML
+    private Text login_username_description;
+
     public LoginController(){
         ;
     }
@@ -58,9 +61,9 @@ public class LoginController {
         try {
             out.writeObject(Command.login(username.getText(),password.getText()));
             Data data = (Data) in.readObject();
-            if((boolean) data.getPrimary()==false){
+            if(!((boolean) data.getPrimary())){
                 System.out.println("not correct");
-                //and other actions
+                login_username_description.setText("wrong username or password");
             }
             else {
                 System.out.println("correct");
