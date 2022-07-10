@@ -437,15 +437,15 @@ public class CmdManager {
         try {
             bytesToFile(image, address);
         } catch (IOException e) {
-            FeedBack.say("could not save profile photo of " + user);
+            FeedBack.say("could not save profile photo of " + cmd.getUser());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            stmt.executeUpdate(String.format("UPDATE users SET picturelink ='%s' WHERE username='%s')", url, user));
+            stmt.executeUpdate(String.format("UPDATE users SET picturelink ='%s' WHERE username='%s')", url, cmd.getUser()));
         } catch (SQLException e) {
-            FeedBack.say("could not update picture url of " + user);
+            FeedBack.say("could not update picture url of " + cmd.getUser());
         }
     }
 
