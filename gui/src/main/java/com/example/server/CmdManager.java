@@ -23,7 +23,9 @@ public class CmdManager {
     private ServerSide serverSide;
     private static Statement stmt = null;
     private Connection con = null;
+
     private final String filespath;
+
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss");
     private DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh-mm-ss");
 
@@ -478,8 +480,8 @@ public class CmdManager {
         User user = (User) cmd.getPrimary();
         byte[] image = user.getProfilePhoto();
         String format = user.getProfilePhotoFormat();
-        String address = new String("");
-        if(image!=null) {
+        String address = "";
+        if(image != null) {
             address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
         }
 
@@ -495,7 +497,7 @@ public class CmdManager {
             return Data.checkSignUp(((User) cmd.getPrimary()).getUsername(), false);
         }
         try {
-            if(image== null){
+            if( image == null){
                 try {
                     image = readAllBytes(Paths.get("C:\\DiscordFiles\\default.png"));
                     user.setProfilePhotoFormat("png");
