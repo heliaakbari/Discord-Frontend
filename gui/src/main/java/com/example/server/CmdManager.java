@@ -23,7 +23,7 @@ public class CmdManager {
     private ServerSide serverSide;
     private static Statement stmt = null;
     private Connection con = null;
-    private static String filespath = null;
+    private static String filespath=null;
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss");
     private DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh-mm-ss");
 
@@ -479,7 +479,7 @@ public class CmdManager {
         byte[] image = user.getProfilePhoto();
         String format = user.getProfilePhotoFormat();
         String address = new String("");
-        if(image==null) {
+        if(image!=null) {
             address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
         }
 
@@ -507,8 +507,8 @@ public class CmdManager {
                 address = filespath + "\\profilePhoto_" + user.getUsername() + ".png";
                 user.setProfilePhotoFormat("png");
             }
-            bytesToFile(image, address);
 
+            bytesToFile(image, address);
 
         } catch (IOException e) {
             FeedBack.say("could not save profile photo of " + user.getUsername());
@@ -563,10 +563,8 @@ public class CmdManager {
         }
         String statement = new String();
         try {
-            System.out.println("receiver: " + receiver + " sender: " + sender);
             ResultSet r = stmt.executeQuery("SELECT count(*) as C1 from users where username='" + receiver + "'");
             r.next();
-            System.out.println((int) r.getInt("C1"));
             System.out.println("receiver: " + receiver + " sender: " + sender);
             if ((int) r.getInt("C1") <= 0) {
                 return Data.checkNewRelation(cmd.getUser(),false);
@@ -790,7 +788,6 @@ public class CmdManager {
         requesters = new ArrayList<>();
         try {
             rs = stmt.executeQuery(String.format("select receiver as S from relationships where status='%s' and sender='%s'", Relationship.Friend_pending.toString(), cmd.getUser()));
-
             while (rs.next()) {
                 requesters.add(rs.getString("S"));
             }

@@ -118,7 +118,11 @@ public class ChannelController {
                 if(isMessageReader) {
                     try {
                         out.writeObject(Command.lastseenChannel(currentUser,currentServer,currentChannel));
+                        Thread.sleep(100);
                     } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    catch (InterruptedException e){
                         e.printStackTrace();
                     }
                 }
@@ -150,7 +154,10 @@ public class ChannelController {
                     if(isMessageReader) {
                         try {
                             out.writeObject(Command.lastseenChannel(currentUser,currentServer,currentChannel));
+                            Thread.sleep(100);
                         } catch (IOException e) {
+                            e.printStackTrace();
+                        }catch (InterruptedException e){
                             e.printStackTrace();
                         }
                     }
@@ -185,7 +192,10 @@ public class ChannelController {
                     if(isMessageReader) {
                         try {
                             out.writeObject(Command.lastseenChannel(currentUser,currentServer,currentChannel));
+                            Thread.sleep(100);
                         } catch (IOException e) {
+                            e.printStackTrace();
+                        }catch (InterruptedException e){
                             e.printStackTrace();
                         }
                     }
@@ -310,11 +320,23 @@ class GoToServer extends Service<Void>{
                 cc.out.writeObject(Command.userServers(cc.currentUser));
                 System.out.println("got the servers");
                 Data dt = (Data) cc.in.readObject();
+                System.out.println(dt.getKeyword()+"!");
                 cc.servers =(ArrayList<String>) dt.getPrimary();
                 cc.out.writeObject(Command.userChannels(cc.currentUser,servername));
                 dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword() +" instead of user channels");
                 cc.channels = (ArrayList<String>) dt.getPrimary();
+                cc.currentChannel = "general";
+                cc.out.writeObject(Command.getChannelMsgs(cc.currentUser,cc.currentServer,cc.currentChannel,5));
+                dt =(Data) cc.in.readObject();
+                System.out.println(dt.getKeyword());
+                cc.messages = (ArrayList<Message>) dt.getPrimary();
+                cc.out.writeObject(Command.getChannelMembers(cc.currentUser,cc.currentServer,cc.currentChannel));
+                dt =(Data) cc.in.readObject();
+                System.out.println(dt.getKeyword());
+                cc.members = (ArrayList<UserShort>) dt.getPrimary();
+                cc.out.writeObject(Command.tellChannel(cc.currentUser,cc.currentServer,"general"));
+                cc.in.readObject();
                 return null;
             }
         };
@@ -325,7 +347,10 @@ class GoToServer extends Service<Void>{
         cc.server_name.setText(servername);
         cc.addServers();
         cc.addChannels();
-        new GoToChannel(cc,"general").restart();
+        cc.channel_name.setText("general");
+        cc.addMembers();
+        cc.addMessages();
+        new MessageReader(cc).start();
     }
 }
 
@@ -363,8 +388,7 @@ class GoToChannel extends Service<Void>{
                 cc.channel_name.setText(channelName);
                 cc.addMembers();
                 cc.addMessages();
-                ////
-                new MessageReader1(cc).restart();
+                new MessageReader(cc).start();
             }
         };
 

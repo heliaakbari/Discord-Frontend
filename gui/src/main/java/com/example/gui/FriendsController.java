@@ -141,12 +141,16 @@ public class FriendsController {
 
     }
 
+    protected Boolean firsttime = true;
     public void showalllist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
             return;
         }
-        new AddAllFriends(this).restart();
+        if (!firsttime){
+            new AddAllFriends(this).restart();
+        }
+        firsttime= false;
     }
 
     public void showblocklist(Event e) {
@@ -182,7 +186,7 @@ public class FriendsController {
                 warning.setText("there is no user with this username");
             else {
                 warning.setText("request sent!");
-                sendrequest_textfield.setText(null);
+                sendrequest_textfield.clear();
             }
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -494,14 +498,14 @@ class GetServers extends Service<Void> {
 
     @Override
     protected void succeeded() {
+        fc.addServers();
+        fc.addDirects();
         fc.all_grid.getChildren().clear();
         fc.all_grid.setVgap(5);
         for (UserShort s : fc.allFriends) {
             fc.all_grid.addColumn(1, s.profileStatus(25.0));
             fc.all_grid.addColumn(2, new Text(s.getUsername()));
         }
-        fc.addServers();
-        fc.addDirects();
         super.succeeded();
     }
 
