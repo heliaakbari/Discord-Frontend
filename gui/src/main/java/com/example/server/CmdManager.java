@@ -1030,7 +1030,9 @@ public class CmdManager {
         } catch (SQLException s) {
             s.printStackTrace();
         }
-        return Data.userInfo(username, user);
+        ArrayList<String> userarr = new ArrayList<>();
+        userarr.add(username);
+        return Data.userInfo(username, user,stringToUserShort(userarr).get(0));
     }
 
     public void pinMsg(Command cmd) {
