@@ -909,7 +909,8 @@ public class CmdManager {
     public ArrayList<UserShort> stringToUserShort(String user,ArrayList<String> people) {
         ArrayList<UserShort> userShorts = new ArrayList<>();
         ResultSet rs = null;
-        ArrayList<String> blockedBys = (ArrayList<String>)Command.getBlockedBy(user).getPrimary();
+        Data data = getBlockedBy(Command.getBlockedBy(user));
+        ArrayList<String> blockedBys = (ArrayList<String>) data.getPrimary();
         Status status;
         for (String username : people) {
             try {
