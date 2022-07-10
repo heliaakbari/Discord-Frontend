@@ -77,4 +77,7 @@ public class UserShort implements Serializable {
         return pane;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
