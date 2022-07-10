@@ -107,6 +107,15 @@ public abstract class Message implements Serializable {
         reactions.put("laugh", numberOfLaughs);
     }
 
+    public int getLikes(){
+       return reactions.get("like");
+    }
+    public int getDislikes(){
+        return reactions.get("dislike");
+    }
+    public int getLaughs(){
+        return reactions.get("laugh");
+    }
     public abstract String getText();
 
     public abstract String shortFormToString();

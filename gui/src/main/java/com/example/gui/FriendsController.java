@@ -84,12 +84,13 @@ public class FriendsController {
 
     void addDirects() {
         directs_grid.getChildren().clear();
+        directs_grid.setVgap(5);
         directs_grid.setAlignment(Pos.CENTER);
         for (UserShort user : directChats) {
             Node pic = user.profileStatus(25.0);
             directs_grid.addColumn(0, pic);
-            Text name = new Text(user.getUsername());
-            name.setTextAlignment(TextAlignment.LEFT);
+            Button name = new Button(user.getUsername());
+            name.setPrefSize(150,40);
             directs_grid.addColumn(1, name);
         }
     }
