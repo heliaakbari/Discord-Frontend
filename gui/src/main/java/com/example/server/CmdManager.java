@@ -479,7 +479,7 @@ public class CmdManager {
         byte[] image = user.getProfilePhoto();
         String format = user.getProfilePhotoFormat();
         String address = new String("");
-        if(image.length != 0) {
+        if(image==null) {
             address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
         }
 
@@ -495,9 +495,10 @@ public class CmdManager {
             return Data.checkSignUp(((User) cmd.getPrimary()).getUsername(), false);
         }
         try {
-            if(image.length == 0){
+            if(image== null){
                 try {
                     image = readAllBytes(Paths.get("C:\\DiscordFiles\\default.png"));
+                    user.setProfilePhotoFormat("png");
                 } catch (NoSuchFileException e) {
                     System.out.println("the file with path doesnt exists");
                 } catch (IOException e) {
@@ -506,7 +507,7 @@ public class CmdManager {
                 address = filespath + "\\profilePhoto_" + user.getUsername() + ".png";
 
             }
-            bytesToFile(user.getProfilePhoto(), address);
+            bytesToFile(image, address);
 
         } catch (IOException e) {
             FeedBack.say("could not save profile photo of " + user.getUsername());
