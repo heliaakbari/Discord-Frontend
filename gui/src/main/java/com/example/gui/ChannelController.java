@@ -14,6 +14,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -22,12 +26,17 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import static java.nio.file.Files.readAllBytes;
 
 public class ChannelController {
 
@@ -232,9 +241,9 @@ public class ChannelController {
             }
             TextFlow textFlow = new TextFlow(new Text(message.getSourceInfo().get(0)+" :\n"+message.getText()+"\n"));
             ToggleGroup group = new ToggleGroup();
-            RadioButton like = new RadioButton("like: "+message.getLikes()+"          ");
-            RadioButton dislike = new RadioButton("dislike: "+message.getDislikes()+"          ");
-            RadioButton laugh = new RadioButton("laugh: "+message.getLaughs()+"           ");
+            RadioButton like = new RadioButton("like: "+message.getLikes()+"      ");
+            RadioButton dislike = new RadioButton("dislike: "+message.getDislikes()+"      ");
+            RadioButton laugh = new RadioButton("laugh: "+message.getLaughs()+"       ");
             like.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -285,6 +294,17 @@ public class ChannelController {
                 });
                 textFlow.getChildren().add(pin);
             }
+            if(message instanceof FileMessage){
+                RadioButton download = new RadioButton("download");
+                download.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        ((RadioButton) event.getSource()).setDisable(true);
+                        downloadFile(message.getText());
+                    }
+                });
+                textFlow.getChildren().add(download);
+            }
             if(message.getSourceInfo().get(0).equals(currentUser)){
                 textFlow.setStyle("-fx-background-color: rgb(254,220,235); -fx-border-radius: 5px; ");
             }
@@ -315,9 +335,9 @@ public class ChannelController {
         }
         TextFlow textFlow = new TextFlow(new Text(message.getSourceInfo().get(0)+" :\n"+message.getText()+"\n"));
         ToggleGroup group = new ToggleGroup();
-        RadioButton like = new RadioButton("like: "+message.getLikes()+"          ");
-        RadioButton dislike = new RadioButton("dislike: "+message.getDislikes()+"          ");
-        RadioButton laugh = new RadioButton("laugh: "+message.getLaughs()+"          ");
+        RadioButton like = new RadioButton("like: "+message.getLikes()+"      ");
+        RadioButton dislike = new RadioButton("dislike: "+message.getDislikes()+"      ");
+        RadioButton laugh = new RadioButton("laugh: "+message.getLaughs()+"      ");
         like.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -368,6 +388,18 @@ public class ChannelController {
             });
             textFlow.getChildren().add(pin);
         }
+        if(message instanceof FileMessage){
+            RadioButton download = new RadioButton("download");
+            download.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    ((RadioButton) event.getSource()).setDisable(true);
+                    downloadFile(message.getText());
+                }
+            });
+            textFlow.getChildren().add(download);
+        }
+
         if(message.getSourceInfo().get(0).equals(currentUser)){
             textFlow.setStyle("-fx-background-color: rgb(254,220,235); -fx-border-radius: 5px;");
         }
@@ -387,7 +419,29 @@ public class ChannelController {
     }
 
     public void sendFileMessage(){
-        ;
+        Command cmd = null;
+            cmd = Command.upload(null,currentServer,currentChannel, true);
+        try {
+            out.writeObject(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ArrayList<String> senderInfo = new ArrayList<>(Arrays.asList(currentUser, currentChannel, currentServer));
+        FileUploader fileUploader = new FileUploader(fout, senderInfo);
+        fileUploader.start();
+    }
+
+    private void downloadFile(String filename) {
+        try {
+              Command  cmd = Command.download(currentServer, currentChannel,filename, true);
+
+            out.writeObject(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileDownloader fileDownloader = new FileDownloader(fin);
+        fileDownloader.start();
     }
 }
 
