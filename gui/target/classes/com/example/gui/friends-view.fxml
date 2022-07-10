@@ -93,7 +93,7 @@
                </rowConstraints>
                <children>
                   <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="51.0" text="inbox" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
-                  <Button mnemonicParsing="false" text="setting" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Button mnemonicParsing="false" onAction="#settingOnButton" text="setting" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                   <Label prefHeight="30.0" prefWidth="276.0" text="Friends">
                      <font>
                         <Font size="20.0" />

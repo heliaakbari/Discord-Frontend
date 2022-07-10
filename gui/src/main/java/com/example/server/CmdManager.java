@@ -23,7 +23,7 @@ public class CmdManager {
     private ServerSide serverSide;
     private static Statement stmt = null;
     private Connection con = null;
-    private static String filespath=null;
+    private final String filespath;
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss");
     private DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh-mm-ss");
 
@@ -338,7 +338,7 @@ public class CmdManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        ArrayList<UserShort> chatArrayGUI = stringToUserShort(chatsArray);
+        ArrayList<UserShort> chatArrayGUI = stringToUserShort(cmd.getUser(),chatsArray);
         return Data.directChats(cmd.getUser(),chatArrayGUI);
     }
 
@@ -781,7 +781,7 @@ public class CmdManager {
             s.printStackTrace();
         }
         HashMap<UserShort,Boolean> reqs = new HashMap<>();
-        ArrayList<UserShort> requestGUI = stringToUserShort(requesters);
+        ArrayList<UserShort> requestGUI = stringToUserShort(cmd.getUser(),requesters);
         for(UserShort req : requestGUI){
             reqs.put(req,true);
         }
@@ -794,7 +794,7 @@ public class CmdManager {
         } catch (SQLException s) {
             s.printStackTrace();
         }
-        requestGUI = stringToUserShort(requesters);
+        requestGUI = stringToUserShort(cmd.getUser(),requesters);
         for(UserShort req : requestGUI){
             reqs.put(req,false);
         }
@@ -819,7 +819,7 @@ public class CmdManager {
         } catch (SQLException s) {
             s.printStackTrace();
         }
-        Data dt = Data.friends(cmd.getUser(), stringToUserShort(friends));
+        Data dt = Data.friends(cmd.getUser(), stringToUserShort(cmd.getUser(),friends));
         return dt;
     }
 
@@ -835,7 +835,7 @@ public class CmdManager {
         } catch (SQLException s) {
             s.printStackTrace();
         }
-        return Data.blockList(cmd.getUser(), stringToUserShort(blockeds));
+        return Data.blockList(cmd.getUser(), stringToUserShort(cmd.getUser(),blockeds));
     }
 
     public Data getBlockedBy(Command cmd) {
@@ -865,7 +865,7 @@ public class CmdManager {
         } catch (SQLException s) {
             s.printStackTrace();
         }
-        ArrayList<UserShort> guiMembers = stringToUserShort(members);
+        ArrayList<UserShort> guiMembers = stringToUserShort(cmd.getUser(),members);
         return Data.channelMembers(cmd.getUser(), cmd.getServer(), cmd.getChannel(), guiMembers);
     }
 
@@ -885,12 +885,23 @@ public class CmdManager {
         return Data.serverMembers(cmd.getUser(), cmd.getServer(), members);
     }
 
-    public ArrayList<UserShort> stringToUserShort(ArrayList<String> people) {
+    public ArrayList<UserShort> stringToUserShort(String user,ArrayList<String> people) {
         ArrayList<UserShort> userShorts = new ArrayList<>();
+        ResultSet rs = null;
+        ArrayList<String> blockedBys = new ArrayList<>();
+        try {
+            rs = stmt.executeQuery(String.format("select sender as S from relationships where status='%s' and receiver='%s'", Relationship.Block.toString(),user));
+
+            while (rs.next()) {
+                blockedBys.add(rs.getString("S"));
+            }
+        } catch (SQLException s) {
+            s.printStackTrace();
+        }
         Status status;
         for (String username : people) {
             try {
-                ResultSet rs = stmt.executeQuery(String.format("select PICTURELINK,STATUS from users where username='%s'", username));
+                rs = stmt.executeQuery(String.format("select PICTURELINK,STATUS from users where username='%s'", username));
                 rs.next();
                 UserShort userShort;
                 if (!rs.getString("STATUS").equals("NULL")) {
@@ -906,7 +917,12 @@ public class CmdManager {
                 }
                 byte[] bytes = new byte[0];
                 try {
-                    bytes = readAllBytes(Paths.get(rs.getString("PICTURELINK")));
+                    if(!blockedBys.contains(username)) {
+                        bytes = readAllBytes(Paths.get(rs.getString("PICTURELINK")));
+                    }
+                    else{
+                        bytes = readAllBytes(Paths.get(filespath+"\\default.png"));
+                    }
                 } catch (NoSuchFileException e) {
                     System.out.println("the file with path doesnt exists");
                 } catch (IOException e) {
@@ -918,6 +934,7 @@ public class CmdManager {
                 s.printStackTrace();
             }
         }
+
         return userShorts;
     }
 
@@ -1032,7 +1049,7 @@ public class CmdManager {
         }
         ArrayList<String> userarr = new ArrayList<>();
         userarr.add(username);
-        return Data.userInfo(username, user,stringToUserShort(userarr).get(0));
+        return Data.userInfo(username, user,stringToUserShort(cmd.getUser(),userarr).get(0));
     }
 
     public void pinMsg(Command cmd) {
