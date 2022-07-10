@@ -417,6 +417,7 @@ public class CmdManager {
             bytesToFile(image, address);
         } catch (IOException e) {
             FeedBack.say("could not save profile photo of " + user);
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -478,8 +479,8 @@ public class CmdManager {
         User user = (User) cmd.getPrimary();
         byte[] image = user.getProfilePhoto();
         String format = user.getProfilePhotoFormat();
-        String address = new String("");
-        if(image==null) {
+        String address = "";
+        if(image != null) {
             address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
         }
 
@@ -495,7 +496,7 @@ public class CmdManager {
             return Data.checkSignUp(((User) cmd.getPrimary()).getUsername(), false);
         }
         try {
-            if(image== null){
+            if( image == null){
                 try {
                     image = readAllBytes(Paths.get("C:\\DiscordFiles\\default.png"));
                     user.setProfilePhotoFormat("png");
@@ -512,6 +513,7 @@ public class CmdManager {
 
         } catch (IOException e) {
             FeedBack.say("could not save profile photo of " + user.getUsername());
+            e.printStackTrace();
             return Data.checkSignUp(((User) cmd.getPrimary()).getUsername(), false);
         } catch (Exception e) {
             e.printStackTrace();
