@@ -417,7 +417,6 @@ public class CmdManager {
             bytesToFile(image, address);
         } catch (IOException e) {
             FeedBack.say("could not save profile photo of " + user);
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -508,12 +507,11 @@ public class CmdManager {
                 address = filespath + "\\profilePhoto_" + user.getUsername() + ".png";
                 user.setProfilePhotoFormat("png");
             }
-            bytesToFile(image, address);
 
+            bytesToFile(image, address);
 
         } catch (IOException e) {
             FeedBack.say("could not save profile photo of " + user.getUsername());
-            e.printStackTrace();
             return Data.checkSignUp(((User) cmd.getPrimary()).getUsername(), false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -565,10 +563,8 @@ public class CmdManager {
         }
         String statement = new String();
         try {
-            System.out.println("receiver: " + receiver + " sender: " + sender);
             ResultSet r = stmt.executeQuery("SELECT count(*) as C1 from users where username='" + receiver + "'");
             r.next();
-            System.out.println((int) r.getInt("C1"));
             System.out.println("receiver: " + receiver + " sender: " + sender);
             if ((int) r.getInt("C1") <= 0) {
                 return Data.checkNewRelation(cmd.getUser(),false);
@@ -792,7 +788,6 @@ public class CmdManager {
         requesters = new ArrayList<>();
         try {
             rs = stmt.executeQuery(String.format("select receiver as S from relationships where status='%s' and sender='%s'", Relationship.Friend_pending.toString(), cmd.getUser()));
-
             while (rs.next()) {
                 requesters.add(rs.getString("S"));
             }

@@ -61,6 +61,7 @@ public class ClientHandler extends Thread {
         if (!cmd.getKeyword().equals("download") && !cmd.getKeyword().equals("upload") && !cmd.getKeyword().equals("newPvMsg") && !cmd.getKeyword().equals("newChannelMsg")) {
             try {
                 out.writeObject(dt);
+                System.out.println("send a data :"+dt.getKeyword());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -117,6 +118,7 @@ public class ClientHandler extends Thread {
     public void sendInstantMessage(Data dt) {
         try {
             out.writeObject(dt);
+            System.out.println("sent a data : "+dt.getKeyword());
         } catch (IOException e) {
             e.printStackTrace();
         }
