@@ -321,10 +321,27 @@ public class CmdManager {
     }
 
     public Data getDirectChats(Command cmd) {
+        ResultSet rs = null;
+        ArrayList<String> friends = new ArrayList<>();
+        try {
+            rs = stmt.executeQuery(String.format("select sender as S from relationships where status='%s' and receiver='%s'", Relationship.Friend.toString(), cmd.getUser()));
+
+            while (rs.next()) {
+                friends.add(rs.getString("S"));
+            }
+
+            rs = stmt.executeQuery(String.format("select receiver as S from relationships where status='%s' and sender='%s'", Relationship.Friend.toString(), cmd.getUser()));
+
+            while (rs.next()) {
+                friends.add(rs.getString("S"));
+            }
+        } catch (SQLException s) {
+            s.printStackTrace();
+        }
         HashSet<String> chats = new HashSet<>();
         ArrayList<String> chatsArray = new ArrayList<>();
         try {
-            ResultSet rs = stmt.executeQuery(String.format("select distinct sender as S from pv_messages where receiver='%s'", cmd.getUser()));
+            rs = stmt.executeQuery(String.format("select distinct sender as S from pv_messages where receiver='%s'", cmd.getUser()));
             while (rs.next()) {
                 chats.add(rs.getString("S"));
             }
@@ -334,7 +351,9 @@ public class CmdManager {
             }
 
             for (String ch : chats) {
-                chatsArray.add(ch);
+                if(friends.contains(ch)){
+                    chatsArray.add(ch);
+                }
             }
 
         } catch (SQLException e) {
@@ -890,16 +909,7 @@ public class CmdManager {
     public ArrayList<UserShort> stringToUserShort(String user,ArrayList<String> people) {
         ArrayList<UserShort> userShorts = new ArrayList<>();
         ResultSet rs = null;
-        ArrayList<String> blockedBys = new ArrayList<>();
-        try {
-            rs = stmt.executeQuery(String.format("select sender as S from relationships where status='%s' and receiver='%s'", Relationship.Block.toString(),user));
-
-            while (rs.next()) {
-                blockedBys.add(rs.getString("S"));
-            }
-        } catch (SQLException s) {
-            s.printStackTrace();
-        }
+        ArrayList<String> blockedBys = (ArrayList<String>)Command.getBlockedBy(user).getPrimary();
         Status status;
         for (String username : people) {
             try {
@@ -1055,6 +1065,7 @@ public class CmdManager {
     }
 
     public void pinMsg(Command cmd) {
+        System.out.println("pinned! started");
         Message message = (Message) cmd.getPrimary();
         try {
             if (message.getSourceInfo().size() == 3) {
@@ -1063,6 +1074,7 @@ public class CmdManager {
                 preparedStatement.setTimestamp(1, Timestamp.valueOf(message.getDateTime()));
                 preparedStatement.setString(2, message.getSourceInfo().get(0));
                 preparedStatement.executeUpdate();
+                System.out.println("pinned! finished");
             }
         } catch (SQLException e) {
             e.printStackTrace();

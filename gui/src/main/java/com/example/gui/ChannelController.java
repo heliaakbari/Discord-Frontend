@@ -9,11 +9,13 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
@@ -40,6 +42,7 @@ public class ChannelController {
     protected ObjectInputStream in;
     protected ObjectOutputStream fout;
     protected ObjectInputStream fin;
+    protected Role currentRole = null;
     protected Boolean isMessageReader=false;
     @FXML
     protected Label channel_name;
@@ -227,15 +230,70 @@ public class ChannelController {
                     break;
                 }
             }
-            TextFlow textFlow = new TextFlow(new Text(message.toString()));
-
+            TextFlow textFlow = new TextFlow(new Text(message.getSourceInfo().get(0)+" :\n"+message.getText()+"\n"));
+            ToggleGroup group = new ToggleGroup();
+            RadioButton like = new RadioButton("like: "+message.getLikes()+"          ");
+            RadioButton dislike = new RadioButton("dislike: "+message.getDislikes()+"          ");
+            RadioButton laugh = new RadioButton("laugh: "+message.getLaughs()+"           ");
+            like.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Command cmd = Command.newReaction(currentUser,message,"like");
+                    try {
+                        out.writeObject(cmd);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            dislike.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Command cmd = Command.newReaction(currentUser,message,"dislike");
+                    try {
+                        out.writeObject(cmd);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            laugh.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Command cmd = Command.newReaction(currentUser,message,"laugh");
+                    try {
+                        out.writeObject(cmd);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            group.getToggles().addAll(like,dislike,laugh);
+            textFlow.getChildren().addAll(like,dislike,laugh);
+            if(currentRole.getValues().charAt(7)=='1'){
+                RadioButton pin = new RadioButton("pin");
+                pin.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        Command cmd = Command.pinMsg(currentUser,message);
+                        try {
+                            out.writeObject(cmd);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                textFlow.getChildren().add(pin);
+            }
             if(message.getSourceInfo().get(0).equals(currentUser)){
-                textFlow.setStyle("-fx-background-color: #665555");
+                textFlow.setStyle("-fx-background-color: rgb(254,220,235); -fx-border-radius: 5px; ");
             }
             else{
-                textFlow.setStyle("-fx-background-color: #555566");
+                textFlow.setStyle("-fx-background-color: rgb(176,223,255); -fx-border-radius: 5px;");
             }
             textFlow.setPrefWidth(430);
+            textFlow.setPadding(new Insets(5));
+            textFlow.setBorder(Border.stroke(Color.BLACK));
             messages_grid.addColumn(1,textFlow);
         }
         messages_scroll.setVvalue(1.0);
@@ -255,20 +313,75 @@ public class ChannelController {
                 break;
             }
         }
-        TextFlow textFlow = new TextFlow(new Text(message.toString()));
-
+        TextFlow textFlow = new TextFlow(new Text(message.getSourceInfo().get(0)+" :\n"+message.getText()+"\n"));
+        ToggleGroup group = new ToggleGroup();
+        RadioButton like = new RadioButton("like: "+message.getLikes()+"          ");
+        RadioButton dislike = new RadioButton("dislike: "+message.getDislikes()+"          ");
+        RadioButton laugh = new RadioButton("laugh: "+message.getLaughs()+"          ");
+        like.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Command cmd = Command.newReaction(currentUser,message,"like");
+                try {
+                    out.writeObject(cmd);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        dislike.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Command cmd = Command.newReaction(currentUser,message,"dislike");
+                try {
+                    out.writeObject(cmd);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        laugh.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Command cmd = Command.newReaction(currentUser,message,"laugh");
+                try {
+                    out.writeObject(cmd);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        group.getToggles().addAll(like,dislike,laugh);
+        textFlow.getChildren().addAll(like,dislike,laugh);
+        if(currentRole.getValues().charAt(7)=='1'){
+            RadioButton pin = new RadioButton("pin");
+            pin.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Command cmd = Command.pinMsg(currentUser,message);
+                    try {
+                        out.writeObject(cmd);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            textFlow.getChildren().add(pin);
+        }
         if(message.getSourceInfo().get(0).equals(currentUser)){
-            textFlow.setStyle("-fx-background-color: #665555");
+            textFlow.setStyle("-fx-background-color: rgb(254,220,235); -fx-border-radius: 5px;");
         }
-        else{
-            textFlow.setStyle("-fx-background-color: #555566");
+        else {
+            textFlow.setStyle("-fx-background-color: rgb(176,223,255); -fx-border-radius: 5px;");
         }
+        textFlow.setPadding(new Insets(5));
+        textFlow.setBorder(Border.stroke(Color.BLACK));
         textFlow.setPrefWidth(430);
-        messages_grid.addColumn(1,textFlow);
+        messages_grid.addColumn(1, textFlow);
         messages_scroll.setVvalue(1.0);
     }
 
-    public void sendTextMessage(Event event){
+    public void sendTextMessage(){
         new SendText(this,message_textField.getText()).restart();
         message_textField.clear();
     }
@@ -331,6 +444,11 @@ class GoToServer extends Service<Void>{
                 dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword());
                 cc.messages = (ArrayList<Message>) dt.getPrimary();
+
+                cc.out.writeObject(Command.getRole(cc.currentUser,servername));
+                dt =(Data) cc.in.readObject();
+                System.out.println(dt.getKeyword());
+                cc.currentRole = (Role) dt.getPrimary();
                 cc.out.writeObject(Command.getChannelMembers(cc.currentUser,cc.currentServer,cc.currentChannel));
                 dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword());
@@ -350,7 +468,9 @@ class GoToServer extends Service<Void>{
         cc.channel_name.setText("general");
         cc.addMembers();
         cc.addMessages();
-        new MessageReader(cc).start();
+        MessageReader mr = new MessageReader(cc);
+        mr.setDaemon(true);
+        mr.start();
     }
 }
 
@@ -374,6 +494,11 @@ class GoToChannel extends Service<Void>{
                 Data dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword());
                 cc.messages = (ArrayList<Message>) dt.getPrimary();
+                cc.out.writeObject(Command.getRole(cc.currentUser,cc.currentServer));
+                dt =(Data) cc.in.readObject();
+                System.out.println(dt.getKeyword());
+                cc.currentRole = (Role) dt.getPrimary();
+
                 cc.out.writeObject(Command.getChannelMembers(cc.currentUser,cc.currentServer,cc.currentChannel));
                 dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword());
@@ -388,7 +513,9 @@ class GoToChannel extends Service<Void>{
                 cc.channel_name.setText(channelName);
                 cc.addMembers();
                 cc.addMessages();
-                new MessageReader(cc).start();
+                MessageReader mr = new MessageReader(cc);
+                mr.setDaemon(true);
+                mr.start();
             }
         };
 
