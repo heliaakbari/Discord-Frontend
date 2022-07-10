@@ -45,6 +45,10 @@ public class User implements Serializable {
         return phoneNum;
     }
 
+    public void setProfilePhotoFormat(String profilePhotoFormat) {
+        this.profilePhotoFormat = profilePhotoFormat;
+    }
+
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
     }
