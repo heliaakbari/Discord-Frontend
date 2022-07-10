@@ -193,6 +193,20 @@ public class FriendsController {
         }
 
     }
+
+    @FXML
+    public void settingOnButton(Event e){
+//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("setting-view.fxml"));
+//        fxmlLoader.setController(new SettingController(out, in, , ));
+//        stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+//        try {
+//            scene = new Scene(fxmlLoader.load(), 1000, 600);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        stage.setScene(scene);
+//        stage.show();
+    }
 }
 
 class AddAllFriends extends Service<Void> {
