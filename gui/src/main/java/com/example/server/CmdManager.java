@@ -505,9 +505,9 @@ public class CmdManager {
                     e.printStackTrace();
                 }
                 address = filespath + "\\profilePhoto_" + user.getUsername() + ".png";
-
+                user.setProfilePhotoFormat("png");
             }
-            bytesToFile(user.getProfilePhoto(), address);
+            bytesToFile(image, address);
 
 
         } catch (IOException e) {
