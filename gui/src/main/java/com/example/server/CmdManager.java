@@ -781,7 +781,26 @@ public class CmdManager {
         } catch (SQLException s) {
             s.printStackTrace();
         }
-        return Data.allFriendRequests(cmd.getUser(), requesters);
+        HashMap<UserShort,Boolean> reqs = new HashMap<>();
+        ArrayList<UserShort> requestGUI = stringToUserShort(requesters);
+        for(UserShort req : requestGUI){
+            reqs.put(req,true);
+        }
+        requesters = new ArrayList<>();
+        try {
+            rs = stmt.executeQuery(String.format("select receiver as S from relationships where status='%s' and sender='%s'", Relationship.Friend_pending.toString(), cmd.getUser()));
+
+            while (rs.next()) {
+                requesters.add(rs.getString("S"));
+            }
+        } catch (SQLException s) {
+            s.printStackTrace();
+        }
+        requestGUI = stringToUserShort(requesters);
+        for(UserShort req : requestGUI){
+            reqs.put(req,false);
+        }
+        return Data.allFriendRequests(cmd.getUser(),reqs);
     }
 
     public Data friends(Command cmd) {
@@ -802,7 +821,7 @@ public class CmdManager {
         } catch (SQLException s) {
             s.printStackTrace();
         }
-        Data dt = Data.friends(cmd.getUser(), friends);
+        Data dt = Data.friends(cmd.getUser(), stringToUserShort(friends));
         return dt;
     }
 
@@ -818,7 +837,7 @@ public class CmdManager {
         } catch (SQLException s) {
             s.printStackTrace();
         }
-        return Data.blockList(cmd.getUser(), blockeds);
+        return Data.blockList(cmd.getUser(), stringToUserShort(blockeds));
     }
 
     public Data getBlockedBy(Command cmd) {
@@ -877,7 +896,7 @@ public class CmdManager {
                 rs.next();
                 UserShort userShort;
                 if (!rs.getString("STATUS").equals("NULL")) {
-                    status = Status.valueOf(rs.getString("STATUS"));
+                    status = Status.valueOf(rs.getString("STATUS").toLowerCase());
                 }
                 else{
                     if (serverSide.getClientHandlers().containsKey(username)){

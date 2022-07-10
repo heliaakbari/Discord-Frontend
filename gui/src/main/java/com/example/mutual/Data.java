@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Data  implements Serializable {
 
-    private static final long serialVersionUID = 757982467897459L;
+    private static final long serialVersionUID = 757982467807459L;
     private String keyword;
     private String user;
     private String server;
@@ -192,7 +192,7 @@ public class Data  implements Serializable {
      * @param allRequests
      * @return
      */
-    public static @NotNull Data allFriendRequests(String user, ArrayList<String> allRequests){
+    public static @NotNull Data allFriendRequests(String user, HashMap<UserShort,Boolean> allRequests){
         Data data = new Data("allFriendRequests");
         data.user = user;
         data.primary = allRequests;
@@ -205,7 +205,7 @@ public class Data  implements Serializable {
      * @param friends
      * @return
      */
-    public static @NotNull Data friends(String user, ArrayList<String> friends){
+    public static @NotNull Data friends(String user, ArrayList<UserShort> friends){
         Data data = new Data("friends");
         data.user = user;
         data.primary = friends;
@@ -236,7 +236,7 @@ public class Data  implements Serializable {
      * @param peopleTheyBlocked
      * @return
      */
-    public static @NotNull Data blockList(String user, ArrayList<String> peopleTheyBlocked){
+    public static @NotNull Data blockList(String user, ArrayList<UserShort> peopleTheyBlocked){
         Data data = new Data("blockList");
         data.user = user;
         data.primary = peopleTheyBlocked;
