@@ -7,21 +7,21 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane prefHeight="443.0" prefWidth="606.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="changeProfileButton" layoutX="85.0" layoutY="249.0" mnemonicParsing="false" onAction="#changeProfileOnButton" text="change profile" />
-      <TextField fx:id="newUsernameField" layoutX="16.0" layoutY="343.0" prefHeight="44.0" prefWidth="322.0" />
-      <Button fx:id="changeUsernameButton" layoutX="379.0" layoutY="347.0" mnemonicParsing="false" onAction="#changeUsernameOnButton" prefHeight="37.0" prefWidth="124.0" text="change username" />
+      <TextField fx:id="newUsernameField" layoutX="16.0" layoutY="325.0" prefHeight="44.0" prefWidth="322.0" />
+      <Button fx:id="changeUsernameButton" layoutX="359.0" layoutY="329.0" mnemonicParsing="false" onAction="#changeUsernameOnButton" prefHeight="37.0" prefWidth="124.0" text="change username" />
       <Text layoutX="280.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Usrename" />
       <Text layoutX="280.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
       <Text layoutX="280.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="e-mail" />
       <Text layoutX="280.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="phone number" />
-      <Text fx:id="currentUsername" layoutX="441.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <Text fx:id="password" layoutX="441.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="22.13671875" />
-      <Text fx:id="email" layoutX="441.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
-      <Text fx:id="phoneNum" layoutX="441.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Text fx:id="currentUsername" layoutX="344.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="238.0" />
+      <Text fx:id="password" layoutX="344.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="238.0" />
+      <Text fx:id="email" layoutX="344.0" layoutY="143.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="238.0" />
+      <Text fx:id="phoneNum" layoutX="372.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="222.0" />
       <Pane fx:id="imageHolder" layoutX="31.0" layoutY="30.0" prefHeight="201.0" prefWidth="222.0" />
-      <Text fx:id="usernameWarning" layoutX="19.0" layoutY="406.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="316.0" />
+      <Text fx:id="usernameWarning" layoutX="19.0" layoutY="389.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="316.0" />
       <Text fx:id="imageWarning" layoutX="69.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="124.0" />
    </children>
 </AnchorPane>

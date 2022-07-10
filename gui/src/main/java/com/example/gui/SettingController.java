@@ -53,7 +53,7 @@ public class SettingController implements Initializable {
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle){
-        imageHolder.getChildren().add(userShort.profileStatus(60.0));
+        imageHolder.getChildren().add(userShort.profileStatus(100.0));
         currentUsername.setText(currentUser.getUsername());
         password.setText(currentUser.getPassword());
         email.setText(currentUser.getEmail());
@@ -76,7 +76,9 @@ public class SettingController implements Initializable {
         } catch (IOException ex) {
             System.out.println("error while reading bytes");
             ex.printStackTrace();
+            return;
         }
+
         if (photo.length > 100000){
             imageWarning.setText("your image size is more than 100kB");
             photo = null;
@@ -87,6 +89,8 @@ public class SettingController implements Initializable {
             photoFormat = splitName[splitName.length - 1];
         }
         try {
+            System.out.println(currentUser.getUsername());
+            System.out.println(photo.length);
             out.writeObject(Command.changeProfilePhoto(currentUser.getUsername(), photo, photoFormat));
             in.readObject();
         } catch (IOException | ClassNotFoundException ex){
@@ -94,7 +98,7 @@ public class SettingController implements Initializable {
             System.out.println("error while transferring cmd and data");
         }
         imageHolder.getChildren().remove(0);
-        imageHolder.getChildren().add(userShort.profileStatus(60.0));
+        imageHolder.getChildren().add(userShort.profileStatus(100.0));
 
     }
 
@@ -105,7 +109,12 @@ public class SettingController implements Initializable {
             Data data = (Data) in.readObject();
             if (data.getKeyword().equals("checkChangeUsername") && (boolean) data.getPrimary()){
                 usernameWarning.setText("username changed successfully!");
+                currentUsername.setText(newUsernameField.getText());
+                currentUser.setUsername(newUsernameField.getText());
+                userShort.setUsername(newUsernameField.getText());
                 newUsernameField.setText(null);
+
+
             }
             else {
                 usernameWarning.setText("this username is already taken");

@@ -197,16 +197,24 @@ public class FriendsController {
 
     @FXML
     public void settingOnButton(Event e){
-//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("setting-view.fxml"));
-//        fxmlLoader.setController(new SettingController(out, in, , ));
-//        stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
-//        try {
-//            scene = new Scene(fxmlLoader.load(), 1000, 600);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        stage.setScene(scene);
-//        stage.show();
+        Data data = null;
+        try {
+            out.writeObject(Command.getUser(currentUser));
+            data = (Data) in.readObject();
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("setting-view.fxml"));
+        fxmlLoader.setController(new SettingController(out, in, (User) data.getPrimary(), (UserShort) data.getSecondary()));
+        Stage stage = new Stage();
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 600, 400);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
     }
 }
 

@@ -177,6 +177,7 @@ public class SignupController implements Initializable {
             photo = readAllBytes(Paths.get(path));
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         if(photo.length > 100000){
             image_warning.setText("your image size is more than 100kB");
