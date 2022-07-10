@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.example.mutual.*;
+import javafx.stage.WindowEvent;
 
 public class FriendsController {
     protected ObjectOutputStream out;
@@ -205,9 +206,13 @@ public class FriendsController {
         } catch (IOException | ClassNotFoundException ex){
             ex.printStackTrace();
         }
+        Stage stage = (Stage)(((Node) e.getSource()).getScene().getWindow());
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("setting-view.fxml"));
-        fxmlLoader.setController(new SettingController(out, in, (User) data.getPrimary(), (UserShort) data.getSecondary()));
-        Stage stage = new Stage();
+        fxmlLoader.setController(new SettingController(out, in, fout,fin,(User) data.getPrimary(), (UserShort) data.getSecondary(),stage));
+        stage.setHeight(450);
+        stage.setWidth(600);
+        stage.centerOnScreen();
+        stage.setResizable(false);
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 600, 400);
