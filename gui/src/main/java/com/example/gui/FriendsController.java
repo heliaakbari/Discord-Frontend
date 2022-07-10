@@ -1,5 +1,6 @@
 package com.example.gui;
 
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -148,7 +149,7 @@ public class FriendsController {
             return;
         }
         if (!firsttime){
-            new AddAllFriends(this).restart();
+            new AddAllFriends(this).start();
         }
         firsttime= false;
     }
@@ -209,7 +210,7 @@ public class FriendsController {
     }
 }
 
-class AddAllFriends extends Service<Void> {
+class AddAllFriends extends Thread {
     FriendsController fc;
 
     public AddAllFriends(FriendsController fc) {
@@ -217,47 +218,55 @@ class AddAllFriends extends Service<Void> {
     }
 
     @Override
-    protected Task<Void> createTask() {
-        return new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                Command cmd = Command.getFriends(fc.currentUser);
-                fc.out.writeObject(cmd);
-                Data dt = (Data) fc.in.readObject();
-                System.out.println(dt.getKeyword());
-                fc.allFriends = (ArrayList<UserShort>) dt.getPrimary();
-                return null;
+    public void run() {
+        Command cmd = Command.getFriends(fc.currentUser);
+        try {
+            fc.out.writeObject(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Data dt = null;
+        try {
+            dt = (Data) fc.in.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println(dt.getKeyword());
+        fc.allFriends = (ArrayList<UserShort>) dt.getPrimary();
+
+        Platform.runLater(()->{
+            int rowNum = 1;
+            fc.all_grid.getChildren().clear();
+            fc.all_grid.setVgap(5);
+            for (UserShort s : fc.allFriends) {
+                fc.all_grid.addColumn(1, s.profileStatus(25.0));
+                fc.all_grid.addColumn(2, new Text(s.getUsername()));
+                Button block = new Button("block");
+                fc.blockButtons.put(rowNum + s.getUsername(), block);
+                fc.all_grid.addColumn(3, block);
+                rowNum++;
             }
-        };
 
+            for (Map.Entry<String, Button> entry: fc.blockButtons.entrySet()) {
+                int row = entry.getKey().charAt(0) - 48;
+                String otherUser = entry.getKey().substring(1);
+                entry.getValue().setOnAction((ActionEvent e) -> {
+                    try {
+                        fc.out.writeObject(Command.newRelation(Relationship.Block, fc.currentUser, otherUser));
+                        fc.in.readObject();
+                        new AddAllFriends(fc).start();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
+        });
     }
 
-    @Override
-    protected void succeeded() {
-        int rowNum = 1;
-        fc.all_grid.getChildren().clear();
-        fc.all_grid.setVgap(5);
-        for (UserShort s : fc.allFriends) {
-            fc.all_grid.addColumn(1, s.profileStatus(25.0));
-            fc.all_grid.addColumn(2, new Text(s.getUsername()));
-            Button block = new Button("block");
-            fc.blockButtons.put(rowNum + s.getUsername(), block);
-            fc.all_grid.addColumn(3, block);
-            rowNum++;
-        }
-
-        for (Map.Entry<String, Button> entry: fc.blockButtons.entrySet()) {
-            int row = entry.getKey().charAt(0) - 48;
-            String otherUser = entry.getKey().substring(1);
-            entry.getValue().setOnAction((ActionEvent e) -> {
-                try {
-                    fc.out.writeObject(Command.newRelation(Relationship.Block, fc.currentUser, otherUser));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            });
-        }
-    }
 }
 
 class AddPending extends Service<Void> {
@@ -325,6 +334,12 @@ class AddPending extends Service<Void> {
             entry.getValue().setOnAction((ActionEvent e) -> {
                 try {
                     fc.out.writeObject(Command.newRelation(Relationship.Friend, fc.currentUser, otherUser));
+                    try {
+                        fc.in.readObject();
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                    new AddPending(fc).restart();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -338,6 +353,12 @@ class AddPending extends Service<Void> {
             entry.getValue().setOnAction((ActionEvent e) -> {
                 try {
                     fc.out.writeObject(Command.newRelation(Relationship.Rejected, fc.currentUser, otherUser));
+                    try {
+                        fc.in.readObject();
+                        new AddPending(fc);
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -350,6 +371,12 @@ class AddPending extends Service<Void> {
             entry.getValue().setOnAction((ActionEvent e) -> {
                 try {
                     fc.out.writeObject(Command.newRelation(Relationship.Rejected, fc.currentUser, otherUser));
+                    try {
+                        fc.in.readObject();
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    }
+                    new AddPending(fc).restart();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -439,7 +466,11 @@ class AddBlockeds extends Service<Void> {
             entry.getValue().setOnAction((ActionEvent e) -> {
                 try {
                     fc.out.writeObject(Command.newRelation(Relationship.Rejected, fc.currentUser, otherUser));
+                    fc.in.readObject();
+                    new AddBlockeds(fc).restart();
                 } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                 }
             });

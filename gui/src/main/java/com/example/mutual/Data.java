@@ -354,9 +354,10 @@ public class Data  implements Serializable {
      * @param user
      * @return
      */
-    public static @NotNull Data userInfo(String username, User user){
+    public static @NotNull Data userInfo(String username, User user,UserShort userShort){
         Data data = new Data ("userInfo");
         data.user= username;
+        data.secondary = userShort;
         data.primary = user;
         return data;
     }
