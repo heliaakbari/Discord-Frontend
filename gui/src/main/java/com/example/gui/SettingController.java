@@ -32,17 +32,25 @@ public class SettingController implements Initializable {
     @FXML
     private Text currentUsername;
     @FXML
-    private Text password;
+    private Text currentPassword;
     @FXML
-    private Text email;
+    private Text currentEmail;
     @FXML
-    private Text phoneNum;
+    private Text currentPhoneNum;
     @FXML
-    private TextField newUsernameField;
+    private TextField newUsername;
+    @FXML
+    private TextField newPassword;
+    @FXML
+    private TextField newEmail;
+    @FXML
+    private TextField newPhoneNum;
     @FXML
     private Text usernameWarning;
     @FXML
     private Text imageWarning;
+    @FXML
+    private Text passwordWarning;
 
     public SettingController(ObjectOutputStream out, ObjectInputStream in, User currentUser, UserShort userShort) {
         this.out = out;
@@ -55,9 +63,9 @@ public class SettingController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle){
         imageHolder.getChildren().add(userShort.profileStatus(100.0));
         currentUsername.setText(currentUser.getUsername());
-        password.setText(currentUser.getPassword());
-        email.setText(currentUser.getEmail());
-        phoneNum.setText(currentUser.getPhoneNum());
+        currentPassword.setText(currentUser.getPassword());
+        currentEmail.setText(currentUser.getEmail());
+        currentPhoneNum.setText(currentUser.getPhoneNum());
     }
 
     @FXML
@@ -105,14 +113,14 @@ public class SettingController implements Initializable {
     @FXML
     public void changeUsernameOnButton(Event e){
         try {
-            out.writeObject(Command.changeUsername(currentUser.getUsername(), newUsernameField.getText()));
+            out.writeObject(Command.changeUsername(currentUser.getUsername(), newUsername.getText()));
             Data data = (Data) in.readObject();
             if (data.getKeyword().equals("checkChangeUsername") && (boolean) data.getPrimary()){
                 usernameWarning.setText("username changed successfully!");
-                currentUsername.setText(newUsernameField.getText());
-                currentUser.setUsername(newUsernameField.getText());
-                userShort.setUsername(newUsernameField.getText());
-                newUsernameField.setText(null);
+                currentUsername.setText(newUsername.getText());
+                currentUser.setUsername(newUsername.getText());
+                userShort.setUsername(newUsername.getText());
+                newUsername.setText(null);
 
 
             }
@@ -122,6 +130,23 @@ public class SettingController implements Initializable {
         } catch (IOException | ClassNotFoundException ex){
             ex.printStackTrace();
         }
+
+    }
+
+    @FXML
+    public void changePasswordOnButton(Event e){
+
+    }
+    @FXML
+    public void changeEmailOnButton(Event e){
+
+    }
+    @FXML
+    public void changePhoneNumOnButton(Event e){
+
+    }
+    @FXML
+    public void editButtonClicked(Event e){
 
     }
 }
