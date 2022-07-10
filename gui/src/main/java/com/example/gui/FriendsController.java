@@ -141,7 +141,7 @@ public class FriendsController {
 
     }
 
-    public void showAllList(Event e) {
+    public void showalllist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
             return;
@@ -149,7 +149,7 @@ public class FriendsController {
         new AddAllFriends(this).restart();
     }
 
-    public void showBlocklist(Event e) {
+    public void showblocklist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
             return;
@@ -157,7 +157,7 @@ public class FriendsController {
         new AddBlockeds(this).restart();
     }
 
-    public void showOnlineList(Event e) {
+    public void showonlinelist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
             return;
@@ -165,7 +165,7 @@ public class FriendsController {
         new AddOnlineFriends(this).restart();
     }
 
-    public void showPendingList(Event e) {
+    public void showpendinglist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
             return;
@@ -216,11 +216,28 @@ class AddAllFriends extends Service<Void> {
 
     @Override
     protected void succeeded() {
+        int rowNum = 1;
         fc.all_grid.getChildren().clear();
         fc.all_grid.setVgap(5);
         for (UserShort s : fc.allFriends) {
             fc.all_grid.addColumn(1, s.profileStatus(25.0));
             fc.all_grid.addColumn(2, new Text(s.getUsername()));
+            Button block = new Button("block");
+            fc.blockButtons.put(rowNum + s.getUsername(), block);
+            fc.all_grid.addColumn(3, block);
+            rowNum++;
+        }
+
+        for (Map.Entry<String, Button> entry: fc.blockButtons.entrySet()) {
+            int row = entry.getKey().charAt(0) - 48;
+            String otherUser = entry.getKey().substring(1);
+            entry.getValue().setOnAction((ActionEvent e) -> {
+                try {
+                    fc.out.writeObject(Command.newRelation(Relationship.Block, fc.currentUser, otherUser));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
         }
     }
 }
@@ -386,13 +403,29 @@ class AddBlockeds extends Service<Void> {
 
     @Override
     protected void succeeded() {
+        int rowNum = 1;
         fc.block_grid.getChildren().clear();
         fc.block_grid.setVgap(5);
         for (UserShort s : fc.allblocks) {
             fc.block_grid.addColumn(1, s.profileStatus(25.0));
             fc.block_grid.addColumn(2, new Text(s.getUsername()));
-            fc.block_grid.addColumn(5, new Button("unblock"));
+            Button unblock = new Button("unblock");
+            fc.unblockButtons.put(rowNum + s.getUsername(), unblock);
+            fc.block_grid.addColumn(5,unblock);
+            rowNum++;
+        }
 
+        for (Map.Entry<String, Button> entry: fc.unblockButtons.entrySet()) {
+            int row = entry.getKey().charAt(0) - 48;
+            String otherUser = entry.getKey().substring(1);
+            entry.getValue().setOnAction((ActionEvent e) -> {
+                try {
+                    fc.out.writeObject(Command.newRelation(Relationship.Rejected, fc.currentUser, otherUser));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
+            // remove row
         }
     }
 }
