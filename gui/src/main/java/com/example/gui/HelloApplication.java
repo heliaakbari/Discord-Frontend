@@ -27,8 +27,6 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
         fxmlLoader.setController(new LoginController(in,out,fin,fout));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-        Image logo = new Image("D:\\IntelliJ Projects\\AP\\gui clone\\logo.png");
-        stage.getIcons().add(logo);
         stage.setTitle("Discord");
         stage.setResizable(false);
         stage.setScene(scene);
