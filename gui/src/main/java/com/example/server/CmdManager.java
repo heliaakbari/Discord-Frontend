@@ -179,7 +179,7 @@ public class CmdManager {
         String type =(String) cmd.getSecondary();
         String newInfo = (String) cmd.getPrimary();
         try {
-            stmt.executeUpdate(String.format("UPDATE users SET %s ='%s' WHERE username='%s')",type,newInfo, cmd.getUser()));
+            stmt.executeUpdate(String.format("UPDATE users SET %s ='%s' WHERE username='%s'",type,newInfo, cmd.getUser()));
         } catch (SQLException e) {
             FeedBack.say("could not update email/phone/status of " + cmd.getUser());
             e.printStackTrace();
@@ -439,14 +439,10 @@ public class CmdManager {
     }
 
     public void changeProfilePhoto(Command cmd) {
-        User user = (User) getUser(Command.getUser(cmd.getUser())).getPrimary();
         byte[] image = (byte[]) cmd.getPrimary();
         String format = (String) cmd.getSecondary();
 
-        String address = filespath + "\\profilePhoto_" + user.getUsername() + "." + format;
-        Path url = Paths.get(address);
-        File file = new File(address);
-        file.delete();
+        String address = filespath + "\\profilePhoto_" + cmd.getUser() + "." + format;
 
         try {
             bytesToFile(image, address);
@@ -457,7 +453,7 @@ public class CmdManager {
         }
 
         try {
-            stmt.executeUpdate(String.format("UPDATE users SET picturelink ='%s' WHERE username='%s')", url, cmd.getUser()));
+            stmt.executeUpdate(String.format("UPDATE users SET picturelink ='%s' WHERE username='%s'",address, cmd.getUser()));
         } catch (SQLException e) {
             FeedBack.say("could not update picture url of " + cmd.getUser());
         }

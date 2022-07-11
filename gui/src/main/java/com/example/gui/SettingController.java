@@ -115,6 +115,7 @@ public class SettingController {
         if (photo.length > 100000){
             imageWarning.setText("your image size is more than 100kB");
             photo = null;
+            return;
         }
         else {
             imageWarning.setText("");
@@ -123,7 +124,6 @@ public class SettingController {
         }
         try {
             System.out.println(currentUser.getUsername());
-            System.out.println(photo.length);
             out.writeObject(Command.changeProfilePhoto(currentUser.getUsername(), photo, photoFormat));
             in.readObject();
         } catch (IOException | ClassNotFoundException ex){
