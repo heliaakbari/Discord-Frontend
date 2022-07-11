@@ -182,15 +182,12 @@ public class SettingController {
             return;
         }
         try {
-            out.writeObject();
-            Data data = (Data) in.readObject();
-            if ((boolean) data.getPrimary()) {
-                passwordWarning.setText("password changed successfully");
-                currentPassword.setText(newPassword.getText());
-                currentUser.setPassword(newPassword.getText());
-                newPassword.setText(null);
-            }
-        } catch (IOException | ClassNotFoundException ex){
+            out.writeObject(Command.changeInfo(currentUser.getUsername(), "password", newPassword.getText()));
+            passwordWarning.setText("password changed successfully");
+            currentPassword.setText(newPassword.getText());
+            currentUser.setPassword(newPassword.getText());
+            newPassword.setText(null);
+        } catch (IOException ex){
             ex.printStackTrace();
         }
 
@@ -206,16 +203,12 @@ public class SettingController {
             return;
         }
         try{
-            out.writeObject();
-            Data data = (Data) in.readObject();
-            if ((boolean) data.getPrimary()){
-                emailWarning.setText("email changed successfully");
-                currentEmail.setText(newEmail.getText());
-                currentUser.setEmail(newEmail.getText());
-                newEmail.setText(null);
-
-            }
-        } catch (IOException | ClassNotFoundException ex){
+            out.writeObject(Command.changeInfo(currentUser.getUsername(), "email", newEmail.getText()));
+            emailWarning.setText("email changed successfully");
+            currentEmail.setText(newEmail.getText());
+            currentUser.setEmail(newEmail.getText());
+            newEmail.setText(null);
+        } catch (IOException ex){
             ex.printStackTrace();
         }
         newEmail.setVisible(false);
@@ -224,15 +217,11 @@ public class SettingController {
     @FXML
     public void changePhoneNumOnButton(Event e){
         try {;
-            out.writeObject();
-            Data data = (Data) in.readObject();
-            if ((boolean) data.getPrimary()){
-                currentPhoneNum.setText(newPhoneNum.getText());
-                currentUser.setPhoneNum(newPhoneNum.getText());
-                newPhoneNum.setText(null);
-            }
-
-        } catch (IOException | ClassNotFoundException ex){
+            out.writeObject(Command.changeInfo(currentUser.getUsername(), "phone", newPhoneNum.getText()));
+            currentPhoneNum.setText(newPhoneNum.getText());
+            currentUser.setPhoneNum(newPhoneNum.getText());
+            newPhoneNum.setText(null);
+        } catch (IOException ex){
             ex.printStackTrace();
         }
 
