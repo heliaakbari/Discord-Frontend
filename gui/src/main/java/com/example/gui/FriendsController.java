@@ -94,6 +94,23 @@ public class FriendsController {
             Node pic = user.profileStatus(25.0);
             directs_grid.addColumn(0, pic);
             Button name = new Button(user.getUsername());
+            name.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("pv-view.fxml"));
+                    PvController pvController = new PvController(in,out,fin,fout,currentUser,((Button)event.getSource()).getText());
+                    fxmlLoader.setController(pvController);
+                    Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+                   Scene scene = null;
+                    try {
+                        scene = new Scene(fxmlLoader.load(), 1000, 600);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    stage.setScene(scene);
+                    stage.show();
+                }
+            });
             name.setPrefSize(150,40);
             directs_grid.addColumn(1, name);
         }
@@ -204,7 +221,6 @@ public class FriendsController {
 
     }
 
-    @FXML
     public void settingOnButton(Event e){
         Data data = null;
         try {

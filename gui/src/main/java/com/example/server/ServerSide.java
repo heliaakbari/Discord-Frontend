@@ -223,6 +223,11 @@ public class ServerSide {
                     clientHandlers.get(receiver).sendInstantMessage(dt);
                 }
             }
+            if (activePvs.containsKey(cmd.getUser())) {
+                    Data dt = Data.newPvMsg(cmd.getUser(), (Message) cmd.getPrimary());
+                    clientHandlers.get(cmd.getUser()).sendInstantMessage(dt);
+
+            }
         }
     }
 
