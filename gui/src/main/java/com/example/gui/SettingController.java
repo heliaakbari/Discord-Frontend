@@ -122,8 +122,8 @@ public class SettingController {
         String fileNameAndType = dialog.getFile();
         String path = dialog.getDirectory() + "//" + dialog.getFile();
 
-        byte[] photo = null;
-        String photoFormat = null;
+        byte[] photo;
+        String photoFormat;
         try {
             photo = readAllBytes(Paths.get(path));
         } catch (IOException ex) {
@@ -151,7 +151,7 @@ public class SettingController {
             ex.printStackTrace();
             System.out.println("error while transferring cmd and data");
         }
-        imageHolder.getChildren().remove(0);
+        userShort.setBytes(photo);
         imageHolder.getChildren().add(userShort.profileStatus(100.0));
 
     }

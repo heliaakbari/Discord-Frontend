@@ -238,7 +238,7 @@
                                           <Font size="16.0" />
                                        </font>
                                     </Text>
-                                    <Text fx:id="warning" strokeType="OUTSIDE" strokeWidth="0.0" text="probable warning" GridPane.rowIndex="3">
+                                    <Text fx:id="warning" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.rowIndex="3">
                                        <font>
                                           <Font size="16.0" />
                                        </font>

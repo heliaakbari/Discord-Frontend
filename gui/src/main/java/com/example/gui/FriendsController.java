@@ -12,16 +12,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -206,9 +212,16 @@ public class FriendsController {
             out.writeObject(Command.newRelation(Relationship.Friend_pending, currentUser, sendrequest_textfield.getText()));
             Data data = (Data) in.readObject();
             if (!(boolean)data.getPrimary()) {
+
+                Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+                alert.setHeight(360);
+                alert.setHeight(240);
+                alert.setHeaderText("FRIEND REQUEST FAILED");
+                alert.setContentText("There is no user with this username.\nPlease make sure that the capitalization, spelling, any spaces and numbers are correct");
+                alert.show();
+
                 warning.setText("there is no user with this username");
                 warning.setFill(Color.RED);
-
             }
             else {
                 warning.setText("request sent to " + sendrequest_textfield.getText() + "!");

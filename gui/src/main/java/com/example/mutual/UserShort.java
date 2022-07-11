@@ -80,4 +80,8 @@ public class UserShort implements Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
+    }
 }
