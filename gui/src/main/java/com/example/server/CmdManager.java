@@ -693,6 +693,7 @@ public class CmdManager {
 
     public Data getNewMsgs(Command cmd) {
         ArrayList<Message> messages = new ArrayList<>();
+        ArrayList<String> users = new ArrayList<>();
         try {
             ResultSet rs = stmt.executeQuery(String.format("select * from pv_messages where seen=false and receiver='%s' order by date,sender", cmd.getUser()));
             while (rs.next()) {
@@ -700,9 +701,11 @@ public class CmdManager {
 
                     FileMessage m = new FileMessage(rs.getString("SENDER"), rs.getTimestamp("DATE").toLocalDateTime(), rs.getString("FILENAME"));
                     messages.add(m);
+                    users.add(rs.getString("SENDER"));
                 } else {
                     TextMessage m = new TextMessage(rs.getString("SENDER"), rs.getString("BODY"), rs.getTimestamp("DATE").toLocalDateTime());
                     messages.add(m);
+                    users.add(rs.getString("SENDER"));
                 }
             }
             HashMap<String, Timestamp> channelsDates = new HashMap<>();
@@ -723,9 +726,11 @@ public class CmdManager {
                         byte[] bytes = fileToBytes(rs.getString("FILELINK"));
                         FileMessage m = new FileMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getTimestamp("DATE").toLocalDateTime(), rs.getString("FILENAME"));
                         messages.add(m);
+                        users.add(rs.getString("SENDER"));
                     } else {
                         TextMessage m = new TextMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getString("BODY"), rs.getTimestamp("DATE").toLocalDateTime());
                         messages.add(m);
+                        users.add(rs.getString("SENDER"));
                     }
                 }
             }
@@ -736,7 +741,7 @@ public class CmdManager {
             e.printStackTrace();
         }
         messages = addReactionsToMessages(messages);
-        return Data.newMsgs(cmd.getUser(), messages);
+        return Data.newMsgs(cmd.getUser(), messages,stringToUserShort(cmd.getUser(),users));
     }
 
     public Data getChannelMsgs(Command cmd) {

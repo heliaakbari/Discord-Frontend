@@ -136,10 +136,11 @@ public class Data  implements Serializable {
      * @param messages
      * @return
      */
-    public static @NotNull Data newMsgs(String user, ArrayList<Message> messages){
+    public static @NotNull Data newMsgs(String user, ArrayList<Message> messages,ArrayList<UserShort> shorts){
         Data data = new Data("newMsgs");
         data.user = user;
         data.primary = messages;
+        data.secondary = shorts;
         return data;
     }
 
