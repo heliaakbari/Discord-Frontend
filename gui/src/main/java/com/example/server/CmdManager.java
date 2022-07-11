@@ -453,7 +453,7 @@ public class CmdManager {
         }
 
         try {
-            stmt.executeUpdate(String.format("UPDATE users SET picturelink ='%s' WHERE username='%s'",address, cmd.getUser()));
+            stmt.executeUpdate(String.format("UPDATE users SET picturelink ='%s',pictureformat ='%s' WHERE username='%s'",address,format,cmd.getUser()));
         } catch (SQLException e) {
             FeedBack.say("could not update picture url of " + cmd.getUser());
         }
@@ -693,6 +693,7 @@ public class CmdManager {
 
     public Data getNewMsgs(Command cmd) {
         ArrayList<Message> messages = new ArrayList<>();
+        ArrayList<String> users = new ArrayList<>();
         try {
             ResultSet rs = stmt.executeQuery(String.format("select * from pv_messages where seen=false and receiver='%s' order by date,sender", cmd.getUser()));
             while (rs.next()) {
@@ -700,9 +701,11 @@ public class CmdManager {
 
                     FileMessage m = new FileMessage(rs.getString("SENDER"), rs.getTimestamp("DATE").toLocalDateTime(), rs.getString("FILENAME"));
                     messages.add(m);
+                    users.add(rs.getString("SENDER"));
                 } else {
                     TextMessage m = new TextMessage(rs.getString("SENDER"), rs.getString("BODY"), rs.getTimestamp("DATE").toLocalDateTime());
                     messages.add(m);
+                    users.add(rs.getString("SENDER"));
                 }
             }
             HashMap<String, Timestamp> channelsDates = new HashMap<>();
@@ -723,9 +726,11 @@ public class CmdManager {
                         byte[] bytes = fileToBytes(rs.getString("FILELINK"));
                         FileMessage m = new FileMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getTimestamp("DATE").toLocalDateTime(), rs.getString("FILENAME"));
                         messages.add(m);
+                        users.add(rs.getString("SENDER"));
                     } else {
                         TextMessage m = new TextMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getString("BODY"), rs.getTimestamp("DATE").toLocalDateTime());
                         messages.add(m);
+                        users.add(rs.getString("SENDER"));
                     }
                 }
             }
@@ -736,7 +741,7 @@ public class CmdManager {
             e.printStackTrace();
         }
         messages = addReactionsToMessages(messages);
-        return Data.newMsgs(cmd.getUser(), messages);
+        return Data.newMsgs(cmd.getUser(), messages,stringToUserShort(cmd.getUser(),users));
     }
 
     public Data getChannelMsgs(Command cmd) {
@@ -1095,6 +1100,7 @@ public class CmdManager {
 
     public Data getPinnedMsgs(Command cmd) {
         ArrayList<Message> messages = new ArrayList<>();
+        ArrayList<String> senders = new ArrayList<>();
         try {
             ResultSet rs = stmt.executeQuery(String.format("select * from channel_messages where channel='%s' and server='%s' and ispinned=true order by date", cmd.getChannel(), cmd.getServer()));
             while (rs.next()) {
@@ -1102,9 +1108,11 @@ public class CmdManager {
                     byte[] bytes = fileToBytes(rs.getString("FILELINK"));
                     FileMessage m = new FileMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getTimestamp("DATE").toLocalDateTime(), rs.getString("FILENAME"));
                     messages.add(m);
+                    senders.add(rs.getString("SENDER"));
                 } else {
                     TextMessage m = new TextMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getString("BODY"), rs.getTimestamp("DATE").toLocalDateTime());
                     messages.add(m);
+                    senders.add(rs.getString("SENDER"));
                 }
             }
         } catch (SQLException e) {
@@ -1113,7 +1121,7 @@ public class CmdManager {
             e.printStackTrace();
         }
         messages = addReactionsToMessages(messages);
-        return Data.pinnedMsgs(cmd.getUser(), cmd.getServer(), cmd.getChannel(), messages);
+        return Data.pinnedMsgs(cmd.getUser(), cmd.getServer(), cmd.getChannel(), messages,stringToUserShort(cmd.getUser(),senders));
     }
 
     public void banFromChannel(Command cmd) {

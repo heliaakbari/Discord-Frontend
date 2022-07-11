@@ -3,40 +3,29 @@ package com.example.gui;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.css.Style;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Modality;
-import javafx.stage.Popup;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.example.mutual.*;
-import javafx.stage.WindowEvent;
 
 public class FriendsController {
     protected ObjectOutputStream out;
@@ -48,6 +37,8 @@ public class FriendsController {
     protected ArrayList<UserShort> directChats = new ArrayList<>();
     protected ArrayList<UserShort> allFriends = new ArrayList<>();
     protected ArrayList<UserShort> allblocks = new ArrayList<>();
+    protected ArrayList<Message> inbox = new ArrayList<>();
+    protected ArrayList<UserShort> inboxPics = new ArrayList<>();
     protected HashMap<UserShort, Boolean> allrequests = new HashMap<>();
 
     protected HashMap<String, Button> acceptButtons = new HashMap<>();
@@ -58,11 +49,18 @@ public class FriendsController {
 
     @FXML
     protected GridPane directs_grid;
+
     @FXML
     protected GridPane servers_grid;
 
     @FXML
     protected GridPane online_grid;
+
+    @FXML
+    protected TextField search_text;
+
+    @FXML
+    protected Button search_button;
 
     @FXML
     protected GridPane pending_grid;
@@ -72,6 +70,9 @@ public class FriendsController {
 
     @FXML
     protected GridPane all_grid;
+
+    @FXML
+    protected GridPane messages_grid;
 
     @FXML
     protected TextField sendrequest_textfield;
@@ -92,9 +93,32 @@ public class FriendsController {
         new GetServers(this).restart();
     }
 
+    public void newDirectFromSearch(Event event){
+        String text = search_text.getText();
+        search_text.clear();
+
+        for(UserShort friend : allFriends){
+            if(friend.getUsername().equals(text)){
+                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("pv-view.fxml"));
+                PvController pvController = new PvController(in,out,fin,fout,currentUser,text);
+                fxmlLoader.setController(pvController);
+                Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 1000, 600);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stage.setScene(scene);
+                stage.show();
+                break;
+            }
+        }
+    }
+
     void addDirects() {
         directs_grid.getChildren().clear();
-        directs_grid.setVgap(5);
+        directs_grid.setVgap(3);
         directs_grid.setAlignment(Pos.CENTER);
         for (UserShort user : directChats) {
             Node pic = user.profileStatus(25.0);
@@ -121,6 +145,7 @@ public class FriendsController {
             directs_grid.addColumn(1, name);
         }
     }
+
 
     public void addServers() {
         servers_grid.getChildren().clear();
@@ -170,6 +195,23 @@ public class FriendsController {
 
     }
 
+    public void addInboxMessages(){
+        messages_grid.getChildren().clear();
+        messages_grid.setVgap(3);
+        for(UserShort user : inboxPics ){
+            messages_grid.addColumn(1,user.profileStatus(25.0));
+        }
+        for(Message msg : inbox){
+            TextFlow textFlow = new TextFlow();
+            textFlow.getChildren().add(new Text(msg.toString()+"\n"));
+            textFlow.setStyle("-fx-background-color: rgb(176,223,255); -fx-border-radius: 5px;");
+            textFlow.setPadding(new Insets(5));
+            textFlow.setBorder(Border.stroke(Color.BLACK));
+            textFlow.setPrefWidth(430);
+            messages_grid.addColumn(2, textFlow);
+        }
+    }
+
     protected Boolean firsttime = true;
     public void showalllist(Event e) {
         Tab tab = (Tab) e.getSource();
@@ -180,6 +222,14 @@ public class FriendsController {
             new AddAllFriends(this).start();
         }
         firsttime= false;
+    }
+
+    public void openInbox(Event e){
+        Tab tab = (Tab) e.getSource();
+        if (!tab.isSelected()) {
+            return;
+        }
+        new InboxMessages(this).restart();
     }
 
     public void showblocklist(Event e) {
@@ -260,6 +310,36 @@ public class FriendsController {
     }
 }
 
+class InboxMessages extends Service<Void>{
+    FriendsController fc;
+
+    public InboxMessages(FriendsController fc){
+        this.fc = fc;
+    }
+
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Command cmd = Command.getNewMsgs(fc.currentUser);
+                fc.out.writeObject(cmd);
+                Data dt = (Data) fc.in.readObject();
+                fc.inbox = (ArrayList<Message>) dt.getPrimary();
+                fc.inboxPics = (ArrayList<UserShort>) dt.getSecondary();
+                cmd = Command.lastseenAll(fc.currentUser);
+                fc.out.writeObject(cmd);
+                fc.in.readObject();
+                return null;
+            }
+        };
+    }
+
+    @Override
+    protected void succeeded() {
+        fc.addInboxMessages();
+    }
+}
 class AddAllFriends extends Thread {
     FriendsController fc;
 

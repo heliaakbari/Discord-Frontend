@@ -136,10 +136,11 @@ public class Data  implements Serializable {
      * @param messages
      * @return
      */
-    public static @NotNull Data newMsgs(String user, ArrayList<Message> messages){
+    public static @NotNull Data newMsgs(String user, ArrayList<Message> messages,ArrayList<UserShort> shorts){
         Data data = new Data("newMsgs");
         data.user = user;
         data.primary = messages;
+        data.secondary = shorts;
         return data;
     }
 
@@ -221,12 +222,13 @@ public class Data  implements Serializable {
      * @return
      */
 
-    public static @NotNull Data pinnedMsgs(String user, String server, String channel, ArrayList<Message> messages){
+    public static @NotNull Data pinnedMsgs(String user, String server, String channel, ArrayList<Message> messages,ArrayList<UserShort> senders){
         Data data = new Data("pinnedMsgs");
         data.user = user;
         data.server = server;
         data.channel = channel;
         data.primary = messages;
+        data.secondary = senders;
         return data;
     }
 

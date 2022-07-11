@@ -120,6 +120,25 @@ public class ChannelController {
         }
     }
 
+    public void openPinnedmsgs(){
+        message_textField.setVisible(false);
+        send_button.setVisible(false);
+        file_button.setVisible(false);
+        if(isMessageReader) {
+            try {
+                out.writeObject(Command.lastseenChannel(currentUser,currentServer,currentChannel));
+                Thread.sleep(100);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+
+        new AddPinnedMessages(this).restart();
+    }
+
     public void addServers(){
         servers_grid.getChildren().clear();
         servers_grid.setVgap(5);
@@ -432,7 +451,7 @@ public class ChannelController {
         fileUploader.start();
     }
 
-    private void downloadFile(String filename) {
+    public void downloadFile(String filename) {
         try {
               Command  cmd = Command.download(currentServer, currentChannel,filename, true);
 
@@ -578,6 +597,95 @@ class GoToChannel extends Service<Void>{
     }
 }
 
+class AddPinnedMessages extends Service<Void>{
+    ChannelController cc;
+    ArrayList<Message> pinnedmsgs;
+    ArrayList<UserShort> pics;
+    public AddPinnedMessages(ChannelController cc){
+        this.cc=cc;
+    }
+
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Command cmd = Command.getPinnedMsgs(cc.currentUser,cc.currentServer,cc.currentChannel);
+                cc.out.writeObject(cmd);
+                Data dt =(Data) cc.in.readObject();
+                pinnedmsgs = (ArrayList<Message>) dt.getPrimary();
+                pics = (ArrayList<UserShort>) dt.getSecondary();
+                return null;
+            }
+        };
+    }
+
+    @Override
+    protected void succeeded() {
+        cc.messages_grid.getChildren().clear();
+        cc.messages_grid.setVgap(5);
+        for (Message message : pinnedmsgs){
+            TextFlow textFlow = new TextFlow(new Text(message.getSourceInfo().get(0)+" :\n"+message.getText()+"\n"));
+            ToggleGroup group = new ToggleGroup();
+            RadioButton like = new RadioButton("like: "+message.getLikes()+"      ");
+            RadioButton dislike = new RadioButton("dislike: "+message.getDislikes()+"      ");
+            RadioButton laugh = new RadioButton("laugh: "+message.getLaughs()+"       ");
+            like.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Command cmd = Command.newReaction(cc.currentUser,message,"like");
+                    try {
+                        cc.out.writeObject(cmd);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            dislike.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Command cmd = Command.newReaction(cc.currentUser,message,"dislike");
+                    try {
+                        cc.out.writeObject(cmd);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            laugh.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Command cmd = Command.newReaction(cc.currentUser,message,"laugh");
+                    try {
+                        cc.out.writeObject(cmd);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            group.getToggles().addAll(like,dislike,laugh);
+            textFlow.getChildren().addAll(like,dislike,laugh);
+           
+            if(message instanceof FileMessage){
+                RadioButton download = new RadioButton("download");
+                download.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        ((RadioButton) event.getSource()).setDisable(true);
+                        cc.downloadFile(message.getText());
+                    }
+                });
+                textFlow.getChildren().add(download);
+            }
+                textFlow.setStyle("-fx-background-color: rgb(176,223,255); -fx-border-radius: 5px;");
+            textFlow.setPrefWidth(430);
+            textFlow.setPadding(new Insets(5));
+            textFlow.setBorder(Border.stroke(Color.BLACK));
+            cc.messages_grid.addColumn(1,textFlow);
+        }
+        cc.messages_scroll.setVvalue(1.0);
+    }
+}
 class MessageReader extends Thread {
 
     private ChannelController cc;

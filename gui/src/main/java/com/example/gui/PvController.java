@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +37,7 @@ public class PvController {
     protected String currentUser;
     protected UserShort meShort;
     protected UserShort youShort;
+    protected ArrayList<UserShort> allFriends = new ArrayList<>();
     protected ArrayList<UserShort> directChats = new ArrayList<>();
     protected ArrayList<String> servers= new ArrayList<>();
     protected ArrayList<Message> messages= new ArrayList<>();
@@ -53,6 +55,12 @@ public class PvController {
 
     @FXML
     protected ScrollPane messages_scroll;
+
+    @FXML
+    protected TextField search_text;
+
+    @FXML
+    protected Button search_button;
 
     @FXML
     protected GridPane directs_grid;
@@ -94,9 +102,44 @@ public class PvController {
     }
 
 
+    public void newDirectFromSearch(Event event){
+        String text = search_text.getText();
+        search_text.clear();
+
+        for(UserShort friend : allFriends){
+            if(friend.getUsername().equals(text)){
+                if(isMessageReader) {
+                    try {
+                        out.writeObject(Command.lastseenPv(currentUser,otherPerson));
+                        Thread.sleep(100);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("pv-view.fxml"));
+                PvController pvController = new PvController(in,out,fin,fout,currentUser,text);
+                fxmlLoader.setController(pvController);
+                Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 1000, 600);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stage.setScene(scene);
+                stage.show();
+                break;
+            }
+        }
+    }
+
+
     void addDirects() {
         directs_grid.getChildren().clear();
-        directs_grid.setVgap(5);
+        directs_grid.setVgap(3);
         directs_grid.setAlignment(Pos.CENTER);
         for (UserShort user : directChats) {
             Node pic = user.profileStatus(25.0);
@@ -363,6 +406,11 @@ class GoToPv extends Service<Void>{
                 pc.out.writeObject(Command.userServers(pc.currentUser));
                 dt = (Data) pc.in.readObject();
                 pc.servers = (ArrayList<String>)dt.getPrimary();
+                cmd = Command.getFriends(pc.currentUser);
+                pc.out.writeObject(cmd);
+                dt = (Data) pc.in.readObject();
+                System.out.println(dt.getKeyword());
+                pc.allFriends = (ArrayList<UserShort>) dt.getPrimary();
                 pc.out.writeObject(Command.getUser(pc.currentUser));
                 dt = (Data) pc.in.readObject();
                 System.out.println(dt.getKeyword()+"!");

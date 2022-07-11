@@ -52,8 +52,8 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="59.0" text="start" GridPane.columnIndex="2" />
-                  <TextField maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="143.0" promptText="find or start a chat" GridPane.columnIndex="1">
+                  <Button fx:id="search_button" mnemonicParsing="false" onAction="#newDirectFromSearch" prefHeight="30.0" prefWidth="59.0" text="start" GridPane.columnIndex="2" />
+                  <TextField fx:id="search_text" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="143.0" promptText="find or start a chat" GridPane.columnIndex="1">
                      <font>
                         <Font size="14.0" />
                      </font>
