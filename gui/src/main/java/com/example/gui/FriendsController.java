@@ -52,11 +52,15 @@ public class FriendsController {
 
     @FXML
     protected GridPane directs_grid;
+    
     @FXML
     protected GridPane servers_grid;
 
     @FXML
     protected GridPane online_grid;
+
+    @FXML
+    private TextField search;
 
     @FXML
     protected GridPane pending_grid;

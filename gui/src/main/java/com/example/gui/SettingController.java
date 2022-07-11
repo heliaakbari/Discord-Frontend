@@ -99,7 +99,6 @@ public class SettingController {
                 fxmlLoader.setController(friendsController);
                 Stage newStage = new Stage();
                 newStage.setTitle("Discord");
-                newStage.getIcons().add(new Image("D:\\IntelliJ Projects\\AP\\gui clone\\logo.png"));
                 Scene scene = null;
                 try {
                     scene = new Scene(fxmlLoader.load(), 1000, 600);
@@ -121,7 +120,10 @@ public class SettingController {
 
         String fileNameAndType = dialog.getFile();
         String path = dialog.getDirectory() + "//" + dialog.getFile();
-
+        if(path.contains("null")){
+            System.out.println(path.contains("null"));
+            return;
+        }
         byte[] photo = null;
         String photoFormat = null;
         try {
@@ -295,18 +297,18 @@ public class SettingController {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
         fxmlLoader.setController(new LoginController(in,out,fin,fout));
          myStage = (Stage)(((Node) e.getSource()).getScene().getWindow());
-        myStage.setHeight(600);
-        myStage.setWidth(1000);
-        myStage.centerOnScreen();
-        myStage.setResizable(false);
+         myStage.close();
+         Stage newStage = new Stage();
+         newStage.setResizable(false);
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        myStage.setScene(scene);
-        myStage.show();
+        newStage.setScene(scene);
+        myStage.close();
+        newStage.show();
     }
 
 

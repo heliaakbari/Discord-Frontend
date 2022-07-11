@@ -453,7 +453,7 @@ public class CmdManager {
         }
 
         try {
-            stmt.executeUpdate(String.format("UPDATE users SET picturelink ='%s' WHERE username='%s'",address, cmd.getUser()));
+            stmt.executeUpdate(String.format("UPDATE users SET picturelink ='%s',pictureformat ='%s' WHERE username='%s'",address,format,cmd.getUser()));
         } catch (SQLException e) {
             FeedBack.say("could not update picture url of " + cmd.getUser());
         }

@@ -66,7 +66,7 @@ public class SignupController implements Initializable {
     private Text image_warning;
 
     private byte[] photo;
-    private String photoFormat;
+    private String photoFormat = new String("");
 
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -176,7 +176,10 @@ public class SignupController implements Initializable {
 
         String fileNameAndType = dialog.getFile();
         String path = dialog.getDirectory() + "//" + dialog.getFile();
-
+        if(path.contains("null")){
+            photo = null;
+            return;
+        }
         try {
             photo = readAllBytes(Paths.get(path));
         } catch (IOException e) {
