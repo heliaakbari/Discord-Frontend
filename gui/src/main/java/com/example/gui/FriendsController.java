@@ -60,7 +60,10 @@ public class FriendsController {
     protected GridPane online_grid;
 
     @FXML
-    private TextField search;
+    protected TextField search_text;
+
+    @FXML
+    protected Button search_button;
 
     @FXML
     protected GridPane pending_grid;
@@ -90,9 +93,32 @@ public class FriendsController {
         new GetServers(this).restart();
     }
 
+    public void newDirectFromSearch(Event event){
+        String text = search_text.getText();
+        search_text.clear();
+
+        for(UserShort friend : allFriends){
+            if(friend.getUsername().equals(text)){
+                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("pv-view.fxml"));
+                PvController pvController = new PvController(in,out,fin,fout,currentUser,text);
+                fxmlLoader.setController(pvController);
+                Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 1000, 600);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                stage.setScene(scene);
+                stage.show();
+                break;
+            }
+        }
+    }
+
     void addDirects() {
         directs_grid.getChildren().clear();
-        directs_grid.setVgap(5);
+        directs_grid.setVgap(3);
         directs_grid.setAlignment(Pos.CENTER);
         for (UserShort user : directChats) {
             Node pic = user.profileStatus(25.0);
