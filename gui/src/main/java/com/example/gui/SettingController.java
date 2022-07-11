@@ -4,23 +4,27 @@ import com.example.mutual.Command;
 import com.example.mutual.Data;
 import com.example.mutual.User;
 import com.example.mutual.UserShort;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
 import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
+
 import static java.nio.file.Files.readAllBytes;
 
 public class SettingController {
@@ -93,6 +97,8 @@ public class SettingController {
                 FriendsController friendsController = new FriendsController(in,out,fin,fout, currentUser.getUsername());
                 fxmlLoader.setController(friendsController);
                 Stage newStage = new Stage();
+                newStage.setTitle("Discord");
+                newStage.getIcons().add(new Image("D:\\IntelliJ Projects\\AP\\gui clone\\logo.png"));
                 Scene scene = null;
                 try {
                     scene = new Scene(fxmlLoader.load(), 1000, 600);
@@ -149,7 +155,7 @@ public class SettingController {
     }
 
     @FXML
-    public void changeUsernameOnButton(Event e){
+    public void changeUsernameOnButton(Event e) {
         if (!newUsername.getText().matches("^[0-9a-zA-Z]{6,20}$")){
             usernameWarning.setText("username must be at least 6 and at most 20 characters and only containing english alphabet and numbers");
             return;
@@ -159,10 +165,14 @@ public class SettingController {
             Data data = (Data) in.readObject();
             if (data.getKeyword().equals("checkChangeUsername") && (boolean) data.getPrimary()){
                 usernameWarning.setText("username changed successfully!");
+
                 currentUsername.setText(newUsername.getText());
                 currentUser.setUsername(newUsername.getText());
                 userShort.setUsername(newUsername.getText());
                 newUsername.setText(null);
+                newUsername.setVisible(false);
+                changeUsername.setVisible(false);
+
             }
             else {
                 usernameWarning.setText("this username is already taken");
@@ -171,8 +181,6 @@ public class SettingController {
             ex.printStackTrace();
         }
 
-        newUsername.setVisible(false);
-        changeUsername.setVisible(false);
     }
 
     @FXML
@@ -187,12 +195,14 @@ public class SettingController {
             currentPassword.setText(newPassword.getText());
             currentUser.setPassword(newPassword.getText());
             newPassword.setText(null);
-        } catch (IOException ex){
+
+            newPassword.setVisible(false);
+            changePassword.setVisible(false);
+
+        } catch (IOException  ex){
             ex.printStackTrace();
         }
 
-        newPassword.setVisible(false);
-        changePassword.setVisible(false);
 
     }
 
@@ -208,11 +218,12 @@ public class SettingController {
             currentEmail.setText(newEmail.getText());
             currentUser.setEmail(newEmail.getText());
             newEmail.setText(null);
-        } catch (IOException ex){
+            newEmail.setVisible(false);
+            changeEmail.setVisible(false);
+        } catch (IOException  ex){
             ex.printStackTrace();
         }
-        newEmail.setVisible(false);
-        changeEmail.setVisible(false);
+
     }
     @FXML
     public void changePhoneNumOnButton(Event e){
@@ -264,5 +275,30 @@ public class SettingController {
         changePassword.setVisible(false);
         changeEmail.setVisible(false);
         changePhoneNum.setVisible(false);
+
+        usernameWarning.setText(null);
+        passwordWarning.setText(null);
+        emailWarning.setText(null);
     }
+
+    @FXML
+    public void logoutOnButton(Event e){
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
+        fxmlLoader.setController(new LoginController(in,out,fin,fout));
+         myStage = (Stage)(((Node) e.getSource()).getScene().getWindow());
+        myStage.setHeight(600);
+        myStage.setWidth(1000);
+        myStage.centerOnScreen();
+        myStage.setResizable(false);
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        myStage.setScene(scene);
+        myStage.show();
+    }
+
+
 }

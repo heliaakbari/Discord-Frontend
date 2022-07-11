@@ -7,35 +7,34 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane prefHeight="401.0" prefWidth="592.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane onMouseClicked="#onScreenClicked" prefHeight="401.0" prefWidth="592.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="changeProfileButton" layoutX="85.0" layoutY="302.0" mnemonicParsing="false" onAction="#changeProfileOnButton" text="change profile" />
-      <Text layoutX="273.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Usrename" />
-      <Text layoutX="275.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
-      <Text layoutX="275.0" layoutY="212.0" strokeType="OUTSIDE" strokeWidth="0.0" text="e-mail" />
-      <Text layoutX="260.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="phone number" />
-      <Pane fx:id="imageHolder" layoutX="30.0" layoutY="79.0" prefHeight="201.0" prefWidth="222.0" />
+      <Text layoutX="269.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Usrename" />
+      <Text layoutX="271.0" layoutY="142.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
+      <Text layoutX="271.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="e-mail" />
+      <Text layoutX="271.0" layoutY="285.0" strokeType="OUTSIDE" strokeWidth="0.0" text="phone" />
+      <Pane fx:id="imageHolder" layoutX="30.0" layoutY="42.0" prefHeight="238.0" prefWidth="222.0" />
       <Text fx:id="imageWarning" layoutX="69.0" layoutY="356.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="124.0" />
-      <Text fx:id="passwordWarning" layoutX="264.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="296.0" />
-      <Text fx:id="usernameWarning" layoutX="271.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="296.0" />
-      <Text fx:id="imageWarning111" layoutX="271.0" layoutY="239.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="296.0" />
-      <Text fx:id="imageWarning1111" layoutX="271.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="296.0" />
-      <Button layoutX="530.0" layoutY="75.0" mnemonicParsing="false" text="edit" />
-      <Button layoutX="530.0" layoutY="134.0" mnemonicParsing="false" text="edit" />
-      <Button layoutX="530.0" layoutY="188.0" mnemonicParsing="false" text="edit" />
-      <Button layoutX="530.0" layoutY="249.0" mnemonicParsing="false" text="edit" />
-      <Button layoutX="348.0" layoutY="314.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="142.0" text="Log out" />
-      <Button layoutX="523.0" layoutY="75.0" mnemonicParsing="false" text="chenge" visible="false" />
-      <Button layoutX="523.0" layoutY="134.0" mnemonicParsing="false" text="chenge" visible="false" />
-      <Button layoutX="523.0" layoutY="187.0" mnemonicParsing="false" text="chenge" visible="false" />
-      <Button layoutX="523.0" layoutY="249.0" mnemonicParsing="false" text="chenge" visible="false" />
-      <Text fx:id="currentUsername" layoutX="344.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="172.0" />
-      <Text fx:id="currentPassword" layoutX="345.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="172.0" />
-      <Text fx:id="currentEmail" layoutX="333.0" layoutY="211.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="172.0" />
-      <Text fx:id="currentPhoneNum" layoutX="348.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="172.0" />
-      <TextField fx:id="newUsername" layoutX="345.0" layoutY="75.0" prefHeight="25.0" prefWidth="172.0" visible="false" />
-      <TextField fx:id="newPassword" layoutX="345.0" layoutY="134.0" prefHeight="25.0" prefWidth="172.0" visible="false" />
-      <TextField fx:id="newEmail" layoutX="345.0" layoutY="188.0" prefHeight="25.0" prefWidth="172.0" visible="false" />
-      <TextField fx:id="newPhoneNum" layoutX="344.0" layoutY="249.0" prefHeight="25.0" prefWidth="172.0" visible="false" />
+      <Text fx:id="passwordWarning" layoutX="269.0" layoutY="165.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="296.0" />
+      <Text fx:id="usernameWarning" layoutX="271.0" layoutY="92.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="296.0" />
+      <Text fx:id="emailWarning" layoutX="271.0" layoutY="248.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="296.0" />
+      <Button fx:id="editUsername" layoutX="530.0" layoutY="46.0" mnemonicParsing="false" onAction="#editButtonClicked" text="edit" />
+      <Button fx:id="editPassword" layoutX="530.0" layoutY="122.0" mnemonicParsing="false" onAction="#editButtonClicked" text="edit" />
+      <Button fx:id="editEmail" layoutX="532.0" layoutY="201.0" mnemonicParsing="false" onAction="#editButtonClicked" text="edit" />
+      <Button fx:id="editPhoneNum" layoutX="532.0" layoutY="268.0" mnemonicParsing="false" onAction="#editButtonClicked" text="edit" />
+      <Button layoutX="360.0" layoutY="337.0" mnemonicParsing="false" onAction="#logoutOnButton" prefHeight="44.0" prefWidth="115.0" text="Log out" />
+      <Button fx:id="changeUsername" layoutX="523.0" layoutY="42.0" mnemonicParsing="false" onAction="#changeUsernameOnButton" prefHeight="32.0" prefWidth="55.0" text="change" visible="false" />
+      <Button fx:id="changePassword" layoutX="523.0" layoutY="121.0" mnemonicParsing="false" onAction="#changePasswordOnButton" prefHeight="32.0" prefWidth="55.0" text="change" visible="false" />
+      <Button fx:id="changeEmail" layoutX="523.0" layoutY="196.0" mnemonicParsing="false" onAction="#changeEmailOnButton" prefHeight="32.0" prefWidth="55.0" text="change" visible="false" />
+      <Button fx:id="changePhoneNum" layoutX="523.0" layoutY="265.0" mnemonicParsing="false" onAction="#changePhoneNumOnButton" prefHeight="32.0" prefWidth="55.0" text="change" visible="false" />
+      <Text fx:id="currentUsername" layoutX="333.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="172.0" />
+      <Text fx:id="currentPassword" layoutX="333.0" layoutY="142.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="180.0" />
+      <Text fx:id="currentEmail" layoutX="327.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="180.0" />
+      <Text fx:id="currentPhoneNum" layoutX="323.0" layoutY="286.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="188.0" />
+      <TextField fx:id="newUsername" layoutX="329.0" layoutY="46.0" prefHeight="25.0" prefWidth="188.0" visible="false" />
+      <TextField fx:id="newPassword" layoutX="345.0" layoutY="121.0" prefHeight="32.0" prefWidth="172.0" visible="false" />
+      <TextField fx:id="newEmail" layoutX="320.0" layoutY="196.0" prefHeight="32.0" prefWidth="197.0" visible="false" />
+      <TextField fx:id="newPhoneNum" layoutX="324.0" layoutY="266.0" prefHeight="32.0" prefWidth="188.0" visible="false" />
    </children>
 </AnchorPane>

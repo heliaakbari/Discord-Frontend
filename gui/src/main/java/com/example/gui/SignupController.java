@@ -129,7 +129,6 @@ public class SignupController implements Initializable {
                 login_username_description.setText("this username is taken, try another one");
             } else {
                 System.out.println("correct");
-                //and other actions
                 FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
                 FriendsController friendsController = new FriendsController(in, out, fin, fout, username.getText());
                 fxmlLoader.setController(friendsController);
