@@ -139,6 +139,21 @@ public class ChannelController {
         new AddPinnedMessages(this).restart();
     }
 
+    public void goToserverSetting(Event event){
+        FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("server-setting-view.fxml"));
+        ServerSettingController serverSettingController = new ServerSettingController(currentRole,currentUser,currentServer,out,in,fout,fin);
+        fxmlLoader.setController(serverSettingController);
+        Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void addServers(){
         servers_grid.getChildren().clear();
         servers_grid.setVgap(5);
