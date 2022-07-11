@@ -3,6 +3,7 @@ package com.example.gui;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.css.Style;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -15,6 +16,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -185,10 +188,14 @@ public class FriendsController {
         try {
             out.writeObject(Command.newRelation(Relationship.Friend_pending, currentUser, sendrequest_textfield.getText()));
             Data data = (Data) in.readObject();
-            if (!(boolean)data.getPrimary())
+            if (!(boolean)data.getPrimary()) {
                 warning.setText("there is no user with this username");
+                warning.setFill(Color.RED);
+
+            }
             else {
-                warning.setText("request sent!");
+                warning.setText("request sent to " + sendrequest_textfield.getText() + "!");
+                warning.setFill(Color.GREEN);
                 sendrequest_textfield.clear();
             }
         } catch (IOException | ClassNotFoundException ex) {

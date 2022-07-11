@@ -72,8 +72,8 @@ public class UserShort implements Serializable {
         pane.getChildren().add(circle);
         pane.getChildren().get(0).setLayoutX(radius);
         pane.getChildren().get(0).setLayoutY(radius);
-        pane.getChildren().get(1).setLayoutX(39);
-        pane.getChildren().get(1).setLayoutY(39);
+        pane.getChildren().get(1).setLayoutX(2*radius - 10);
+        pane.getChildren().get(1).setLayoutY(2*radius - 10);
         return pane;
     }
 

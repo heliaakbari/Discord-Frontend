@@ -9,8 +9,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.text.Text;
 
@@ -33,7 +35,7 @@ public class LoginController {
     private TextField username;
 
     @FXML
-    private TextField password;
+    private PasswordField password;
 
     @FXML
     private Button login_button;
@@ -64,6 +66,7 @@ public class LoginController {
             if(!((boolean) data.getPrimary())){
                 System.out.println("not correct");
                 login_username_description.setText("wrong username or password");
+                login_username_description.setFill(Color.RED);
             }
             else {
                 System.out.println("correct");

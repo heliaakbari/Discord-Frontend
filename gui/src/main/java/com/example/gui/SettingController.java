@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -133,6 +134,7 @@ public class SettingController {
 
         if (photo.length > 100000){
             imageWarning.setText("your image size is more than 100kB");
+            imageWarning.setFill(Color.RED);
             photo = null;
         }
         else {
@@ -158,6 +160,7 @@ public class SettingController {
     public void changeUsernameOnButton(Event e) {
         if (!newUsername.getText().matches("^[0-9a-zA-Z]{6,20}$")){
             usernameWarning.setText("username must be at least 6 and at most 20 characters and only containing english alphabet and numbers");
+            usernameWarning.setFill(Color.RED);
             return;
         }
         try {
@@ -165,6 +168,7 @@ public class SettingController {
             Data data = (Data) in.readObject();
             if (data.getKeyword().equals("checkChangeUsername") && (boolean) data.getPrimary()){
                 usernameWarning.setText("username changed successfully!");
+                usernameWarning.setFill(Color.GREEN);
 
                 currentUsername.setText(newUsername.getText());
                 currentUser.setUsername(newUsername.getText());
@@ -176,6 +180,7 @@ public class SettingController {
             }
             else {
                 usernameWarning.setText("this username is already taken");
+                usernameWarning.setFill(Color.RED);
             }
         } catch (IOException | ClassNotFoundException ex){
             ex.printStackTrace();
@@ -187,11 +192,13 @@ public class SettingController {
     public void changePasswordOnButton(Event e){
         if (!newPassword.getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,20}$")){
             passwordWarning.setText("password must be at least 8 and at most 20 characters and contain capital and small english alphabets and numbers");
+            passwordWarning.setFill(Color.RED);
             return;
         }
         try {
             out.writeObject(Command.changeInfo(currentUser.getUsername(), "password", newPassword.getText()));
             passwordWarning.setText("password changed successfully");
+            passwordWarning.setFill(Color.GREEN);
             currentPassword.setText(newPassword.getText());
             currentUser.setPassword(newPassword.getText());
             newPassword.setText(null);
@@ -210,11 +217,13 @@ public class SettingController {
     public void changeEmailOnButton(Event e){
         if (!newEmail.getText().matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")){
             emailWarning.setText("email format isn't correct");
+            emailWarning.setFill(Color.RED);
             return;
         }
         try{
             out.writeObject(Command.changeInfo(currentUser.getUsername(), "email", newEmail.getText()));
             emailWarning.setText("email changed successfully");
+            emailWarning.setFill(Color.GREEN);
             currentEmail.setText(newEmail.getText());
             currentUser.setEmail(newEmail.getText());
             newEmail.setText(null);

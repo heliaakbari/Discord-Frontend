@@ -9,7 +9,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -40,7 +42,7 @@ public class SignupController implements Initializable {
     private TextField username;
 
     @FXML
-    private TextField password;
+    private PasswordField password;
 
     @FXML
     private TextField username1;
@@ -94,11 +96,13 @@ public class SignupController implements Initializable {
         if (!username.getText().matches("^[0-9a-zA-Z]{6,20}$")) {
             // tell user
             login_username_description.setText("username must be at least 6 and at most 20 characters and only containing english alphabet and numbers");
+            login_username_description.setFill(Color.RED);
             ableToSignup = false;
         }
         if (!password.getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,20}$")) {
             // tell user
             login_username_description1.setText("password must be at least 8 and at most 20 characters and contain capital and small english alphabets and numbers");
+            login_username_description1.setFill(Color.RED);
             ableToSignup = false;
         }
 
@@ -127,6 +131,7 @@ public class SignupController implements Initializable {
             if (!((boolean) data.getPrimary())) {
                 System.out.println("not successful");
                 login_username_description.setText("this username is taken, try another one");
+                login_username_description.setFill(Color.RED);
             } else {
                 System.out.println("correct");
                 FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
@@ -180,6 +185,7 @@ public class SignupController implements Initializable {
         }
         if(photo.length > 100000){
             image_warning.setText("your image size is more than 100kB");
+            image_warning.setFill(Color.RED);
             photo = null;
         }
         else {
