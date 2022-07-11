@@ -140,6 +140,17 @@ public class ChannelController {
     }
 
     public void goToserverSetting(Event event){
+        if(isMessageReader) {
+            try {
+                out.writeObject(Command.lastseenChannel(currentUser,currentServer,currentChannel));
+                Thread.sleep(100);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
         FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("server-setting-view.fxml"));
         ServerSettingController serverSettingController = new ServerSettingController(currentRole,currentUser,currentServer,out,in,fout,fin);
         fxmlLoader.setController(serverSettingController);
