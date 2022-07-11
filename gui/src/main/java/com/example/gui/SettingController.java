@@ -4,10 +4,12 @@ import com.example.mutual.Command;
 import com.example.mutual.Data;
 import com.example.mutual.User;
 import com.example.mutual.UserShort;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -54,6 +56,17 @@ public class SettingController {
     private Text imageWarning;
     @FXML
     private Text passwordWarning;
+    @FXML
+    private Text emailWarning;
+
+    @FXML
+    private Button changeUsername;
+    @FXML
+    private Button changePassword;
+    @FXML
+    private Button changeEmail;
+    @FXML
+    private Button changePhoneNum;
 
     public SettingController(ObjectOutputStream out, ObjectInputStream in,ObjectOutputStream fout, ObjectInputStream fin, User currentUser, UserShort userShort,Stage stage) {
         this.out = out;
@@ -137,6 +150,10 @@ public class SettingController {
 
     @FXML
     public void changeUsernameOnButton(Event e){
+        if (!newUsername.getText().matches("^[0-9a-zA-Z]{6,20}$")){
+            usernameWarning.setText("username must be at least 6 and at most 20 characters and only containing english alphabet and numbers");
+            return;
+        }
         try {
             out.writeObject(Command.changeUsername(currentUser.getUsername(), newUsername.getText()));
             Data data = (Data) in.readObject();
@@ -146,8 +163,6 @@ public class SettingController {
                 currentUser.setUsername(newUsername.getText());
                 userShort.setUsername(newUsername.getText());
                 newUsername.setText(null);
-
-
             }
             else {
                 usernameWarning.setText("this username is already taken");
@@ -156,22 +171,109 @@ public class SettingController {
             ex.printStackTrace();
         }
 
+        newUsername.setVisible(false);
+        changeUsername.setVisible(false);
     }
 
     @FXML
     public void changePasswordOnButton(Event e){
+        if (!newPassword.getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,20}$")){
+            passwordWarning.setText("password must be at least 8 and at most 20 characters and contain capital and small english alphabets and numbers");
+            return;
+        }
+        try {
+            out.writeObject();
+            Data data = (Data) in.readObject();
+            if ((boolean) data.getPrimary()) {
+                passwordWarning.setText("password changed successfully");
+                currentPassword.setText(newPassword.getText());
+                currentUser.setPassword(newPassword.getText());
+                newPassword.setText(null);
+            }
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        newPassword.setVisible(false);
+        changePassword.setVisible(false);
 
     }
+
     @FXML
     public void changeEmailOnButton(Event e){
+        if (!newEmail.getText().matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")){
+            emailWarning.setText("email format isn't correct");
+            return;
+        }
+        try{
+            out.writeObject();
+            Data data = (Data) in.readObject();
+            if ((boolean) data.getPrimary()){
+                emailWarning.setText("email changed successfully");
+                currentEmail.setText(newEmail.getText());
+                currentUser.setEmail(newEmail.getText());
+                newEmail.setText(null);
 
+            }
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+        newEmail.setVisible(false);
+        changeEmail.setVisible(false);
     }
     @FXML
     public void changePhoneNumOnButton(Event e){
+        try {;
+            out.writeObject();
+            Data data = (Data) in.readObject();
+            if ((boolean) data.getPrimary()){
+                currentPhoneNum.setText(newPhoneNum.getText());
+                currentUser.setPhoneNum(newPhoneNum.getText());
+                newPhoneNum.setText(null);
+            }
 
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        newPhoneNum.setVisible(false);
+        changePhoneNum.setVisible(false);
     }
     @FXML
     public void editButtonClicked(Event e){
+        Node button = (Node) e.getSource();
+        String id = button.getId();
+        switch (id){
+            case "editUsername" :
+                newUsername.setVisible(true);
+                changeUsername.setVisible(true);
+                break;
+            case "editPassword" :
+                newPassword.setVisible(true);
+                changePassword.setVisible(true);
+                break;
+            case "editEmail" :
+                newEmail.setVisible(true);
+                changeEmail.setVisible(true);
+                break;
+            case "editPhoneNum" :
+                newPhoneNum.setVisible(true);
+                changePhoneNum.setVisible(true);
+                break;
+        }
 
+
+    }
+
+    @FXML
+    public void onScreenClicked(Event e){
+        newUsername.setVisible(false);
+        newPassword.setVisible(false);
+        newEmail.setVisible(false);
+        newPhoneNum.setVisible(false);
+        changeUsername.setVisible(false);
+        changePassword.setVisible(false);
+        changeEmail.setVisible(false);
+        changePhoneNum.setVisible(false);
     }
 }
