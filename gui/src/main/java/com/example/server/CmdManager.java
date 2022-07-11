@@ -44,6 +44,9 @@ public class CmdManager {
     public Data process(Command cmd) {
         Data dt = Data.fake();
         switch (cmd.getKeyword()) {
+            case "changeInfo":
+                changeInfo(cmd);
+                break;
             case "newPvMsg":
                 newPvMsg(cmd);
                 break;
@@ -170,6 +173,17 @@ public class CmdManager {
         }
 
         return dt;
+    }
+
+    public void changeInfo(Command cmd){
+        String type =(String) cmd.getSecondary();
+        String newInfo = (String) cmd.getPrimary();
+        try {
+            stmt.executeUpdate(String.format("UPDATE users SET %s ='%s' WHERE username='%s')",type,newInfo, cmd.getUser()));
+        } catch (SQLException e) {
+            FeedBack.say("could not update email/phone/status of " + cmd.getUser());
+            e.printStackTrace();
+        }
     }
 
     public Data getFilePath(Command cmd) {

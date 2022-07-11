@@ -286,6 +286,18 @@ public class Command implements Serializable {
     }
 
     /**
+     * different allowed types = password, phone , email, status
+     * @return
+     */
+    public static Command changeInfo(String username,String typeOfinfo,String newInfo){
+        Command cmd = new Command("changeInfo");
+        cmd.user = username;
+        cmd.secondary = typeOfinfo;
+        cmd.primary = newInfo;
+        return cmd;
+    }
+
+    /**
      * a command constructor to fetch all reaction for a message from database
      *
      * @param user    username

@@ -58,7 +58,7 @@ public class ClientHandler extends Thread {
             return;
         }
 
-        if (!cmd.getKeyword().equals("pinMsg") && !cmd.getKeyword().equals("newReaction") && !cmd.getKeyword().equals("download") && !cmd.getKeyword().equals("upload") && !cmd.getKeyword().equals("newPvMsg") && !cmd.getKeyword().equals("newChannelMsg")) {
+        if (!cmd.getKeyword().equals("changeInfo") && !cmd.getKeyword().equals("pinMsg") && !cmd.getKeyword().equals("newReaction") && !cmd.getKeyword().equals("download") && !cmd.getKeyword().equals("upload") && !cmd.getKeyword().equals("newPvMsg") && !cmd.getKeyword().equals("newChannelMsg")) {
             try {
                 out.writeObject(dt);
                 System.out.println("send a data :"+dt.getKeyword());
