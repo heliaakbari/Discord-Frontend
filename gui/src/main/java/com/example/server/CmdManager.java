@@ -1100,6 +1100,7 @@ public class CmdManager {
 
     public Data getPinnedMsgs(Command cmd) {
         ArrayList<Message> messages = new ArrayList<>();
+        ArrayList<String> senders = new ArrayList<>();
         try {
             ResultSet rs = stmt.executeQuery(String.format("select * from channel_messages where channel='%s' and server='%s' and ispinned=true order by date", cmd.getChannel(), cmd.getServer()));
             while (rs.next()) {
@@ -1107,9 +1108,11 @@ public class CmdManager {
                     byte[] bytes = fileToBytes(rs.getString("FILELINK"));
                     FileMessage m = new FileMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getTimestamp("DATE").toLocalDateTime(), rs.getString("FILENAME"));
                     messages.add(m);
+                    senders.add(rs.getString("SENDER"));
                 } else {
                     TextMessage m = new TextMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getString("BODY"), rs.getTimestamp("DATE").toLocalDateTime());
                     messages.add(m);
+                    senders.add(rs.getString("SENDER"));
                 }
             }
         } catch (SQLException e) {
@@ -1118,7 +1121,7 @@ public class CmdManager {
             e.printStackTrace();
         }
         messages = addReactionsToMessages(messages);
-        return Data.pinnedMsgs(cmd.getUser(), cmd.getServer(), cmd.getChannel(), messages);
+        return Data.pinnedMsgs(cmd.getUser(), cmd.getServer(), cmd.getChannel(), messages,stringToUserShort(cmd.getUser(),senders));
     }
 
     public void banFromChannel(Command cmd) {

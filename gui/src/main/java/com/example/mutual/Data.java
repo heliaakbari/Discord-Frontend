@@ -222,12 +222,13 @@ public class Data  implements Serializable {
      * @return
      */
 
-    public static @NotNull Data pinnedMsgs(String user, String server, String channel, ArrayList<Message> messages){
+    public static @NotNull Data pinnedMsgs(String user, String server, String channel, ArrayList<Message> messages,ArrayList<UserShort> senders){
         Data data = new Data("pinnedMsgs");
         data.user = user;
         data.server = server;
         data.channel = channel;
         data.primary = messages;
+        data.secondary = senders;
         return data;
     }
 
