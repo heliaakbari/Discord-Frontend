@@ -289,6 +289,7 @@ public class FriendsController {
         stage.setScene(scene);
         stage.show();
     }
+
     public void addInboxMessages(){
         messages_grid.getChildren().clear();
         messages_grid.setVgap(3);

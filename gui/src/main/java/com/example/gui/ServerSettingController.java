@@ -3,7 +3,6 @@ package com.example.gui;
 import com.example.mutual.*;
 import com.example.mutual.Data;
 import com.example.mutual.Role;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
@@ -11,7 +10,6 @@ import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +20,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -30,10 +27,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class ServerSettingController {
 
@@ -124,8 +119,6 @@ public class ServerSettingController {
     @FXML
     protected ChoiceBox channels3;
     @FXML
-    protected ChoiceBox channels4;
-    @FXML
     protected TextField role_name;
     @FXML
     protected ChoiceBox friends1;
@@ -145,7 +138,9 @@ public class ServerSettingController {
     @FXML
     protected Text serverNameWarning;
     @FXML
-    protected Button changeServerName;
+    protected Text changeServerNameTitle;
+    @FXML
+    protected Button changeServerNameButton;
     @FXML
     protected Button deleteServerButton;
 
@@ -450,7 +445,6 @@ public class ServerSettingController {
     }
 
 
-    @FXML
     public void addUserToChannel(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -533,11 +527,14 @@ public class ServerSettingController {
         // ability to rename server
         if (role.getValues().charAt(5) == '1'){
             newServerName.setVisible(true);
-            changeServerName.setVisible(true);
+            changeServerNameButton.setVisible(true);
+            changeServerNameTitle.setVisible(true);
         }
         else{
             newServerName.setVisible(false);
-            changeServerName.setVisible(false);
+            changeServerNameButton.setVisible(false);
+            changeServerNameTitle.setVisible(false);
+            serverNameWarning.setVisible(false);
         }
 
         // ability to delete server

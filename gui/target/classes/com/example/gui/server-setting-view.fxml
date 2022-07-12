@@ -24,7 +24,7 @@
    <children>
       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
          <tabs>
-            <Tab fx:id="addUserToChannel" onSelectionChanged="#addUserToChannel" text="add user to channel">
+            <Tab fx:id="addUserToChannel" onSelectionChanged="#addUserToChannel" text="add user(channel)">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -111,7 +111,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="deleteUserFromServer" onSelectionChanged="#deleteUserFromServer" text="delete user from server">
+            <Tab fx:id="deleteUserFromServer" onSelectionChanged="#deleteUserFromServer" text="delete user(server)">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -137,7 +137,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="deleteUserFromChannel" closable="false" onSelectionChanged="#deleteUserFromChannel" text="delete user from channel">
+            <Tab fx:id="deleteUserFromChannel" closable="false" onSelectionChanged="#deleteUserFromChannel" text="delete user(channel)">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -171,7 +171,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="addUserToServer" onSelectionChanged="#addUserToServer" text="add user to server">
+            <Tab fx:id="addUserToServer" onSelectionChanged="#addUserToServer" text="add user(server)">
                <content>
                   <AnchorPane disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0">
                      <children>
@@ -479,7 +479,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <Button fx:id="leave_server" mnemonicParsing="false" onAction="#leaveFromServerOnButton" text="leave server" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                              <Button fx:id="leave_server" mnemonicParsing="false" onAction="#leaveFromServerOnButton" prefHeight="31.0" prefWidth="84.0" text="leave server" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
                      </children></AnchorPane>
@@ -487,7 +487,30 @@
             </Tab>
             <Tab fx:id="rename_delete_server" text="rename/delete server">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="newServerName" layoutX="376.0" layoutY="256.0" prefHeight="59.0" prefWidth="227.0" />
+                        <Text fx:id="serverNameWarning" layoutX="376.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="377.13671875">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Text>
+                        <Button fx:id="changeServerNameButton" layoutX="627.0" layoutY="257.0" mnemonicParsing="false" onAction="#renameServerOnButton" text="change">
+                           <font>
+                              <Font size="27.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="deleteServerButton" layoutX="22.0" layoutY="37.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="140.0" text="Delete Server" textAlignment="CENTER" textFill="#ee1111">
+                           <font>
+                              <Font size="19.0" />
+                           </font>
+                        </Button>
+                        <Text fx:id="changeServerNameTitle" layoutX="376.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="change server name">
+                           <font>
+                              <Font size="23.0" />
+                           </font>
+                        </Text>
+                     </children></AnchorPane>
               </content>
             </Tab>
          </tabs>
