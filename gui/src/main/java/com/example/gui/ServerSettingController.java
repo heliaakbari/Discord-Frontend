@@ -30,7 +30,7 @@ public class ServerSettingController {
     protected ObjectInputStream fin;
 
     protected ArrayList<String> channels;
-    protected ArrayList<HashMap<String, Role>> serverMembers;
+    protected HashMap<String, Role> serverMembers;
     protected ArrayList<UserShort> channelMembers;
     protected ArrayList<UserShort> friends;
 
@@ -171,7 +171,7 @@ class AddServerMembers extends Service<Void>{
             protected Void call() throws Exception {
                 ssc.out.writeObject(Command.getServerMembers(ssc.currentUser, ssc.currentServer));
                 Data data = (Data) ssc.in.readObject();
-                ssc.serverMembers = (ArrayList<HashMap<String, Role>>) data.getPrimary();
+                ssc.serverMembers = (HashMap<String, Role>) data.getPrimary();
                 return null;
             }
         };
@@ -180,11 +180,9 @@ class AddServerMembers extends Service<Void>{
     @Override
     protected void succeeded() {
         ssc.serverMembers1.getItems().clear();
-        for (HashMap<String ,Role> user: ssc.serverMembers) {
-            for (Map.Entry<String,Role> entry : user.entrySet()) {
+            for (HashMap.Entry<String,Role> entry : ssc.serverMembers.entrySet()) {
                 ssc.serverMembers1.getItems().add(entry.getKey());
             }
-        }
     }
 }
 
@@ -286,4 +284,27 @@ class AddChannelsAndFriends extends Service<Void>{
     }
 }
 
+class OpenServerRoles extends Service<Void>{
+    ServerSettingController ssc;
 
+    public OpenServerRoles(ServerSettingController ssc){
+        this.ssc = ssc;
+    }
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Command cmd = Command.getServerMembers(ssc.currentUser,ssc.currentServer);
+                ssc.out.writeObject(cmd);
+                Data data = (Data) ssc.in.readObject();
+                return null;
+            }
+        };
+    }
+
+    @Override
+    protected void succeeded() {
+
+    }
+}
