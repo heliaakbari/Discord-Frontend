@@ -546,14 +546,8 @@ public class ServerSettingController {
         new AddFriends(this).restart();
     }
 
-    public void serverRoles(Event e) {
-        Tab tab = (Tab) e.getSource();
-        if (!tab.isSelected())
-            return;
-    }
-
     public void leave(Event e) {
-        if (role.getValues().length() == 9){
+        if (role.getRoleName().equals("creator")){
             leave_server.setVisible(false);
             leaveServerLabel.setVisible(false);
         }
@@ -625,7 +619,7 @@ class GetRole extends Service<Void> {
             }
         }
 
-        if (ssc.role.getValues().length() == 9) {
+        if (ssc.role.getRoleName().equals("creator")) {
             ssc.addUserToChannel.setDisable(false);
             ssc.serverRoles.setDisable(false);
         }
