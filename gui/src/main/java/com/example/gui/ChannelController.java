@@ -605,6 +605,7 @@ public class ChannelController {
             });
             textFlow.getChildren().add(pin);
         }
+
         if(message instanceof FileMessage){
             RadioButton download = new RadioButton("download");
             download.setOnAction(new EventHandler<ActionEvent>() {
@@ -781,6 +782,7 @@ class GoToServer extends Service<Void>{
         MessageReader mr = new MessageReader(cc);
         mr.setDaemon(true);
         mr.start();
+
     }
 }
 
@@ -802,6 +804,9 @@ class GoToChannel extends Service<Void>{
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
+                cc.message_textField.setVisible(true);
+                cc.send_button.setVisible(true);
+                cc.file_button.setVisible(true);
                 cc.currentChannel = channelName;
                 cc.out.writeObject(Command.getChannelMsgs(cc.currentUser,cc.currentServer,cc.currentChannel,5));
                 Data dt =(Data) cc.in.readObject();
