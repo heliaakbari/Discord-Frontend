@@ -50,6 +50,7 @@ public class ServerSettingController {
     protected ChoiceBox<String> changerole_role;
     @FXML
     protected GridPane role_desc;
+
     @FXML
     protected Tab deleteChannel;
     @FXML
@@ -91,6 +92,10 @@ public class ServerSettingController {
 //    @FXML
 //    protected Tab ;
 
+
+    protected Tab serverName;
+    @FXML
+    protected Tab deleteServer;
 
     @FXML
     protected ChoiceBox channels1;
@@ -221,7 +226,6 @@ public class ServerSettingController {
         }
     }
 
-
     public void addUserToChannel(Event e){
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -281,6 +285,52 @@ public class ServerSettingController {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
+    }
+}
+
+class GetRole extends Service<Void>{
+    ServerSettingController ssc;
+
+    public GetRole(ServerSettingController ssc) {
+        this.ssc = ssc;
+    }
+
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                ssc.out.writeObject(Command.getRole(ssc.currentUser, ssc.currentServer));
+                Data data = (Data) ssc.in.readObject();
+                ssc.role = (Role) data.getPrimary();
+                return null;
+            }
+        };
+    }
+
+    @Override
+    protected void succeeded() {
+        ssc.leave.setDisable(false);
+        ssc.addUserToServer.setDisable(false);
+        ArrayList<String> abilities = ssc.role.getAvailableAbilities();
+        for (String ability: abilities) {
+            switch (ability){
+                case "create channel" -> ssc.createChannel.setDisable(false);
+                case "remove channel" -> ssc.deleteChannel.setDisable(false);
+                case "remove member from server " -> ssc.deleteUserFromServer.setDisable(false);
+                case "remove member from channel" -> ssc.deleteUserFromChannel.setDisable(false);
+                case "change server name" -> ssc.serverName.setDisable(false);
+                case "see chat history" -> ssc.chatHistory.setDisable(false);
+                case "delete server" -> ssc.deleteServer.setDisable(false);
+
+            }
+        }
+
+        if (ssc.role.getValues().length() == 9){
+            ssc.addUserToChannel.setDisable(false);
+            ssc.serverRoles.setDisable(false);
+        }
+
     }
 }
 
@@ -466,7 +516,9 @@ class OpenServerRoles extends Service<Void>{
                 Command cmd = Command.getServerMembers(ssc.currentUser,ssc.currentServer);
                 ssc.out.writeObject(cmd);
                 Data data = (Data) ssc.in.readObject();
+
                ssc.serverMembers =(HashMap<String, Role>) data.getPrimary();
+
                 return null;
             }
         };
