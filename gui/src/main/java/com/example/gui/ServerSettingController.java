@@ -206,6 +206,9 @@ public class ServerSettingController {
         if(role == null){
             return;
         }
+        if(role.equals("creator")){
+            return;
+        }
         Command cmd = Command.changeRole(currentUser,changerole_member.getValue(),currentServer,role);
         try {
             out.writeObject(cmd);
@@ -261,6 +264,9 @@ public class ServerSettingController {
 
         Role role = new Role(abilities,role_name.getText());
         if(choicebox_createrole.getValue().equals("none")){
+            return;
+        }
+        if(choicebox_createrole.getValue().equals("creator")){
             return;
         }
         Command cmd =Command.changeRole(currentUser,choicebox_createrole.getValue(),currentServer,role);
@@ -360,6 +366,8 @@ public class ServerSettingController {
     @FXML
     public void deleteFromServerOnButton(Event e) {
         String person = (String) serverMembers1.getSelectionModel().getSelectedItem();
+        if(role.getRoleName().equals("creator"))
+            return;
         try {
             out.writeObject(Command.banFromServer(person, currentServer));
             Data data = (Data) in.readObject();
@@ -374,6 +382,9 @@ public class ServerSettingController {
     public void deleteFromChannelOnButton(Event e) {
         String person = (String) channelMembers1.getSelectionModel().getSelectedItem();
         String channel = (String) channels3.getSelectionModel().getSelectedItem();
+        if(channel.equals("general")){
+            return;
+        }
         try {
             out.writeObject(Command.banFromChannel(person, currentServer, channel));
             Data data = (Data) in.readObject();
@@ -389,14 +400,18 @@ public class ServerSettingController {
         if(channels_list_leave.getValue()==null){
             return;
         }
-        try{
-            System.out.println("ban");
-            out.writeObject(Command.banFromChannel(currentUser, currentServer,channels_list_leave.getValue()));
-            Data data = (Data) in.readObject();
-        } catch (IOException | ClassNotFoundException ex){
-            ex.printStackTrace();
+        if(channels_list_leave.getValue()=="general") {
+            return;
         }
-        try {
+            try{
+                System.out.println("ban");
+                out.writeObject(Command.banFromChannel(currentUser, currentServer,channels_list_leave.getValue()));
+                Data data = (Data) in.readObject();
+            } catch (IOException | ClassNotFoundException ex){
+                ex.printStackTrace();
+            }
+
+            try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
@@ -408,6 +423,9 @@ public class ServerSettingController {
     }
     @FXML
     public void leaveFromServerOnButton(Event e){
+        if(role.getRoleName().equals("creator")){
+            return;
+        }
         try{
             out.writeObject(Command.banFromServer(currentUser, currentServer));
             Data data = (Data) in.readObject();
