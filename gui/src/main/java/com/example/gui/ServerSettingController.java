@@ -206,7 +206,7 @@ public class ServerSettingController {
         new GetRole(this).restart();
 
     }
-    
+
     public void changeRole(Event e) {
         Button btn = (Button) e.getSource();
         Role role = null;
