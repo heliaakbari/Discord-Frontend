@@ -24,7 +24,7 @@
    <children>
       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
          <tabs>
-            <Tab fx:id="tab_add" text="add user to channel">
+            <Tab fx:id="tab_add" onSelectionChanged="#addUserToChannel" text="add user to channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -39,9 +39,9 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ChoiceBox prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <ChoiceBox prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" />
-                              <Button mnemonicParsing="false" prefHeight="30.0" text="add to channel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                              <ChoiceBox fx:id="friends1" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <ChoiceBox fx:id="channels1" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" text="add " GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose the channel" wrappingWidth="210.4564220905304">
                                  <font>
                                     <Font size="18.0" />
@@ -56,7 +56,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab_all"  text="create channel">
+            <Tab fx:id="tab_all" text="create channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -83,7 +83,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab_online"  text="delete channel">
+            <Tab fx:id="tab_online" onSelectionChanged="#deleteChannel" text="delete channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -97,7 +97,7 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" />
+                              <ChoiceBox fx:id="channels2" prefWidth="150.0" GridPane.columnIndex="1" />
                               <Button mnemonicParsing="false" prefHeight="30.0" text="delete channel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose channel">
                                  <font>
@@ -109,7 +109,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab_pending" text="delete user from server">
+            <Tab fx:id="tab_pending" onSelectionChanged="#deleteUserFromServer" text="delete user from server">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -123,8 +123,8 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" />
-                              <Button mnemonicParsing="false" prefHeight="30.0" text="delete user" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <ChoiceBox fx:id="serverMembers1" prefWidth="150.0" GridPane.columnIndex="1" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" text="remove" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose user">
                                  <font>
                                     <Font size="18.0" />
@@ -135,7 +135,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab_blocked" closable="false" text="delete user from channel">
+            <Tab fx:id="tab_blocked" closable="false" onSelectionChanged="#deleteUserFromChannel" text="delete user from channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -150,15 +150,15 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ChoiceBox prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <ChoiceBox prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" />
-                              <Button mnemonicParsing="false" prefHeight="30.0" text="add to channel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                              <ChoiceBox fx:id="channelMembers1" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <ChoiceBox fx:id="channels3" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" text="remove" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose the channel" wrappingWidth="210.4564220905304">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose your friend" GridPane.rowIndex="1">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose user" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -169,7 +169,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="add user to server">
+            <Tab onSelectionChanged="#addUserToServer" text="add user to server">
                <content>
                   <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0">
                      <children>
@@ -183,7 +183,7 @@
                               <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" />
+                              <ChoiceBox fx:id="friends2" prefWidth="150.0" GridPane.columnIndex="1" />
                               <Button mnemonicParsing="false" prefHeight="30.0" text="add user" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose user">
                                  <font>
@@ -196,7 +196,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab_add1" text="server roles">
+            <Tab fx:id="tab_add1" onSelectionChanged="#serverRoles" text="server roles">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -406,7 +406,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab_add2" text="chat history">
+            <Tab fx:id="tab_add2" onSelectionChanged="#chatHistory" text="chat history">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" />
                </content>
