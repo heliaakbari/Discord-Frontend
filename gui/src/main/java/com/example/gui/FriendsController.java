@@ -36,6 +36,7 @@ public class FriendsController {
     protected ObjectOutputStream fout;
     protected ObjectInputStream fin;
     protected String currentUser;
+
     protected ArrayList<String> servers = new ArrayList<>();
     protected ArrayList<UserShort> directChats = new ArrayList<>();
     protected ArrayList<UserShort> allFriends = new ArrayList<>();
@@ -198,7 +199,7 @@ public class FriendsController {
         btn.setOnAction((ActionEvent event) -> {
             System.out.println("clicked");
 
-            Dialog<Boolean> dialog = new Dialog<Boolean>();
+            Dialog<Boolean> dialog = new Dialog<>();
             dialog.setTitle("CREATING SERVER");
             dialog.setHeight(240);
             dialog.setWidth(400);
@@ -247,6 +248,7 @@ public class FriendsController {
                             dialog.setResult(Boolean.TRUE);
                             new GetServers(this).restart();
                             dialog.close();
+                            changeToServerSetting(serverName.getText(), event);
                         }
                     }
                 } catch (IOException | ClassNotFoundException ex){
@@ -274,6 +276,19 @@ public class FriendsController {
 
     }
 
+    public void changeToServerSetting(String serverName, Event event){
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("server-setting-view.fxml"));
+        fxmlLoader.setController(new ServerSettingController(null, currentUser, serverName, out, in, fout, fin));
+        Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
     public void addInboxMessages(){
         messages_grid.getChildren().clear();
         messages_grid.setVgap(3);

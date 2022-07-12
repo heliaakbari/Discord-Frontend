@@ -31,7 +31,7 @@ public class ServerSide {
 
     public ServerSide() {
         try {
-            serverSocket = new ServerSocket(8644);
+            serverSocket = new ServerSocket(8643);
             fileSocket = new ServerSocket(8999);
             clientHandlers = new HashMap<>();
         } catch (IOException e) {
