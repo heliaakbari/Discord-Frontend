@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
@@ -34,7 +35,6 @@ public class ServerSettingController {
     protected Role role;
     protected String currentUser;
     protected String currentServer;
-    protected String currentChannel;
 
     protected ObjectOutputStream out;
     protected ObjectInputStream in;
@@ -74,6 +74,8 @@ public class ServerSettingController {
     @FXML
     protected ChoiceBox channels3;
     @FXML
+    protected ChoiceBox channels4;
+    @FXML
     protected ChoiceBox friends1;
     @FXML
     protected ChoiceBox friends2;
@@ -87,9 +89,13 @@ public class ServerSettingController {
     @FXML
     protected TextField newChannelName;
     @FXML
-    protected Text newServerName;
+    protected TextField newServerName;
     @FXML
-    protected TextField serverNameWarning;
+    protected Text serverNameWarning;
+    @FXML
+    protected Button changeServerName;
+    @FXML
+    protected Button deleteServer;
 
 
     public ServerSettingController(Role role, String currentUser, String currentServer, ObjectOutputStream out, ObjectInputStream in, ObjectOutputStream fout, ObjectInputStream fin) {
@@ -204,6 +210,15 @@ public class ServerSettingController {
     @FXML
     public void leaveFromChannelOnButton(Event e){
 
+        String channel = (String) channels4.getSelectionModel().getSelectedItem();
+        try{
+            out.writeObject(Command.banFromChannel(currentUser, currentServer, channel));
+            Data data = (Data) in.readObject();
+
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
     }
 
     @FXML
@@ -232,7 +247,29 @@ public class ServerSettingController {
 
     @FXML
     public void renameServerOnButton(Event e){
+        String newName = newServerName.getText();;
+        if (newName.equals("")){
+            serverNameWarning.setText("type a name first!");
+            serverNameWarning.setFill(Color.RED);
+        }
+        else{
+            try {
+                out.writeObject(Command.changeServerName(currentUser, currentServer, newName));
+                Data data = (Data) in.readObject();
+                if (!(boolean) data.getPrimary()){
+                    serverNameWarning.setText("this name is taken, try another one!");
+                    serverNameWarning.setFill(Color.RED);
+                }
+                else{
+                    serverNameWarning.setText("server name changed successfully!");
+                    serverNameWarning.setFill(Color.GREEN);
+                }
 
+            } catch (IOException | ClassNotFoundException ex){
+                ex.printStackTrace();
+            }
+
+        }
     }
 
 
@@ -264,7 +301,7 @@ public class ServerSettingController {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
-        new AddChannels(this).restart();
+        new AddChannels(this, channels2).restart();
     }
 
     public void deleteUserFromServer(Event e) {
@@ -304,6 +341,26 @@ public class ServerSettingController {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
+        new AddChannels(this, channels4);
+    }
+
+    public void renameDelete(Event e){
+        // ability to rename server
+        if (role.getValues().charAt(5) == '1'){
+            newServerName.setVisible(true);
+            changeServerName.setVisible(true);
+        }
+        else{
+            newServerName.setVisible(false);
+            changeServerName.setVisible(false);
+        }
+
+        // ability to delete server
+        if (role.getValues().charAt(8) == '1')
+            deleteServer.setVisible(true);
+        else
+            deleteServer.setVisible(false);
+
     }
 
 
@@ -359,6 +416,7 @@ class GetRole extends Service<Void> {
 class AddChannelsAndChannelMembers extends Service<Void> {
 
     ServerSettingController ssc;
+    String currentChannel;
 
     public AddChannelsAndChannelMembers(ServerSettingController ssc) {
         this.ssc = ssc;
@@ -373,10 +431,28 @@ class AddChannelsAndChannelMembers extends Service<Void> {
                 Data data = (Data) ssc.in.readObject();
                 ssc.channels = (ArrayList<String>) data.getPrimary();
 
+                ssc.channels3.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Number> observableValue, Number number1, Number number2) {
+                        currentChannel = (String) ssc.channels3.getItems().get((Integer) number2);
 
-                ssc.out.writeObject(Command.getChannelMembers(ssc.currentUser, ssc.currentServer, ssc.currentChannel));
-                data = (Data) ssc.in.readObject();
-                ssc.channelMembers = (ArrayList<UserShort>) data.getPrimary();
+                        try {
+                            ssc.out.writeObject(Command.getChannelMembers(ssc.currentUser, ssc.currentServer, currentChannel));
+                            Data data2 = (Data) ssc.in.readObject();
+                            ssc.channelMembers = (ArrayList<UserShort>) data2.getPrimary();
+
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        ssc.channelMembers1.getItems().clear();
+                        for (UserShort user : ssc.channelMembers) {
+                            ssc.channels3.getItems().add(user.getUsername());
+                        }
+
+                    }
+                });
+
                 return null;
             }
         };
@@ -387,10 +463,6 @@ class AddChannelsAndChannelMembers extends Service<Void> {
         ssc.channels3.getItems().clear();
         ssc.channels3.getItems().addAll(ssc.channels);
 
-        ssc.channelMembers1.getItems().clear();
-        for (UserShort user : ssc.channelMembers) {
-            ssc.channels3.getItems().add(user.getUsername());
-        }
     }
 }
 
@@ -429,6 +501,7 @@ class AddServerMembers extends Service<Void> {
 class AddFriends extends Service<Void> {
 
     ServerSettingController ssc;
+    HashMap<String , Role> membersAlreadyHere;
 
     public AddFriends(ServerSettingController ssc) {
         this.ssc = ssc;
@@ -442,6 +515,10 @@ class AddFriends extends Service<Void> {
                 ssc.out.writeObject(Command.getFriends(ssc.currentUser));
                 Data data = (Data) ssc.in.readObject();
                 ssc.friends = (ArrayList<UserShort>) data.getPrimary();
+
+                ssc.out.writeObject(Command.getServerMembers(ssc.currentUser, ssc.currentServer));
+                data = (Data) ssc.in.readObject();
+                membersAlreadyHere = (HashMap<String, Role>) data.getPrimary();
                 return null;
             }
         };
@@ -451,17 +528,20 @@ class AddFriends extends Service<Void> {
     protected void succeeded() {
         ssc.friends2.getItems().clear();
         for (UserShort user : ssc.friends) {
-            ssc.friends2.getItems().add(user.getUsername());
+            if (!membersAlreadyHere.containsKey(user.getUsername()))
+                ssc.friends2.getItems().add(user.getUsername());
         }
     }
 }
 
-// for delete channel
+// for delete channel and leave channel
 class AddChannels extends Service<Void> {
     ServerSettingController ssc;
+    ChoiceBox channels;
 
-    public AddChannels(ServerSettingController ssc) {
+    public AddChannels(ServerSettingController ssc, ChoiceBox channels) {
         this.ssc = ssc;
+        this.channels = channels;
     }
 
     @Override
@@ -479,8 +559,8 @@ class AddChannels extends Service<Void> {
 
     @Override
     protected void succeeded() {
-        ssc.channels2.getItems().clear();
-        ssc.channels2.getItems().addAll(ssc.channels);
+        channels.getItems().clear();
+        channels.getItems().addAll(ssc.channels);
 
     }
 }
