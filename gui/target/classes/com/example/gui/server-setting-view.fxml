@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -33,7 +41,7 @@
                            <children>
                               <ChoiceBox fx:id="friends1" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <ChoiceBox fx:id="channels1" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" />
-                              <Button mnemonicParsing="false" prefHeight="30.0" text="add to channel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" text="add " GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose the channel" wrappingWidth="210.4564220905304">
                                  <font>
                                     <Font size="18.0" />
@@ -48,7 +56,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab_all" onSelectionChanged="#createChannel" text="create channel">
+            <Tab fx:id="tab_all" text="create channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -116,7 +124,7 @@
                            </rowConstraints>
                            <children>
                               <ChoiceBox fx:id="serverMembers1" prefWidth="150.0" GridPane.columnIndex="1" />
-                              <Button mnemonicParsing="false" prefHeight="30.0" text="delete user" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" text="remove" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose user">
                                  <font>
                                     <Font size="18.0" />
@@ -144,13 +152,13 @@
                            <children>
                               <ChoiceBox fx:id="channelMembers1" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <ChoiceBox fx:id="channels3" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" />
-                              <Button mnemonicParsing="false" prefHeight="30.0" text="add to channel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" text="remove" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose the channel" wrappingWidth="210.4564220905304">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose your friend" GridPane.rowIndex="1">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose user" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -190,7 +198,212 @@
             </Tab>
             <Tab fx:id="tab_add1" onSelectionChanged="#serverRoles" text="server roles">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+                           <children>
+                              <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="300.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="252.0" minWidth="10.0" prefWidth="143.44446309407553" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.66666158040363" minWidth="0.0" prefWidth="156.55553690592447" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose role" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose member" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Button mnemonicParsing="false" text="add/change role" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label text="add/change a member's role" GridPane.columnSpan="2">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                       <textFill>
+                                          <LinearGradient endX="1.0" endY="1.0">
+                                             <stops>
+                                                <Stop>
+                                                   <color>
+                                                      <Color green="0.18333333730697632" blue="1.0" />
+                                                   </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                   <color>
+                                                      <Color red="1.0" />
+                                                   </color>
+                                                </Stop>
+                                             </stops>
+                                          </LinearGradient>
+                                       </textFill>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                              <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="330.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="331.111083984375" minWidth="10.0" prefWidth="110.33333333333331" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.88890584309894" minWidth="10.0" prefWidth="173.55562337239581" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.88890584309894" minWidth="10.0" prefWidth="41.7777099609375" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.88890584309894" minWidth="10.0" prefWidth="39.66668701171875" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label prefHeight="30.0" prefWidth="266.0" text="make a new role" GridPane.columnSpan="2">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                       <textFill>
+                                          <LinearGradient endX="1.0" endY="1.0">
+                                             <stops>
+                                                <Stop>
+                                                   <color>
+                                                      <Color red="1.0" />
+                                                   </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                   <color>
+                                                      <Color red="1.0" blue="0.7484143972396851" />
+                                                   </color>
+                                                </Stop>
+                                             </stops>
+                                          </LinearGradient>
+                                       </textFill>
+                                    </Label>
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="role's name" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="1. create channel" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="2. delete channel" GridPane.rowIndex="3">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="3. delete member from server" GridPane.rowIndex="4">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="4. delete member from channel" GridPane.rowIndex="5">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="5. add user to server" GridPane.rowIndex="6">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="6. view chat history" GridPane.rowIndex="7">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="7. change server name" GridPane.rowIndex="8">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="8. pin a message" GridPane.rowIndex="9">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Text>
+                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" text="create role" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.rowIndex="10">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Button>
+                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="one" />
+                                       </toggleGroup>
+                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" text="off" toggleGroup="$one" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="one1" />
+                                       </toggleGroup>
+                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" text="off" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="two" />
+                                       </toggleGroup>
+                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" text="off" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="three" />
+                                       </toggleGroup>
+                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" text="off" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="four" />
+                                       </toggleGroup>
+                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" text="off" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="five" />
+                                       </toggleGroup>
+                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" text="off" GridPane.columnIndex="3" GridPane.rowIndex="7">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="six" />
+                                       </toggleGroup>
+                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" text="off" GridPane.columnIndex="3" GridPane.rowIndex="8">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="seven" />
+                                       </toggleGroup>
+                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" text="off" GridPane.columnIndex="3" GridPane.rowIndex="9">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="eight" />
+                                       </toggleGroup>
+                                    </ToggleButton>
+                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$two" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$three" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$four" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$five" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$six" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$seven" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$eight" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                     </children></AnchorPane>
                </content>
             </Tab>
             <Tab fx:id="tab_add2" onSelectionChanged="#chatHistory" text="chat history">
@@ -198,7 +411,12 @@
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" />
                </content>
             </Tab>
-            <Tab fx:id="tab_online1" onSelectionChanged="#leave" text="leave from channel/server">
+            <Tab fx:id="tab_add21" onSelectionChanged="#chatHistory" text="server's name">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+            <Tab fx:id="tab_online1" onSelectionChanged="#leave" text="leave">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" />
                </content>
