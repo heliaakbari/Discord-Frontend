@@ -11,8 +11,15 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -75,6 +82,15 @@ public class ServerSettingController {
     @FXML
     protected ChoiceBox channelMembers1;
 
+    @FXML
+    protected Text createChannelWarning;
+    @FXML
+    protected TextField newChannelName;
+    @FXML
+    protected Text newServerName;
+    @FXML
+    protected TextField serverNameWarning;
+
 
     public ServerSettingController(Role role, String currentUser, String currentServer, ObjectOutputStream out, ObjectInputStream in, ObjectOutputStream fout, ObjectInputStream fin) {
         this.in = in;
@@ -96,7 +112,6 @@ public class ServerSettingController {
 
         ArrayList<String> choice = new ArrayList<>();
         choice.add((String) friends2.getSelectionModel().getSelectedItem());
-
         try {
             out.writeObject(Command.addPeopleToServer(currentUser, currentServer, choice));
             in.readObject();
@@ -109,35 +124,140 @@ public class ServerSettingController {
     @FXML
     public void createChannelOnButton(Event e) {
 
+        String channelName = newChannelName.getText();
+        if (channelName.equals("")) {
+            createChannelWarning.setText("type a name first!");
+            createChannelWarning.setFill(Color.RED);
+        }
+        else {
+            try {
+                out.writeObject(Command.newChannel(currentUser, currentServer, channelName));
+                Data data = (Data) in.readObject();
+                if (!(boolean) data.getPrimary()) {
+                    createChannelWarning.setText("this name is taken, try another one!");
+                    createChannelWarning.setFill(Color.RED);
+                }
+                else {
+                    createChannelWarning.setText("channel created successfully");
+                    createChannelWarning.setFill(Color.GREEN);
+                }
+            } catch (IOException | ClassNotFoundException ex) {
+                ex.printStackTrace();
+            }
+
+        }
     }
 
     @FXML
     public void addToChannelOnButton(Event e) {
+        String channel = (String) channels1.getSelectionModel().getSelectedItem();
+        String person = (String) friends1.getSelectionModel().getSelectedItem();
+
+        try{
+            out.writeObject(Command.addOneMemberToChannel(currentUser, person, currentServer, channel));
+            Data data = (Data) in.readObject();
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
 
     }
 
     @FXML
     public void deleteChannelOnButton(Event e) {
+        String channel = (String) channels2.getSelectionModel().getSelectedItem();
+        try {
+            out.writeObject(Command.deleteChannel(currentUser,currentServer, channel));
+            Data data = (Data) in.readObject();
 
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
     }
 
     @FXML
     public void deleteFromServerOnButton(Event e) {
+        String person = (String) serverMembers1.getSelectionModel().getSelectedItem();
+        try {
+            out.writeObject(Command.banFromServer(person, currentServer));
+            Data data = (Data) in.readObject();
+
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
 
     }
 
     @FXML
     public void deleteFromChannelOnButton(Event e) {
+        String person = (String) channelMembers1.getSelectionModel().getSelectedItem();
+        String channel = (String) channels3.getSelectionModel().getSelectedItem();
+        try {
+            out.writeObject(Command.banFromChannel(person, currentServer, channel));
+            Data data = (Data) in.readObject();
+
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+    }
+
+    @FXML
+    public void leaveFromChannelOnButton(Event e){
+
+    }
+
+    @FXML
+    public void leaveFromServerOnButton(Event e){
+        try{
+            out.writeObject(Command.banFromServer(currentUser, currentServer));
+            Data data = (Data) in.readObject();
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        changeToFriendsView(e);
+    }
+
+    @FXML
+    public void deleteServerOnButton(Event e){
+        try{
+            out.writeObject(Command.deleteServer(currentUser, currentServer));
+            Data data = (Data) in.readObject();
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        changeToFriendsView(e);
+    }
+
+    @FXML
+    public void renameServerOnButton(Event e){
 
     }
 
 
+    @FXML
     public void addUserToChannel(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
 
         new AddChannelsAndFriends(this).restart();
+    }
+
+    public void changeToFriendsView(Event event){
+        FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
+        FriendsController friendsController = new FriendsController(in, out, fin, fout, currentUser);
+        fxmlLoader.setController(friendsController);
+        Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void deleteChannel(Event e) {
@@ -185,6 +305,8 @@ public class ServerSettingController {
         if (!tab.isSelected())
             return;
     }
+
+
 }
 
 class GetRole extends Service<Void> {
