@@ -22,6 +22,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -29,6 +30,9 @@ import java.util.*;
 
 import com.example.mutual.*;
 
+/**
+ * this class is responsible for handling events in friends-view.fxml file such as pressing buttons etc.
+ */
 public class FriendsController {
 
     protected ObjectOutputStream out;
@@ -95,21 +99,24 @@ public class FriendsController {
         currentUser = username;
     }
 
+    /**
+     * does any necessary jobs when first entering the scene including getting the servers list and showing it on the left panel
+     */
     @FXML
     public void initialize() {
         new GetServers(this).restart();
     }
 
-    public void newDirectFromSearch(Event event){
+    public void newDirectFromSearch(Event event) {
         String text = search_text.getText();
         search_text.clear();
 
-        for(UserShort friend : allFriends){
-            if(friend.getUsername().equals(text)){
+        for (UserShort friend : allFriends) {
+            if (friend.getUsername().equals(text)) {
                 FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("pv-view.fxml"));
-                PvController pvController = new PvController(in,out,fin,fout,currentUser,text);
+                PvController pvController = new PvController(in, out, fin, fout, currentUser, text);
                 fxmlLoader.setController(pvController);
-                Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+                Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
                 Scene scene = null;
                 try {
                     scene = new Scene(fxmlLoader.load(), 1000, 600);
@@ -135,10 +142,10 @@ public class FriendsController {
                 @Override
                 public void handle(ActionEvent event) {
                     FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("pv-view.fxml"));
-                    PvController pvController = new PvController(in,out,fin,fout,currentUser,((Button)event.getSource()).getText());
+                    PvController pvController = new PvController(in, out, fin, fout, currentUser, ((Button) event.getSource()).getText());
                     fxmlLoader.setController(pvController);
-                    Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
-                   Scene scene = null;
+                    Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+                    Scene scene = null;
                     try {
                         scene = new Scene(fxmlLoader.load(), 1000, 600);
                     } catch (IOException e) {
@@ -148,7 +155,7 @@ public class FriendsController {
                     stage.show();
                 }
             });
-            name.setPrefSize(150,40);
+            name.setPrefSize(150, 40);
             directs_grid.addColumn(1, name);
         }
     }
@@ -233,13 +240,12 @@ public class FriendsController {
             warning.setLayoutY(160);
             text.setTextAlignment(TextAlignment.CENTER);
 
-            Button ok= new Button("ok");
+            Button ok = new Button("ok");
             ok.setOnAction((ActionEvent event2) -> {
                 try {
-                    if (serverName.getText().equals("")){
+                    if (serverName.getText().equals("")) {
                         warning.setText("type a name first!");
-                    }
-                    else {
+                    } else {
                         out.writeObject(Command.newServer(currentUser, serverName.getText()));
                         Data data = (Data) in.readObject();
                         if (!(boolean) data.getPrimary())
@@ -251,7 +257,7 @@ public class FriendsController {
                             changeToServerSetting(serverName.getText(), event);
                         }
                     }
-                } catch (IOException | ClassNotFoundException ex){
+                } catch (IOException | ClassNotFoundException ex) {
                     ex.printStackTrace();
                 }
 
@@ -285,9 +291,14 @@ public class FriendsController {
 
     }
 
-    public void changeToServerSetting(String serverName, Event event){
+    /**
+     * changes the scene to server-setting view after a server is created
+     * @param serverName
+     * @param event
+     */
+    public void changeToServerSetting(String serverName, Event event) {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("server-setting-view.fxml"));
-        Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
         fxmlLoader.setController(new ServerSettingController(null, currentUser, serverName, out, in, fout, fin, stage));
         Scene scene = null;
         try {
@@ -299,15 +310,15 @@ public class FriendsController {
         stage.show();
     }
 
-    public void addInboxMessages(){
+    public void addInboxMessages() {
         messages_grid.getChildren().clear();
         messages_grid.setVgap(3);
-        for(UserShort user : inboxPics ){
-            messages_grid.addColumn(1,user.profileStatus(25.0));
+        for (UserShort user : inboxPics) {
+            messages_grid.addColumn(1, user.profileStatus(25.0));
         }
-        for(Message msg : inbox){
+        for (Message msg : inbox) {
             TextFlow textFlow = new TextFlow();
-            textFlow.getChildren().add(new Text(msg.toString()+"\n"));
+            textFlow.getChildren().add(new Text(msg.toString() + "\n"));
             textFlow.setStyle("-fx-background-color: rgb(176,223,255); -fx-border-radius: 5px;");
             textFlow.setPadding(new Insets(5));
             textFlow.setBorder(Border.stroke(Color.BLACK));
@@ -318,18 +329,26 @@ public class FriendsController {
 
     protected Boolean firsttime = true;
 
+    /**
+     * handles the event when the 'all' tab is selected
+     * @param e
+     */
     public void showalllist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
             return;
         }
-        if (!firsttime){
+        if (!firsttime) {
             new AddAllFriends(this).start();
         }
-        firsttime= false;
+        firsttime = false;
     }
 
-    public void openInbox(Event e){
+    /**
+     * handles the event when the 'inbox' tab is selected
+     * @param e
+     */
+    public void openInbox(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
             return;
@@ -337,6 +356,10 @@ public class FriendsController {
         new InboxMessages(this).restart();
     }
 
+    /**
+     * handles the event when the 'blocks' tab is selected
+     * @param e
+     */
     public void showblocklist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
@@ -345,6 +368,10 @@ public class FriendsController {
         new AddBlockeds(this).restart();
     }
 
+    /**
+     * handles the event when the 'onlins' tab is selected
+     * @param e
+     */
     public void showonlinelist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
@@ -353,6 +380,10 @@ public class FriendsController {
         new AddOnlineFriends(this).restart();
     }
 
+    /**
+     * handles the event when the 'pending' tab is selected
+     * @param e
+     */
     public void showpendinglist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
@@ -361,12 +392,16 @@ public class FriendsController {
         new AddPending(this).restart();
     }
 
+    /**
+     * handles the event when the 'send request' tab is selected
+     * @param e
+     */
     @FXML
     public void sendRequestOnButton(Event e) {
         try {
             out.writeObject(Command.newRelation(Relationship.Friend_pending, currentUser, sendrequest_textfield.getText()));
             Data data = (Data) in.readObject();
-            if (!(boolean)data.getPrimary()) {
+            if (!(boolean) data.getPrimary()) {
 
                 Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
                 alert.setHeight(360);
@@ -377,8 +412,7 @@ public class FriendsController {
 
                 warning.setText("there is no user with this username");
                 warning.setFill(Color.RED);
-            }
-            else {
+            } else {
                 warning.setText("request sent to " + sendrequest_textfield.getText() + "!");
                 warning.setFill(Color.GREEN);
                 sendrequest_textfield.clear();
@@ -389,18 +423,23 @@ public class FriendsController {
 
     }
 
+    /**
+     * handles the event when the setting button is pressed
+     * changes the scene to setting view in the same stage
+     * @param e
+     */
     @FXML
-    public void settingOnButton(Event e){
+    public void settingOnButton(Event e) {
         Data data = null;
         try {
             out.writeObject(Command.getUser(currentUser));
             data = (Data) in.readObject();
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        Stage stage = (Stage)(((Node) e.getSource()).getScene().getWindow());
+        Stage stage = (Stage) (((Node) e.getSource()).getScene().getWindow());
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("setting-view.fxml"));
-        fxmlLoader.setController(new SettingController(out, in, fout,fin,(User) data.getPrimary(), (UserShort) data.getSecondary(),stage));
+        fxmlLoader.setController(new SettingController(out, in, fout, fin, (User) data.getPrimary(), (UserShort) data.getSecondary(), stage));
         stage.setHeight(450);
         stage.setWidth(600);
         stage.centerOnScreen();
@@ -418,10 +457,13 @@ public class FriendsController {
 
 }
 
-class InboxMessages extends Service<Void>{
+/**
+ * this class is responsible for getting inbox messages from server and showing it on 'inbox' tab
+ */
+class InboxMessages extends Service<Void> {
     FriendsController fc;
 
-    public InboxMessages(FriendsController fc){
+    public InboxMessages(FriendsController fc) {
         this.fc = fc;
     }
 
@@ -449,6 +491,9 @@ class InboxMessages extends Service<Void>{
     }
 }
 
+/**
+ * this class is responsible for getting friends from server and showing it on 'all' tab
+ */
 class AddAllFriends extends Thread {
     FriendsController fc;
 
@@ -475,7 +520,7 @@ class AddAllFriends extends Thread {
         System.out.println(dt.getKeyword());
         fc.allFriends = (ArrayList<UserShort>) dt.getPrimary();
 
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             int rowNum = 1;
             fc.all_grid.getChildren().clear();
             fc.all_grid.setVgap(5);
@@ -488,7 +533,7 @@ class AddAllFriends extends Thread {
                 rowNum++;
             }
 
-            for (Map.Entry<String, Button> entry: fc.blockButtons.entrySet()) {
+            for (Map.Entry<String, Button> entry : fc.blockButtons.entrySet()) {
                 int row = entry.getKey().charAt(0) - 48;
                 String otherUser = entry.getKey().substring(1);
                 entry.getValue().setOnAction((ActionEvent e) -> {
@@ -508,6 +553,9 @@ class AddAllFriends extends Thread {
 
 }
 
+/**
+ * this class is responsible for getting incoming and outgoing friend requests from server and showing it on 'pending' tab
+ */
 class AddPending extends Service<Void> {
     FriendsController fc;
 
@@ -626,6 +674,9 @@ class AddPending extends Service<Void> {
     }
 }
 
+/**
+ * this class is responsible for getting currently online friends from server and showing it on 'online' tab
+ */
 class AddOnlineFriends extends Service<Void> {
     FriendsController fc;
 
@@ -660,8 +711,11 @@ class AddOnlineFriends extends Service<Void> {
             }
         }
     }
- }
+}
 
+/**
+ * this class is responsible for getting blocked people from server and showing it on 'blocks' tab
+ */
 class AddBlockeds extends Service<Void> {
     FriendsController fc;
 
@@ -695,11 +749,11 @@ class AddBlockeds extends Service<Void> {
             fc.block_grid.addColumn(2, new Text(s.getUsername()));
             Button unblock = new Button("unblock");
             fc.unblockButtons.put(rowNum + s.getUsername(), unblock);
-            fc.block_grid.addColumn(5,unblock);
+            fc.block_grid.addColumn(5, unblock);
             rowNum++;
         }
 
-        for (Map.Entry<String, Button> entry: fc.unblockButtons.entrySet()) {
+        for (Map.Entry<String, Button> entry : fc.unblockButtons.entrySet()) {
             int row = entry.getKey().charAt(0) - 48;
             String otherUser = entry.getKey().substring(1);
             entry.getValue().setOnAction((ActionEvent e) -> {
@@ -718,6 +772,9 @@ class AddBlockeds extends Service<Void> {
     }
 }
 
+/**
+ * this class is responsible for getting the list of active direct chats from server and showing it on the left panel besides servers list
+ */
 class GetDirectList extends Service<Void> {
     FriendsController fc;
 
@@ -748,6 +805,9 @@ class GetDirectList extends Service<Void> {
     }
 }
 
+/**
+ * this class is responsible for getting servers list from server and showing it on the left panel
+ */
 class GetServers extends Service<Void> {
     FriendsController fc;
 
