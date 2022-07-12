@@ -99,7 +99,7 @@ public class SettingController {
                 fxmlLoader.setController(friendsController);
                 Stage newStage = new Stage();
                 newStage.setTitle("Discord");
-                newStage.getIcons().add(new Image("C:\\DiscordFiles\\logo.png"));
+                newStage.getIcons().add(new Image("C:\\discord\\logo.png"));
                 Scene scene = null;
                 try {
                     scene = new Scene(fxmlLoader.load(), 1000, 600);

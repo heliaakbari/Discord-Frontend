@@ -19,7 +19,7 @@ import static java.nio.file.Files.readAllBytes;
 public class DatabaseManager {
     private Connection con = null;
     public Scanner get = new Scanner(System.in);
-    private String dbUrl = "jdbc:hsqldb:file:C:/discord/database/dtb";
+    private String dbUrl = "jdbc:hsqldb:file:C:/DiscordFiles/database/dtb";
     private Statement stmt = null;
     private String filespath = "C:\\DiscordFiles";
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -30,6 +30,8 @@ public class DatabaseManager {
         this.serverSide=serverSide;
     }
     public void start() {
+        File f1 = new File("C:\\DiscordFiles\\database\\dtb");
+        boolean bool = f1.mkdir();
         try {
 
             System.out.println("1.existing database    2.new database");
