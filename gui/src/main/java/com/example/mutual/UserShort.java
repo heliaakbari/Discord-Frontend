@@ -1,10 +1,11 @@
+/**
+ * this is used to give a prepared node of users' picture from server to user
+ */
 package com.example.mutual;
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -12,16 +13,32 @@ import javafx.scene.shape.Circle;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 
+
 public class UserShort implements Serializable {
     private static final long serialVersionUID = 838923986992328L;
+    /**
+     * username of user as string
+     */
     private String username;
+    /**
+     * user's image in bytes
+     */
     private byte[] bytes;
+    /**
+     * user's status
+     */
     private Status status;
 
     public Status getStatus() {
         return status;
     }
 
+    /**
+     * the constructor
+     * @param username
+     * @param bytes
+     * @param status
+     */
     public UserShort(String username, byte[] bytes, Status status){
         this.bytes = bytes;
         this.username = username;
@@ -32,6 +49,14 @@ public class UserShort implements Serializable {
         return username;
     }
 
+    /**
+     * combines status and changes image from bytes to image and then
+     * makes a pane from image and status which can be shown in javafx
+     * alse the status is change from status to a circle
+     * black:offline grey:invisible yellow:idle online:green do_not_disturb:red
+     * @param radius the redius of profile picture
+     * @return the pane that is showable in javafx
+     */
     public Node profileStatus(Double radius){
         Image profilePhoto = new Image(new ByteArrayInputStream(bytes));
         ImageView imageView = new ImageView(profilePhoto);
