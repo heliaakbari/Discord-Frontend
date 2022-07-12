@@ -4,17 +4,21 @@ import com.example.mutual.Command;
 import com.example.mutual.Data;
 import com.example.mutual.Role;
 import com.example.mutual.UserShort;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class ServerSettingController {
@@ -34,6 +38,59 @@ public class ServerSettingController {
     protected ArrayList<UserShort> channelMembers;
     protected ArrayList<UserShort> friends;
 
+    @FXML
+    protected GridPane members_grid;
+    @FXML
+    protected Tab addUserToChannel;
+    @FXML
+    protected ChoiceBox<String> changerole_member;
+    @FXML
+    protected Button changerole_button;
+    @FXML
+    protected ChoiceBox<String> changerole_role;
+    @FXML
+    protected GridPane role_desc;
+    @FXML
+    protected Tab deleteChannel;
+    @FXML
+    protected Tab createChannel;
+    @FXML
+    protected Tab deleteUserFromServer;
+    @FXML
+    protected Tab deleteUserFromChannel;
+    @FXML
+    protected Tab addUserToServer;
+    @FXML
+    protected Tab serverRoles;
+    @FXML
+    protected Tab chatHistory;
+    @FXML
+    protected Tab leave;
+    @FXML
+    protected Button create_channel;
+    @FXML
+    protected Button delete_channel;
+    @FXML
+    protected Button delete_from_server;
+    @FXML
+    protected Button delete_from_channel;
+    @FXML
+    protected Button add_to_server;
+    @FXML
+    protected Button chat_history;
+    @FXML
+    protected Button change_name;
+    @FXML
+    protected Button pin_msg;
+    @FXML
+    protected ChoiceBox<String> choicebox_createrole;
+    @FXML
+    protected Button create_role;
+//    @FXML
+//    protected Tab ;
+//    @FXML
+//    protected Tab ;
+
 
     @FXML
     protected ChoiceBox channels1;
@@ -41,6 +98,8 @@ public class ServerSettingController {
     protected ChoiceBox channels2 ;
     @FXML
     protected ChoiceBox channels3;
+    @FXML
+    protected TextField role_name;
     @FXML
     protected ChoiceBox friends1;
     @FXML
@@ -61,6 +120,108 @@ public class ServerSettingController {
         this.fout = fout;
     }
 
+    @FXML
+    public void initialize(){
+        new GetRole(this).restart();
+    }
+
+    public void changeRole(Event e){
+        Button btn = (Button) e.getSource();
+        Role role = null;
+        for(HashMap.Entry<String,Role> entry : serverMembers.entrySet()){
+            if (entry.getValue().getRoleName().equals(changerole_role.getValue())){
+                role = entry.getValue();
+                break;
+            }
+        }
+        if(role == null){
+            return;
+        }
+        Command cmd = Command.changeRole(currentUser,changerole_member.getValue(),currentServer,role);
+        try {
+            out.writeObject(cmd);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        try {
+            in.readObject();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        new OpenServerRoles(this).restart();
+    }
+
+    public void addRole(Event e){
+        String abilities = new String("");
+        if(create_channel.getText().equals("yes"))
+            abilities = abilities+"1";
+        else
+            abilities = abilities+"0";
+        if(delete_channel.getText().equals("yes"))
+            abilities = abilities+"1";
+        else
+            abilities = abilities+"0";
+        if(delete_from_server.getText().equals("yes"))
+            abilities = abilities+"1";
+        else
+            abilities = abilities+"0";
+        if(delete_from_channel.getText().equals("yes"))
+            abilities = abilities+"1";
+        else
+            abilities = abilities+"0";
+        if(delete_from_server.getText().equals("yes"))
+            abilities = abilities+"1";
+        else
+            abilities = abilities+"0";
+        if(change_name.getText().equals("yes"))
+            abilities = abilities+"1";
+        else
+            abilities = abilities+"0";
+        if(chat_history.getText().equals("yes"))
+            abilities = abilities+"1";
+        else
+            abilities = abilities+"0";
+        if(pin_msg.getText().equals("yes"))
+            abilities = abilities+"1";
+        else
+            abilities = abilities+"0";
+
+        abilities = abilities+"0";
+
+        Role role = new Role(abilities,role_name.getText());
+        if(choicebox_createrole.getValue().equals("none")){
+            return;
+        }
+        Command cmd =Command.changeRole(currentUser,choicebox_createrole.getValue(),currentServer,role);
+        try {
+            out.writeObject(cmd);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        try {
+            in.readObject();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        ((Button)(e.getSource())).setText("done!");
+        new OpenServerRoles(this).restart();
+    }
+
+    public void noyes(Event e){
+        Button btn =(Button) e.getSource();
+        if(btn.getText().equals("yes")){
+            btn.setText("no");
+        }
+        else if(btn.getText().equals("no")){
+            btn.setText("yes");
+        }
+    }
+
+
     public void addUserToChannel(Event e){
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -74,6 +235,13 @@ public class ServerSettingController {
         if (!tab.isSelected())
             return;
         new AddChannels(this).restart();
+    }
+
+    public void serverRolesTab(Event e){
+        Tab tab = (Tab) e.getSource();
+        if(!tab.isSelected())
+            return;
+        new OpenServerRoles(this).restart();
     }
 
     public void deleteUserFromServer(Event e){
@@ -298,6 +466,7 @@ class OpenServerRoles extends Service<Void>{
                 Command cmd = Command.getServerMembers(ssc.currentUser,ssc.currentServer);
                 ssc.out.writeObject(cmd);
                 Data data = (Data) ssc.in.readObject();
+               ssc.serverMembers =(HashMap<String, Role>) data.getPrimary();
                 return null;
             }
         };
@@ -305,6 +474,46 @@ class OpenServerRoles extends Service<Void>{
 
     @Override
     protected void succeeded() {
+        ssc.members_grid.getChildren().clear();
+        ssc.members_grid.setVgap(10);
+        ssc.choicebox_createrole.getItems().clear();
+        ssc.choicebox_createrole.getItems().add("none");
+        ssc.choicebox_createrole.setValue("none");
+        ssc.changerole_member.getItems().clear();
+        HashSet<String> roles = new HashSet<>();
+        for(HashMap.Entry<String,Role> entry : ssc.serverMembers.entrySet()){
+            ssc.members_grid.addColumn(0,new Text(entry.getKey()));
+            ssc.members_grid.addColumn(1,new Text(entry.getValue().getRoleName()));
+            if(!entry.getKey().equals(ssc.currentUser)) {
+                ssc.choicebox_createrole.getItems().add(entry.getKey());
+                ssc.changerole_member.getItems().add(entry.getKey());
+            }
+            if(!entry.getValue().getRoleName().equals("creator")){
+                roles.add(entry.getValue().getRoleName());
+            }
+        }
+        ssc.changerole_role.getItems().clear();
+        ssc.changerole_role.getItems().addAll(roles);
 
+        ssc.changerole_role.getSelectionModel().selectedItemProperty().addListener( (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            Role role = null;
+            if(newValue==null){
+                return;
+            }
+            for(HashMap.Entry<String,Role> entry : ssc.serverMembers.entrySet()){
+                if (entry.getValue().getRoleName().equals(newValue)){
+                    role = entry.getValue();
+                    break;
+                }
+            }
+            ssc.role_desc.getChildren().clear();
+            for(int i=0;i<9;i++){
+                if(Role.abilities.get(i).equals("ban member")){
+                    continue;
+                }
+                ssc.role_desc.addColumn(0,new Text(Role.abilities.get(i)));
+                ssc.role_desc.addColumn(1, new Text(role.getValues().charAt(i)=='1' ? "yes" : "no"));
+            }
+        } );
     }
 }
