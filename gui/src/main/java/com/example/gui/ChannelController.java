@@ -1,3 +1,7 @@
+/**
+ * this controller is linked to channel-view.fxml
+ * it is for when user enters a channel chat
+ */
 package com.example.gui;
 
 import com.example.mutual.*;
@@ -40,23 +44,46 @@ public class ChannelController {
     protected String currentChannel;
     protected String currentServer;
     protected String currentUser;
+    /**
+     * arraylist of servers that the person is a member of
+     */
     protected ArrayList<String> servers= new ArrayList<>();
+    /**
+     * array list of channels from the current server
+     * that user is a part of
+     */
     protected ArrayList<String> channels = new ArrayList<>();
+    /**
+     * array of messages in the channel
+     */
     protected ArrayList<Message> messages= new ArrayList<>();
+    /**
+     * arrays of Usershorts corresponding to messages list
+     */
     protected ArrayList<UserShort> messagesPic= new ArrayList<>();
+    /**
+     * array of members of the current channel
+     */
     protected ArrayList<UserShort> members= new ArrayList<>();
+
     protected ObjectOutputStream out;
     protected ObjectInputStream in;
     protected ObjectOutputStream fout;
     protected ObjectInputStream fin;
+    /**
+     * the role of person in this channel and their capabilities
+     */
     protected Role currentRole = null;
+    /**
+     * says if the message reader thread is running
+     */
     protected Boolean isMessageReader=false;
+
     @FXML
     protected Label channel_name;
 
     @FXML
     protected GridPane messages_grid;
-
 
     @FXML
     protected ScrollPane messages_scroll;
@@ -69,7 +96,6 @@ public class ChannelController {
 
     @FXML
     protected Button file_button;
-
 
     @FXML
     protected GridPane channels_grid;
@@ -97,15 +123,17 @@ public class ChannelController {
         this.currentServer = currentServer;
     }
 
+    /**
+     * when this controller is instantiated, this method will be called
+     */
     @FXML
     public void initialize() {
         new GoToServer(this,currentServer).restart();
     }
 
-    public void addnewServer(){
-        new GoToServer(this,currentServer).restart();
-    }
-
+    /**
+     * adds members from members field to the GUI
+     */
     public void addMembers(){
         members_grid.getChildren().clear();
         members_grid.setAlignment(Pos.CENTER);
@@ -118,6 +146,12 @@ public class ChannelController {
         }
     }
 
+    /**
+     * when the pinned messages button is pressed this method will be called
+     * it will disable message reader
+     * and call the thread that gets pinned messages from server
+     * and shows them
+     */
     public void openPinnedmsgs(){
         message_textField.setVisible(false);
         send_button.setVisible(false);
@@ -137,6 +171,11 @@ public class ChannelController {
         new AddPinnedMessages(this).restart();
     }
 
+    /**
+     * when the setting is pressed this method will be called
+     *  and opens the server setting scene
+     * @param event
+     */
     public void goToserverSetting(Event event){
         if(isMessageReader) {
             try {
@@ -163,6 +202,9 @@ public class ChannelController {
         stage.show();
     }
 
+    /**
+     * adds servers from field to GUI
+     */
     public void addServers(){
         servers_grid.getChildren().clear();
         servers_grid.setVgap(5);
@@ -338,6 +380,10 @@ public class ChannelController {
 
     }
 
+    /**
+     * when the discord button is pressed, this will be activated
+     * @param event
+     */
     public void changeToFriendsView(Event event){
         FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
         FriendsController friendsController = new FriendsController(in, out, fin, fout, currentUser);
@@ -353,6 +399,10 @@ public class ChannelController {
         stage.show();
     }
 
+    /**
+     * adds channels of server from field to GUI
+     * and gives them eventhandler
+     */
     public void addChannels(){
         channels_grid.getChildren().clear();
         channels_grid.setVgap(5);
@@ -382,6 +432,9 @@ public class ChannelController {
         }
     }
 
+    /**
+     * adds all the messages and messages pic from field to GUI
+     */
     public void addMessages(){
         messages_grid.getChildren().clear();
         messages_grid.setVgap(5);
@@ -479,6 +532,10 @@ public class ChannelController {
         messages_scroll.setVvalue(1.0);
     }
 
+    /**
+     * if a new message comes, this will show it in GUI
+     * @param message
+     */
     public void addNewMessage(Message message){
         for(UserShort userShort : members){
             if(message.getSourceInfo().get(0).equals(userShort.getUsername())){
@@ -573,11 +630,19 @@ public class ChannelController {
         messages_scroll.setVvalue(1.0);
     }
 
+    /**
+     * when the send button is pressed, this will
+     * get the text areas text and calls send text thread
+     */
     public void sendTextMessage(){
         new SendText(this,message_textField.getText()).restart();
         message_textField.clear();
     }
 
+    /**
+     * when the file button is pressed, this will
+     * call the server and server calls message reader to upload
+     */
     public void sendFileMessage(){
         Command cmd = null;
             cmd = Command.upload(null,currentServer,currentChannel, true);
@@ -591,6 +656,10 @@ public class ChannelController {
         fileUploader.start();
     }
 
+    /**
+     * this is called when user presses download
+     * @param filename
+     */
     public void downloadFile(String filename) {
         try {
               Command  cmd = Command.download(currentServer, currentChannel,filename, true);
@@ -606,16 +675,26 @@ public class ChannelController {
 
 }
 
-
+/**
+ * this thread is for when user wants to send a file
+ */
 class SendText extends Service<Void>{
     private ChannelController cc;
+    /**
+     * text of message
+     */
     private String body;
+
 
     public SendText(ChannelController cc,String body){
         this.cc= cc;
         this.body = body;
     }
 
+    /**
+     * sends the message to server ina different thread that the main one
+     * @return
+     */
     @Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
@@ -630,15 +709,27 @@ class SendText extends Service<Void>{
     }
 }
 
+/**
+ * this thread kind of updates all the infos in the GUI
+ * also is called when user goes to another server
+ */
 class GoToServer extends Service<Void>{
 
     private ChannelController cc;
+    /**
+     * the server the user wants the information of to be shown
+     */
     private String servername;
     public GoToServer(ChannelController cc,String servername){
         this.cc = cc;
         this.servername = servername;
     }
 
+    /**
+     * gets infos for servers,channels,messages,messages pic fields
+     * it goes to general channel which all servers have
+     * @return
+     */
     @Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
@@ -675,6 +766,10 @@ class GoToServer extends Service<Void>{
         };
     }
 
+    /**
+     * this method runs in main thread
+     * and updates the gui with the new infos
+     */
     @Override
     protected void succeeded() {
         cc.server_name.setText(servername);
@@ -689,7 +784,10 @@ class GoToServer extends Service<Void>{
     }
 }
 
-
+/**
+ * this thread is for when user goes from one channel to the other
+ * in the same server
+ */
 class GoToChannel extends Service<Void>{
     private ChannelController cc;
     private String channelName;
@@ -739,6 +837,10 @@ class GoToChannel extends Service<Void>{
     }
 }
 
+/**
+ * this thread gets the pinned messages from server
+ * and shows them to user
+ */
 class AddPinnedMessages extends Service<Void>{
     ChannelController cc;
     ArrayList<Message> pinnedmsgs;
@@ -747,6 +849,11 @@ class AddPinnedMessages extends Service<Void>{
         this.cc=cc;
     }
 
+    /**
+     * this thread is ran in another thread
+     * this will get the pinned messages from server
+     * @return
+     */
     @Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
@@ -762,6 +869,9 @@ class AddPinnedMessages extends Service<Void>{
         };
     }
 
+    /**
+     * this is ran in the main thread. this will show the pinned messages
+     */
     @Override
     protected void succeeded() {
         cc.messages_grid.getChildren().clear();
@@ -829,6 +939,10 @@ class AddPinnedMessages extends Service<Void>{
     }
 }
 
+/**
+ * this gets the new messages in real time
+ * and if the data it gets is exit, it will stop
+ */
 class MessageReader extends Thread {
 
     private ChannelController cc;

@@ -924,6 +924,16 @@ public class CmdManager {
         return Data.serverMembers(cmd.getUser(), cmd.getServer(), members);
     }
 
+    /**
+     * this is for changing program from console to gui
+     * while we just showed user's username before,
+     * now we show their username and status and pic together
+     * also if the user is blocked, they will see the default
+     * pic instead of the real one
+     * @param user the user who requested this
+     * @param people array of strings of usernames
+     * @return the array of the same usernames but in Usershort format
+     */
     public ArrayList<UserShort> stringToUserShort(String user,ArrayList<String> people) {
         ArrayList<UserShort> userShorts = new ArrayList<>();
         ResultSet rs = null;
