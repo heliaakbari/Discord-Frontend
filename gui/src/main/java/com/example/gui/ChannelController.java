@@ -810,6 +810,7 @@ class AddPinnedMessages extends Service<Void>{
         cc.messages_scroll.setVvalue(1.0);
     }
 }
+
 class MessageReader extends Thread {
 
     private ChannelController cc;

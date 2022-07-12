@@ -745,6 +745,7 @@ public class CmdManager {
     }
 
     public Data getChannelMsgs(Command cmd) {
+        ArrayList<String> users = new ArrayList<>();
         int number = (int) cmd.getPrimary();
         ArrayList<Message> messages = new ArrayList<>();
         try {
@@ -758,9 +759,11 @@ public class CmdManager {
                 if (rs.getBoolean("isfile")) {
                     FileMessage m = new FileMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getTimestamp("DATE").toLocalDateTime(), rs.getString("FILENAME"));
                     messages.add(m);
+                    users.add(rs.getString("SENDER"));
                 } else {
                     TextMessage m = new TextMessage(rs.getString("SENDER"), rs.getString("SERVER"), rs.getString("CHANNEL"), rs.getString("BODY"), rs.getTimestamp("DATE").toLocalDateTime());
                     messages.add(m);
+                    users.add(rs.getString("SENDER"));
                 }
             }
         } catch (SQLException e) {
@@ -769,7 +772,7 @@ public class CmdManager {
             e.printStackTrace();
         }
         messages = addReactionsToMessages(messages);
-        return Data.channelMsgs(cmd.getUser(), cmd.getServer(), cmd.getChannel(), messages);
+        return Data.channelMsgs(cmd.getUser(), cmd.getServer(), cmd.getChannel(), messages,stringToUserShort(cmd.getUser(),users));
     }
 
     public Data getPvMsgs(Command cmd) {

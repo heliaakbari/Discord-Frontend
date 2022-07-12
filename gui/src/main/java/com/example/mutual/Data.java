@@ -266,10 +266,11 @@ public class Data  implements Serializable {
      * @param messages
      * @return
      */
-    public static @NotNull Data channelMsgs (String user, String server, String channel, ArrayList<Message> messages){
+    public static @NotNull Data channelMsgs (String user, String server, String channel, ArrayList<Message> messages,ArrayList<UserShort> users){
         Data data = new Data("channelMsgs");
         data.user = user;
         data.server= server;
+        data.secondary = users;
         data.channel = channel;
         data.primary = messages;
         return data;
