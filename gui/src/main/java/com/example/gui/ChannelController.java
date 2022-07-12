@@ -152,9 +152,9 @@ public class ChannelController {
             }
         }
         FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("server-setting-view.fxml"));
-        ServerSettingController serverSettingController = new ServerSettingController(currentRole,currentUser,currentServer,out,in,fout,fin);
-        fxmlLoader.setController(serverSettingController);
         Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        ServerSettingController serverSettingController = new ServerSettingController(currentRole,currentUser,currentServer,out,in,fout,fin, stage);
+        fxmlLoader.setController(serverSettingController);
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);

@@ -10,6 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -40,6 +42,7 @@ public class ServerSettingController {
     protected ObjectInputStream in;
     protected ObjectOutputStream fout;
     protected ObjectInputStream fin;
+    protected Stage myStage;
 
     protected ArrayList<String> channels;
     protected HashMap<String, Role> serverMembers;
@@ -98,7 +101,7 @@ public class ServerSettingController {
     protected Button deleteServer;
 
 
-    public ServerSettingController(Role role, String currentUser, String currentServer, ObjectOutputStream out, ObjectInputStream in, ObjectOutputStream fout, ObjectInputStream fin) {
+    public ServerSettingController(Role role, String currentUser, String currentServer, ObjectOutputStream out, ObjectInputStream in, ObjectOutputStream fout, ObjectInputStream fin, Stage myStage) {
         this.in = in;
         this.out = out;
         this.role = role;
@@ -106,11 +109,30 @@ public class ServerSettingController {
         this.currentUser = currentUser;
         this.fin = fin;
         this.fout = fout;
+        this.myStage = myStage;
     }
 
     @FXML
     public void initialize() {
+        myStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                System.out.println("closed");
+                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
+                FriendsController friendsController = new FriendsController(in, out, fin, fout, currentUser);
+                fxmlLoader.setController(friendsController);
+                Scene scene= null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 1000, 600);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                myStage.setScene(scene);
+                myStage.show();
+            }
+        });
         new GetRole(this).restart();
+
     }
 
     @FXML

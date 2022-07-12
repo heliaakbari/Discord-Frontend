@@ -97,6 +97,11 @@ public class PvController {
         new GoToPv(this).restart();
     }
 
+    @FXML
+    public void addServer(Event e){
+        
+    }
+
     public void addnewServer(){
         ;
     }

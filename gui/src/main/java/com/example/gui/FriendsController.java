@@ -276,8 +276,8 @@ public class FriendsController {
 
     public void changeToServerSetting(String serverName, Event event){
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("server-setting-view.fxml"));
-        fxmlLoader.setController(new ServerSettingController(null, currentUser, serverName, out, in, fout, fin));
         Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        fxmlLoader.setController(new ServerSettingController(null, currentUser, serverName, out, in, fout, fin, stage));
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);
