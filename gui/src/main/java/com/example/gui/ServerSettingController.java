@@ -54,6 +54,8 @@ public class ServerSettingController {
     @FXML
     protected Tab addUserToChannel;
     @FXML
+    protected ChoiceBox<String> channels_list_leave;
+    @FXML
     protected ChoiceBox<String> changerole_member;
     @FXML
     protected Button changerole_button;
@@ -153,7 +155,7 @@ public class ServerSettingController {
     public void initialize() {
         new GetRole(this).restart();
     }
-    
+
     public void changeRole(Event e){
         Button btn = (Button) e.getSource();
         Role role = null;
@@ -346,7 +348,22 @@ public class ServerSettingController {
 
     @FXML
     public void leaveFromChannelOnButton(Event e){
-
+        if(channels_list_leave.getValue()==null){
+            return;
+        }
+        try{
+            System.out.println("ban");
+            out.writeObject(Command.banFromChannel(currentUser, currentServer,channels_list_leave.getValue()));
+            Data data = (Data) in.readObject();
+        } catch (IOException | ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        new AddChannels(this).restart();
     }
 
     @FXML
@@ -357,7 +374,11 @@ public class ServerSettingController {
         } catch (IOException | ClassNotFoundException ex){
             ex.printStackTrace();
         }
-
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
         changeToFriendsView(e);
     }
 
@@ -455,6 +476,7 @@ public class ServerSettingController {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
+        new AddChannels(this).restart();
     }
 
 
@@ -632,7 +654,12 @@ class AddChannels extends Service<Void> {
     protected void succeeded() {
         ssc.channels2.getItems().clear();
         ssc.channels2.getItems().addAll(ssc.channels);
-
+        ssc.channels_list_leave.getItems().clear();
+        for(String channel : ssc.channels){
+            if(!channel.equals("general")){
+                ssc.channels_list_leave.getItems().add(channel);
+            }
+        }
     }
 }
 

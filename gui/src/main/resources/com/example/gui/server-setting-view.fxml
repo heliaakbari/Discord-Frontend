@@ -279,6 +279,7 @@
                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="331.111083984375" minWidth="10.0" prefWidth="104.55550130208334" />
                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.88890584309894" minWidth="10.0" prefWidth="186.66664632161456" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.88890584309894" minWidth="1.9999796549478788" prefWidth="39.333353678385436" />
+                                    <ColumnConstraints />
                                 </columnConstraints>
                                 <rowConstraints>
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -445,7 +446,43 @@
             </Tab>
             <Tab fx:id="leave" onSelectionChanged="#leave" text="leave">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <GridPane alignment="CENTER" layoutX="223.0" layoutY="95.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="375.0" vgap="3.0" AnchorPane.leftAnchor="325.0" AnchorPane.topAnchor="95.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="764.8889261881511" minWidth="10.0" prefWidth="43.66668701171875" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="764.8889261881511" minWidth="10.0" prefWidth="79.66664632161458" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="738.4444681803385" minWidth="0.0" prefWidth="118.99997965494792" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="738.4444681803385" minWidth="10.0" prefWidth="171.66668701171875" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                              <RowConstraints />
+                              <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="50.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <ChoiceBox fx:id="channels_list_leave" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                              <Button fx:id="leave_channel" mnemonicParsing="false" onAction="#leaveFromChannelOnButton" prefHeight="30.0" text="leave channel" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </Button>
+                              <Label text="1. leave a certain channel" GridPane.columnSpan="3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label text="2. leave server" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="leave_server" mnemonicParsing="false" onAction="#leaveFromServerOnButton" text="leave server" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                           </children>
+                        </GridPane>
+                     </children></AnchorPane>
                </content>
             </Tab>
             <Tab fx:id="rename_delete_server" text="rename/delete server">
