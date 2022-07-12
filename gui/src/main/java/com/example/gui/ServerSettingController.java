@@ -61,6 +61,11 @@ public class ServerSettingController {
         this.fout = fout;
     }
 
+    @FXML
+    public void initialize(){
+        new GetRole(this).restart();
+    }
+
     public void addUserToChannel(Event e){
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -116,6 +121,31 @@ public class ServerSettingController {
     }
 }
 
+class GetRole extends Service<Void>{
+    ServerSettingController ssc;
+
+    public GetRole(ServerSettingController ssc) {
+        this.ssc = ssc;
+    }
+
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                ssc.out.writeObject(Command.getRole(ssc.currentUser, ssc.currentServer));
+                Data data = (Data) ssc.in.readObject();
+                ssc.role = (Role) data.getPrimary();
+                return null;
+            }
+        };
+    }
+
+    @Override
+    protected void succeeded() {
+        
+    }
+}
 // for delete user from channel
 class AddChannelsAndChannelMembers extends Service<Void> {
 
