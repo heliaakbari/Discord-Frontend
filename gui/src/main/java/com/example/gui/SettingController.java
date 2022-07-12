@@ -24,10 +24,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 
 import static java.nio.file.Files.readAllBytes;
 
+/**
+ * this class is responsible for handeling events such as pressing buttons etc. in setting-view.fxml file
+ */
 public class SettingController {
 
     private ObjectOutputStream out;
@@ -73,7 +75,7 @@ public class SettingController {
     @FXML
     private Button changePhoneNum;
 
-    public SettingController(ObjectOutputStream out, ObjectInputStream in,ObjectOutputStream fout, ObjectInputStream fin, User currentUser, UserShort userShort,Stage stage) {
+    public SettingController(ObjectOutputStream out, ObjectInputStream in, ObjectOutputStream fout, ObjectInputStream fin, User currentUser, UserShort userShort, Stage stage) {
         this.out = out;
         this.in = in;
         this.currentUser = currentUser;
@@ -83,8 +85,12 @@ public class SettingController {
         myStage = stage;
     }
 
+    /**
+     * does the necessary jobs when first entering the scene such as setting on close request action
+     * which will run when user presses close button
+     */
     @FXML
-    public void initialize(){
+    public void initialize() {
         imageHolder.getChildren().add(userShort.profileStatus(100.0));
         currentUsername.setText(currentUser.getUsername());
         currentPassword.setText(currentUser.getPassword());
@@ -95,7 +101,7 @@ public class SettingController {
             public void handle(WindowEvent windowEvent) {
                 System.out.println("closed");
                 FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
-                FriendsController friendsController = new FriendsController(in,out,fin,fout, currentUser.getUsername());
+                FriendsController friendsController = new FriendsController(in, out, fin, fout, currentUser.getUsername());
                 fxmlLoader.setController(friendsController);
                 Stage newStage = new Stage();
                 newStage.setTitle("Discord");
@@ -113,15 +119,20 @@ public class SettingController {
         });
     }
 
+    /**
+     * handles the event change profile button is pressed, the chosen image wil be sent to server.
+     * an error will appear if the image is bigger than 100kb
+     * @param e
+     */
     @FXML
-    public void changeProfileOnButton(Event e){
+    public void changeProfileOnButton(Event e) {
         FileDialog dialog = new FileDialog((Frame) null, "Select File to Open");
         dialog.setMode(FileDialog.LOAD);
         dialog.setVisible(true);
 
         String fileNameAndType = dialog.getFile();
         String path = dialog.getDirectory() + "//" + dialog.getFile();
-        if(path.contains("null")){
+        if (path.contains("null")) {
             System.out.println(path.contains("null"));
             return;
         }
@@ -135,13 +146,12 @@ public class SettingController {
             return;
         }
 
-        if (photo.length > 100000){
+        if (photo.length > 100000) {
             imageWarning.setText("your image size is more than 100kB");
             imageWarning.setFill(Color.RED);
             photo = null;
             return;
-        }
-        else {
+        } else {
             imageWarning.setText("");
             String[] splitName = fileNameAndType.split("\\.");
             photoFormat = splitName[splitName.length - 1];
@@ -150,7 +160,7 @@ public class SettingController {
             System.out.println(currentUser.getUsername());
             out.writeObject(Command.changeProfilePhoto(currentUser.getUsername(), photo, photoFormat));
             in.readObject();
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
             System.out.println("error while transferring cmd and data");
         }
@@ -159,9 +169,14 @@ public class SettingController {
 
     }
 
+    /**
+     * handles the event change username button is pressed, the appropriate command wil be sent to server.
+     * an error will appear if the username isn't in valid format or is repetitious
+     * @param e
+     */
     @FXML
     public void changeUsernameOnButton(Event e) {
-        if (!newUsername.getText().matches("^[0-9a-zA-Z]{6,20}$")){
+        if (!newUsername.getText().matches("^[0-9a-zA-Z]{6,20}$")) {
             usernameWarning.setText("username must be at least 6 and at most 20 characters and only containing english alphabet and numbers");
             usernameWarning.setFill(Color.RED);
             return;
@@ -169,7 +184,7 @@ public class SettingController {
         try {
             out.writeObject(Command.changeUsername(currentUser.getUsername(), newUsername.getText()));
             Data data = (Data) in.readObject();
-            if (data.getKeyword().equals("checkChangeUsername") && (boolean) data.getPrimary()){
+            if (data.getKeyword().equals("checkChangeUsername") && (boolean) data.getPrimary()) {
                 usernameWarning.setText("username changed successfully!");
                 usernameWarning.setFill(Color.GREEN);
 
@@ -180,20 +195,24 @@ public class SettingController {
                 newUsername.setVisible(false);
                 changeUsername.setVisible(false);
 
-            }
-            else {
+            } else {
                 usernameWarning.setText("this username is already taken");
                 usernameWarning.setFill(Color.RED);
             }
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
 
     }
 
+    /**
+     * handles the event change password button is pressed, the appropriate command wil be sent to server.
+     * an error will appear if the password isn't in valid format.
+     * @param e
+     */
     @FXML
-    public void changePasswordOnButton(Event e){
-        if (!newPassword.getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,20}$")){
+    public void changePasswordOnButton(Event e) {
+        if (!newPassword.getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,20}$")) {
             passwordWarning.setText("password must be at least 8 and at most 20 characters and contain capital and small english alphabets and numbers");
             passwordWarning.setFill(Color.RED);
             return;
@@ -209,21 +228,26 @@ public class SettingController {
             newPassword.setVisible(false);
             changePassword.setVisible(false);
 
-        } catch (IOException  ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
 
 
     }
 
+    /**
+     * handles the event change email button is pressed, the appropriate command wil be sent to server.
+     * an error will appear if the email isn't in valid format.
+     * @param e
+     */
     @FXML
-    public void changeEmailOnButton(Event e){
-        if (!newEmail.getText().matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")){
+    public void changeEmailOnButton(Event e) {
+        if (!newEmail.getText().matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")) {
             emailWarning.setText("email format isn't correct");
             emailWarning.setFill(Color.RED);
             return;
         }
-        try{
+        try {
             out.writeObject(Command.changeInfo(currentUser.getUsername(), "email", newEmail.getText()));
             emailWarning.setText("email changed successfully");
             emailWarning.setFill(Color.GREEN);
@@ -232,43 +256,55 @@ public class SettingController {
             newEmail.setText(null);
             newEmail.setVisible(false);
             changeEmail.setVisible(false);
-        } catch (IOException  ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
 
     }
+
+    /**
+     * handles the event change phone num button is pressed, the appropriate command wil be sent to server.
+     * @param e
+     */
     @FXML
-    public void changePhoneNumOnButton(Event e){
-        try {;
+    public void changePhoneNumOnButton(Event e) {
+        try {
             out.writeObject(Command.changeInfo(currentUser.getUsername(), "phone", newPhoneNum.getText()));
             currentPhoneNum.setText(newPhoneNum.getText());
             currentUser.setPhoneNum(newPhoneNum.getText());
             newPhoneNum.setText(null);
-        } catch (IOException ex){
+        }
+        catch (IOException ex) {
             ex.printStackTrace();
         }
 
         newPhoneNum.setVisible(false);
         changePhoneNum.setVisible(false);
     }
+
+    /**
+     * handles the event when edit button in front of each information field is pressed
+     * edit button will be hidden and a text filed and change button will appear
+     * @param e
+     */
     @FXML
-    public void editButtonClicked(Event e){
+    public void editButtonClicked(Event e) {
         Node button = (Node) e.getSource();
         String id = button.getId();
-        switch (id){
-            case "editUsername" :
+        switch (id) {
+            case "editUsername":
                 newUsername.setVisible(true);
                 changeUsername.setVisible(true);
                 break;
-            case "editPassword" :
+            case "editPassword":
                 newPassword.setVisible(true);
                 changePassword.setVisible(true);
                 break;
-            case "editEmail" :
+            case "editEmail":
                 newEmail.setVisible(true);
                 changeEmail.setVisible(true);
                 break;
-            case "editPhoneNum" :
+            case "editPhoneNum":
                 newPhoneNum.setVisible(true);
                 changePhoneNum.setVisible(true);
                 break;
@@ -277,8 +313,13 @@ public class SettingController {
 
     }
 
+    /**
+     * handles the event when anywhere in the plane screen clicked
+     * text filed and change button will hide if there is any visible and edit button will appear instead
+     * @param e
+     */
     @FXML
-    public void onScreenClicked(Event e){
+    public void onScreenClicked(Event e) {
         newUsername.setVisible(false);
         newPassword.setVisible(false);
         newEmail.setVisible(false);
@@ -293,14 +334,18 @@ public class SettingController {
         emailWarning.setText(null);
     }
 
+    /**
+     * changes the scene to login-view
+     * @param e
+     */
     @FXML
-    public void logoutOnButton(Event e){
+    public void logoutOnButton(Event e) {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-        fxmlLoader.setController(new LoginController(in,out,fin,fout));
-         myStage = (Stage)(((Node) e.getSource()).getScene().getWindow());
-         myStage.close();
-         Stage newStage = new Stage();
-         newStage.setResizable(false);
+        fxmlLoader.setController(new LoginController(in, out, fin, fout));
+        myStage = (Stage) (((Node) e.getSource()).getScene().getWindow());
+        myStage.close();
+        Stage newStage = new Stage();
+        newStage.setResizable(false);
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);
