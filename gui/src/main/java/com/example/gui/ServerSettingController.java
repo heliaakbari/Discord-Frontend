@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -180,16 +181,21 @@ public class ServerSettingController {
                 FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
                 FriendsController friendsController = new FriendsController(in, out, fin, fout, currentUser);
                 fxmlLoader.setController(friendsController);
+                Stage newStage = new Stage();
+                newStage.setTitle("Discord");
+                newStage.getIcons().add(new Image("C:\\DiscordFiles\\logo.png"));
                 Scene scene= null;
                 try {
                     scene = new Scene(fxmlLoader.load(), 1000, 600);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                myStage.setScene(scene);
-                myStage.show();
+                newStage.setScene(scene);
+                myStage.close();
+                newStage.show();
             }
         });
+
         new GetRole(this).restart();
 
     }
@@ -366,8 +372,11 @@ public class ServerSettingController {
     @FXML
     public void deleteFromServerOnButton(Event e) {
         String person = (String) serverMembers1.getSelectionModel().getSelectedItem();
-        if(role.getRoleName().equals("creator"))
+
+        if(role.getRoleName().equals("creator")){
             return;
+        }
+
         try {
             out.writeObject(Command.banFromServer(person, currentServer));
             Data data = (Data) in.readObject();
@@ -382,9 +391,10 @@ public class ServerSettingController {
     public void deleteFromChannelOnButton(Event e) {
         String person = (String) channelMembers1.getSelectionModel().getSelectedItem();
         String channel = (String) channels3.getSelectionModel().getSelectedItem();
-        if(channel.equals("general")){
-            return;
-        }
+       if(channel.equals("general")){
+           return;
+       }
+
         try {
             out.writeObject(Command.banFromChannel(person, currentServer, channel));
             Data data = (Data) in.readObject();
@@ -400,18 +410,21 @@ public class ServerSettingController {
         if(channels_list_leave.getValue()==null){
             return;
         }
+
         if(channels_list_leave.getValue()=="general") {
             return;
-        }
-            try{
-                System.out.println("ban");
-                out.writeObject(Command.banFromChannel(currentUser, currentServer,channels_list_leave.getValue()));
-                Data data = (Data) in.readObject();
-            } catch (IOException | ClassNotFoundException ex){
-                ex.printStackTrace();
-            }
 
-            try {
+        }
+        try{
+            System.out.println("ban");
+
+            out.writeObject(Command.banFromChannel(currentUser, currentServer,channels_list_leave.getValue()));
+
+            Data data = (Data) in.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
             ex.printStackTrace();

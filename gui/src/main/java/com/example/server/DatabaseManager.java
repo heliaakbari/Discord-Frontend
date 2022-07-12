@@ -19,7 +19,7 @@ import static java.nio.file.Files.readAllBytes;
 public class DatabaseManager {
     private Connection con = null;
     public Scanner get = new Scanner(System.in);
-    private String dbUrl = "jdbc:hsqldb:hsql://localhost/testdb";
+    private String dbUrl = "jdbc:hsqldb:file:C:/discord/database/dtb";
     private Statement stmt = null;
     private String filespath = "C:\\DiscordFiles";
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
