@@ -27,7 +27,7 @@
               </rowConstraints>
                <children>
                   <Button fx:id="discord" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="90.0" text="Discord" />
-                  <Button fx:id="add_server_button" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="90.0" text="add server" GridPane.rowIndex="1">
+                  <Button fx:id="add_server_button" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addServerOnButton" prefHeight="40.0" prefWidth="90.0" text="add server" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets top="5.0" />
                      </GridPane.margin>

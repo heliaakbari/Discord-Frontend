@@ -38,7 +38,7 @@ public class HelloApplication extends Application {
         boolean bool = f1.mkdir();
 
         try {
-            socket = new Socket("localhost", 8643);
+            socket = new Socket("localhost", 8644);
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
 

@@ -15,19 +15,22 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 import com.example.mutual.*;
 
 public class FriendsController {
+
     protected ObjectOutputStream out;
     protected ObjectInputStream in;
     protected ObjectOutputStream fout;
@@ -79,6 +82,9 @@ public class FriendsController {
 
     @FXML
     protected Text warning;
+
+    @FXML
+    protected Button addServer;
 
     public FriendsController(ObjectInputStream in, ObjectOutputStream out, ObjectInputStream fin, ObjectOutputStream fout, String username) {
         this.out = out;
@@ -188,6 +194,77 @@ public class FriendsController {
         }
 
         btn = new Button("add server");
+
+        btn.setOnAction((ActionEvent event) -> {
+            System.out.println("clicked");
+
+            Dialog<Boolean> dialog = new Dialog<Boolean>();
+            dialog.setTitle("CREATING SERVER");
+            dialog.setHeight(240);
+            dialog.setWidth(400);
+
+            DialogPane dialogPane = new DialogPane();
+            dialogPane.setPrefHeight(240);
+            dialogPane.setPrefWidth(400);
+
+            Pane pane = new Pane();
+            pane.setPrefHeight(240);
+            pane.setPrefWidth(400);
+
+            Text text = new Text("type the name of the server in the field below");
+            text.setWrappingWidth(360);
+            text.setFont(Font.font(17));
+            text.setLayoutX(20);
+            text.setLayoutY(70);
+            text.setTextAlignment(TextAlignment.CENTER);
+
+            TextField serverName = new TextField();
+            serverName.setLayoutX(35);
+            serverName.setLayoutY(110);
+            serverName.setPrefHeight(25);
+            serverName.setPrefWidth(280);
+
+            Text warning = new Text();
+            warning.setWrappingWidth(360);
+            warning.setFont(Font.font(14));
+            warning.setFill(Color.RED);
+            warning.setLayoutX(40);
+            warning.setLayoutY(160);
+            text.setTextAlignment(TextAlignment.CENTER);
+
+            Button ok= new Button("ok");
+            ok.setOnAction((ActionEvent event2) -> {
+                try {
+                    if (serverName.getText().equals("")){
+                        warning.setText("type a name first!");
+                    }
+                    else {
+                        out.writeObject(Command.newServer(currentUser, serverName.getText()));
+                        Data data = (Data) in.readObject();
+                        if (!(boolean) data.getPrimary())
+                            warning.setText("this name is already taken!");
+                        else {
+                            dialog.setResult(Boolean.TRUE);
+                            dialog.close();
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException ex){
+                    ex.printStackTrace();
+                }
+
+            });
+            ok.setPrefHeight(25);
+            ok.setPrefWidth(50);
+            ok.setLayoutX(320);
+            ok.setLayoutY(110);
+
+            // close via rex X button  later
+
+            pane.getChildren().addAll(new ArrayList<>(Arrays.asList(text, serverName, ok, warning)));
+            dialogPane.setContent(pane);
+            dialog.setDialogPane(dialogPane);
+            dialog.show();
+        });
         //add eventhandler
         btn.setPrefHeight(40);
         btn.setPrefWidth(servers_grid.getPrefWidth());
@@ -213,6 +290,7 @@ public class FriendsController {
     }
 
     protected Boolean firsttime = true;
+
     public void showalllist(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected()) {
@@ -284,6 +362,7 @@ public class FriendsController {
 
     }
 
+    @FXML
     public void settingOnButton(Event e){
         Data data = null;
         try {
@@ -308,6 +387,8 @@ public class FriendsController {
         stage.setScene(scene);
         stage.show();
     }
+
+
 }
 
 class InboxMessages extends Service<Void>{
@@ -340,6 +421,7 @@ class InboxMessages extends Service<Void>{
         fc.addInboxMessages();
     }
 }
+
 class AddAllFriends extends Thread {
     FriendsController fc;
 
