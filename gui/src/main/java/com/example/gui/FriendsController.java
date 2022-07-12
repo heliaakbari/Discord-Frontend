@@ -202,15 +202,15 @@ public class FriendsController {
             Dialog<Boolean> dialog = new Dialog<>();
             dialog.setTitle("CREATING SERVER");
             dialog.setHeight(240);
-            dialog.setWidth(400);
+            dialog.setWidth(440);
 
             DialogPane dialogPane = new DialogPane();
             dialogPane.setPrefHeight(240);
-            dialogPane.setPrefWidth(400);
+            dialogPane.setPrefWidth(440);
 
             Pane pane = new Pane();
             pane.setPrefHeight(240);
-            pane.setPrefWidth(400);
+            pane.setPrefWidth(440);
 
             Text text = new Text("type the name of the server in the field below");
             text.setWrappingWidth(360);
@@ -261,9 +261,18 @@ public class FriendsController {
             ok.setLayoutX(320);
             ok.setLayoutY(110);
 
-            // close via rex X button  later
+            Button cancel = new Button("cancel");
+            cancel.setOnAction((ActionEvent cancelEvent) -> {
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+            });
+            cancel.setPrefHeight(25);
+            cancel.setPrefWidth(50);
+            cancel.setLayoutX(375);
+            cancel.setLayoutY(110);
 
-            pane.getChildren().addAll(new ArrayList<>(Arrays.asList(text, serverName, ok, warning)));
+
+            pane.getChildren().addAll(new ArrayList<>(Arrays.asList(text, serverName, ok, warning, cancel)));
             dialogPane.setContent(pane);
             dialog.setDialogPane(dialogPane);
             dialog.show();

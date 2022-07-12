@@ -24,7 +24,7 @@
    <children>
       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
          <tabs>
-            <Tab fx:id="addUserToChannel" onSelectionChanged="#addUserToChannel" text="add user(channel)">
+            <Tab fx:id="addUserToChannel" onSelectionChanged="#addUserToChannel" text="add user to channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -111,7 +111,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="deleteUserFromServer" onSelectionChanged="#deleteUserFromServer" text="delete user(server)">
+            <Tab fx:id="deleteUserFromServer" onSelectionChanged="#deleteUserFromServer" text="delete user from server">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -137,7 +137,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="deleteUserFromChannel" closable="false" onSelectionChanged="#deleteUserFromChannel" text="delete user(channel)">
+            <Tab fx:id="deleteUserFromChannel" closable="false" onSelectionChanged="#deleteUserFromChannel" text="delete user from channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -171,7 +171,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="addUserToServer" onSelectionChanged="#addUserToServer" text="add user(server)">
+            <Tab fx:id="addUserToServer" onSelectionChanged="#addUserToServer" text="add user to server">
                <content>
                   <AnchorPane disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0">
                      <children>
