@@ -910,10 +910,10 @@ public class CmdManager {
         HashMap<String, Role> members = new HashMap<>();
 
         try {
-            rs = stmt.executeQuery(String.format("select username as U,rolename as R,abilities as A from channel_members where server='%s'", cmd.getServer()));
+            rs = stmt.executeQuery(String.format("select username,rolename,abilities from server_members where server='%s'", cmd.getServer()));
 
             while (rs.next()) {
-                members.put(rs.getString("U"), new Role(rs.getString("A"), rs.getString("R")));
+                members.put(rs.getString("USERNAME"), new Role(rs.getString("ABILITIES"), rs.getString("ROLENAME")));
             }
         } catch (SQLException s) {
             s.printStackTrace();
@@ -1235,6 +1235,9 @@ public class CmdManager {
 
     public void changeRole(Command cmd) {
         Role role = (Role) cmd.getPrimary();
+        if(role == null){
+            return;
+        }
         try {
             stmt.executeUpdate(String.format("update server_members set rolename='%s' , abilities='%s' where username='%s' and server='%s'; ", role.getRoleName(), role.getValues(), (String) cmd.getSecondary(), cmd.getServer()));
         } catch (SQLException e) {
