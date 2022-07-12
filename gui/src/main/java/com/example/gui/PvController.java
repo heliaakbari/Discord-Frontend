@@ -256,7 +256,19 @@ public class PvController {
         }
 
         btn = new Button("add server");
+
         btn.setOnAction((ActionEvent event) -> {
+            if(isMessageReader) {
+                try {
+                    out.writeObject(Command.lastseenPv(currentUser,otherPerson));
+                    Thread.sleep(100);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+            
             System.out.println("clicked");
 
             Dialog<Boolean> dialog = new Dialog<>();
