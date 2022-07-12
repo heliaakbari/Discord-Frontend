@@ -10,8 +10,8 @@ public class Role implements Serializable {
     private static final long serialVersionUID = 338245675849926L;
     private String roleName;
     private String values;
-    public static final ArrayList<String> abilities = new ArrayList<>(Arrays.asList("create channel", "remove channel", "remove member",
-            "restrict member", "ban member", "change server name", "see chat history", "pin message", "delete server"));
+    public static final ArrayList<String> abilities = new ArrayList<>(Arrays.asList("create channel", "remove channel", "remove member from server",
+            "remove member from channel ", "ban member", "change server name", "see chat history", "pin message", "delete server"));
 
     /**
      * @param values a string containing nine 0 and 1s to define whether this role has each of nine abilities or not

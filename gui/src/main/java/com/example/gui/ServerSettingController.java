@@ -366,6 +366,8 @@ class OpenServerRoles extends Service<Void>{
                 Command cmd = Command.getServerMembers(ssc.currentUser,ssc.currentServer);
                 ssc.out.writeObject(cmd);
                 Data data = (Data) ssc.in.readObject();
+                ssc.serverMembers =(HashMap<String, Role>) data.getPrimary();
+
                 return null;
             }
         };
