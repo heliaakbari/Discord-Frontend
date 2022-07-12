@@ -38,6 +38,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * this class handles events for server-setting.fxml file.
+ * define methods for buttons, labels and ...
+ */
 public class ServerSettingController {
 
     protected Role role;
@@ -172,6 +176,9 @@ public class ServerSettingController {
         this.myStage = myStage;
     }
 
+    /**
+     * the method does all the essential job when first entering the scene, including enable and disabling tabs
+     */
     @FXML
     public void initialize() {
         myStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -184,7 +191,7 @@ public class ServerSettingController {
                 Stage newStage = new Stage();
                 newStage.setTitle("Discord");
                 newStage.getIcons().add(new Image("C:\\discord\\logo.png"));
-                Scene scene= null;
+                Scene scene = null;
                 try {
                     scene = new Scene(fxmlLoader.load(), 1000, 600);
                 } catch (IOException e) {
@@ -200,22 +207,22 @@ public class ServerSettingController {
 
     }
 
-    public void changeRole(Event e){
+    public void changeRole(Event e) {
         Button btn = (Button) e.getSource();
         Role role = null;
-        for(HashMap.Entry<String,Role> entry : serverMembers.entrySet()){
-            if (entry.getValue().getRoleName().equals(changerole_role.getValue())){
+        for (HashMap.Entry<String, Role> entry : serverMembers.entrySet()) {
+            if (entry.getValue().getRoleName().equals(changerole_role.getValue())) {
                 role = entry.getValue();
                 break;
             }
         }
-        if(role == null){
+        if (role == null) {
             return;
         }
-        if(role.equals("creator")){
+        if (role.equals("creator")) {
             return;
         }
-        Command cmd = Command.changeRole(currentUser,changerole_member.getValue(),currentServer,role);
+        Command cmd = Command.changeRole(currentUser, changerole_member.getValue(), currentServer, role);
         try {
             out.writeObject(cmd);
         } catch (IOException ex) {
@@ -231,51 +238,51 @@ public class ServerSettingController {
         new OpenServerRoles(this).restart();
     }
 
-    public void addRole(Event e){
+    public void addRole(Event e) {
         String abilities = new String("");
-        if(create_channel.getText().equals("yes"))
-            abilities = abilities+"1";
+        if (create_channel.getText().equals("yes"))
+            abilities = abilities + "1";
         else
-            abilities = abilities+"0";
-        if(delete_channel.getText().equals("yes"))
-            abilities = abilities+"1";
+            abilities = abilities + "0";
+        if (delete_channel.getText().equals("yes"))
+            abilities = abilities + "1";
         else
-            abilities = abilities+"0";
-        if(delete_from_server.getText().equals("yes"))
-            abilities = abilities+"1";
+            abilities = abilities + "0";
+        if (delete_from_server.getText().equals("yes"))
+            abilities = abilities + "1";
         else
-            abilities = abilities+"0";
-        if(delete_from_channel.getText().equals("yes"))
-            abilities = abilities+"1";
+            abilities = abilities + "0";
+        if (delete_from_channel.getText().equals("yes"))
+            abilities = abilities + "1";
         else
-            abilities = abilities+"0";
-        if(delete_from_server.getText().equals("yes"))
-            abilities = abilities+"1";
+            abilities = abilities + "0";
+        if (delete_from_server.getText().equals("yes"))
+            abilities = abilities + "1";
         else
-            abilities = abilities+"0";
-        if(change_name.getText().equals("yes"))
-            abilities = abilities+"1";
+            abilities = abilities + "0";
+        if (change_name.getText().equals("yes"))
+            abilities = abilities + "1";
         else
-            abilities = abilities+"0";
-        if(chat_history.getText().equals("yes"))
-            abilities = abilities+"1";
+            abilities = abilities + "0";
+        if (chat_history.getText().equals("yes"))
+            abilities = abilities + "1";
         else
-            abilities = abilities+"0";
-        if(pin_msg.getText().equals("yes"))
-            abilities = abilities+"1";
+            abilities = abilities + "0";
+        if (pin_msg.getText().equals("yes"))
+            abilities = abilities + "1";
         else
-            abilities = abilities+"0";
+            abilities = abilities + "0";
 
-        abilities = abilities+"0";
+        abilities = abilities + "0";
 
-        Role role = new Role(abilities,role_name.getText());
-        if(choicebox_createrole.getValue().equals("none")){
+        Role role = new Role(abilities, role_name.getText());
+        if (choicebox_createrole.getValue().equals("none")) {
             return;
         }
-        if(choicebox_createrole.getValue().equals("creator")){
+        if (choicebox_createrole.getValue().equals("creator")) {
             return;
         }
-        Command cmd =Command.changeRole(currentUser,choicebox_createrole.getValue(),currentServer,role);
+        Command cmd = Command.changeRole(currentUser, choicebox_createrole.getValue(), currentServer, role);
         try {
             out.writeObject(cmd);
         } catch (IOException ex) {
@@ -288,20 +295,24 @@ public class ServerSettingController {
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        ((Button)(e.getSource())).setText("done!");
+        ((Button) (e.getSource())).setText("done!");
         new OpenServerRoles(this).restart();
     }
 
-    public void noyes(Event e){
-        Button btn =(Button) e.getSource();
-        if(btn.getText().equals("yes")){
+    public void noyes(Event e) {
+        Button btn = (Button) e.getSource();
+        if (btn.getText().equals("yes")) {
             btn.setText("no");
-        }
-        else if(btn.getText().equals("no")){
+        } else if (btn.getText().equals("no")) {
             btn.setText("yes");
         }
     }
 
+    /**
+     * handles the event when the add button is pressed in tab : add user to server
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
     public void addToServerOnButton(Event e) {
 
@@ -316,6 +327,11 @@ public class ServerSettingController {
 
     }
 
+    /**
+     * handles the event when the create button is pressed in tab : create channel
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
     public void createChannelOnButton(Event e) {
 
@@ -323,16 +339,14 @@ public class ServerSettingController {
         if (channelName.equals("")) {
             createChannelWarning.setText("type a name first!");
             createChannelWarning.setFill(Color.RED);
-        }
-        else {
+        } else {
             try {
                 out.writeObject(Command.newChannel(currentUser, currentServer, channelName));
                 Data data = (Data) in.readObject();
                 if (!(boolean) data.getPrimary()) {
                     createChannelWarning.setText("this name is taken, try another one!");
                     createChannelWarning.setFill(Color.RED);
-                }
-                else {
+                } else {
                     createChannelWarning.setText("channel created successfully");
                     createChannelWarning.setFill(Color.GREEN);
                 }
@@ -343,37 +357,52 @@ public class ServerSettingController {
         }
     }
 
+    /**
+     * handles the event when the add  button is pressed in tab : add user to channel
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
     public void addToChannelOnButton(Event e) {
         String channel = (String) channels1.getSelectionModel().getSelectedItem();
         String person = (String) friends1.getSelectionModel().getSelectedItem();
 
-        try{
+        try {
             out.writeObject(Command.addOneMemberToChannel(currentUser, person, currentServer, channel));
             Data data = (Data) in.readObject();
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
 
     }
 
+    /**
+     * handles the event when the delete channel button is pressed in tab : delete channel
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
     public void deleteChannelOnButton(Event e) {
         String channel = (String) channels2.getSelectionModel().getSelectedItem();
         try {
-            out.writeObject(Command.deleteChannel(currentUser,currentServer, channel));
+            out.writeObject(Command.deleteChannel(currentUser, currentServer, channel));
             Data data = (Data) in.readObject();
 
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
 
+    /**
+     * handles the event when the remove button is pressed in tab : delete user from server
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
     public void deleteFromServerOnButton(Event e) {
         String person = (String) serverMembers1.getSelectionModel().getSelectedItem();
 
-        if(role.getRoleName().equals("creator")){
+        if (role.getRoleName().equals("creator")) {
             return;
         }
 
@@ -381,44 +410,54 @@ public class ServerSettingController {
             out.writeObject(Command.banFromServer(person, currentServer));
             Data data = (Data) in.readObject();
 
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
 
     }
 
+    /**
+     * handles the event when the remve button is pressed in tab : delete user from channel
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
     public void deleteFromChannelOnButton(Event e) {
         String person = (String) channelMembers1.getSelectionModel().getSelectedItem();
         String channel = (String) channels3.getSelectionModel().getSelectedItem();
-       if(channel.equals("general")){
-           return;
-       }
+        if (channel.equals("general")) {
+            return;
+        }
 
         try {
             out.writeObject(Command.banFromChannel(person, currentServer, channel));
             Data data = (Data) in.readObject();
 
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
 
     }
 
+    /**
+     * handles the event when the leave channel button is pressed in tab : leave
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
-    public void leaveFromChannelOnButton(Event e){
-        if(channels_list_leave.getValue()==null){
+    public void leaveFromChannelOnButton(Event e) {
+        if (channels_list_leave.getValue() == null) {
             return;
         }
 
-        if(channels_list_leave.getValue()=="general") {
+        if (channels_list_leave.getValue() == "general") {
             return;
 
         }
-        try{
+        try {
             System.out.println("ban");
 
-            out.writeObject(Command.banFromChannel(currentUser, currentServer,channels_list_leave.getValue()));
+            out.writeObject(Command.banFromChannel(currentUser, currentServer, channels_list_leave.getValue()));
 
             Data data = (Data) in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
@@ -429,20 +468,27 @@ public class ServerSettingController {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
-        new AddChannels(this,channels_list_leave).restart();
+        new AddChannels(this, channels_list_leave).restart();
     }
-    public void showMessages(){
+
+    public void showMessages() {
         new AddMessages(this).restart();
     }
+
+    /**
+     * handles the event when the leave server button is pressed in tab : leave
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
-    public void leaveFromServerOnButton(Event e){
-        if(role.getRoleName().equals("creator")){
+    public void leaveFromServerOnButton(Event e) {
+        if (role.getRoleName().equals("creator")) {
             return;
         }
-        try{
+        try {
             out.writeObject(Command.banFromServer(currentUser, currentServer));
             Data data = (Data) in.readObject();
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
         try {
@@ -453,39 +499,48 @@ public class ServerSettingController {
         changeToFriendsView(e);
     }
 
+    /**
+     * handles the event when the delete server button is pressed in tab : rename/delete server
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
-    public void deleteServerOnButton(Event e){
-        try{
+    public void deleteServerOnButton(Event e) {
+        try {
             out.writeObject(Command.deleteServer(currentUser, currentServer));
             Data data = (Data) in.readObject();
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
 
         changeToFriendsView(e);
     }
 
+    /**
+     * handles the event when the rename button is pressed in tab : rename/delete server
+     * transfers the appropriate command and data to and from server
+     * @param e
+     */
     @FXML
-    public void renameServerOnButton(Event e){
-        String newName = newServerName.getText();;
-        if (newName.equals("")){
+    public void renameServerOnButton(Event e) {
+        String newName = newServerName.getText();
+        ;
+        if (newName.equals("")) {
             serverNameWarning.setText("type a name first!");
             serverNameWarning.setFill(Color.RED);
-        }
-        else{
+        } else {
             try {
                 out.writeObject(Command.changeServerName(currentUser, currentServer, newName));
                 Data data = (Data) in.readObject();
-                if (!(boolean) data.getPrimary()){
+                if (!(boolean) data.getPrimary()) {
                     serverNameWarning.setText("this name is taken, try another one!");
                     serverNameWarning.setFill(Color.RED);
-                }
-                else{
+                } else {
                     serverNameWarning.setText("server name changed successfully!");
                     serverNameWarning.setFill(Color.GREEN);
                 }
 
-            } catch (IOException | ClassNotFoundException ex){
+            } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
 
@@ -493,6 +548,11 @@ public class ServerSettingController {
     }
 
 
+    /**
+     * handles the event when the add user to channel tab is selected
+     * gets necessary data from server and show is in the tab
+     * @param e
+     */
     public void addUserToChannel(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -501,7 +561,11 @@ public class ServerSettingController {
         new AddChannelsAndFriends(this).restart();
     }
 
-    public void changeToFriendsView(Event event){
+    /**
+     * changes the scene to friends-view in the same stage
+     * @param event
+     */
+    public void changeToFriendsView(Event event) {
         FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
         FriendsController friendsController = new FriendsController(in, out, fin, fout, currentUser);
         fxmlLoader.setController(friendsController);
@@ -516,6 +580,11 @@ public class ServerSettingController {
         stage.show();
     }
 
+    /**
+     * handles the event when the delete-channel tab is selected
+     * gets necessary data from server and show is in the tab
+     * @param e
+     */
     public void deleteChannel(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -524,13 +593,23 @@ public class ServerSettingController {
     }
 
 
-    public void serverRolesTab(Event e){
+    /**
+     * handles the event when the server roles tab is selected
+     * gets necessary data from server and show is in the tab
+     * @param e
+     */
+    public void serverRolesTab(Event e) {
         Tab tab = (Tab) e.getSource();
-        if(!tab.isSelected())
+        if (!tab.isSelected())
             return;
         new OpenServerRoles(this).restart();
     }
 
+    /**
+     * handles the event when the 'delete user from server' tab is selected
+     * gets necessary data from server and show is in the tab
+     * @param e
+     */
     public void deleteUserFromServer(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -538,6 +617,11 @@ public class ServerSettingController {
         new AddServerMembers(this).restart();
     }
 
+    /**
+     * handles the event when the 'delete user from channel' tab is selected
+     * gets necessary data from server and show is in the tab
+     * @param e
+     */
     public void deleteUserFromChannel(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -545,13 +629,23 @@ public class ServerSettingController {
         new AddChannelsAndChannelMembers(this).restart();
     }
 
+    /**
+     * handles the event when the 'chat history' tab is selected
+     * gets necessary data from server and show is in the tab
+     * @param e
+     */
     public void OpenHistoryTab(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
-        new AddChannels(this,history_list).restart();
+        new AddChannels(this, history_list).restart();
     }
 
+    /**
+     * handles the event when the 'add user to server' tab is selected
+     * gets necessary data from server and show is in the tab
+     * @param e
+     */
     public void addUserToServer(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -559,8 +653,14 @@ public class ServerSettingController {
         new AddFriends(this).restart();
     }
 
+    /**
+     * handles the event when the 'eave' tab is selected
+     * gets necessary data from server and show is in the tab
+     * shows or hides some button in this tab based on user's role
+     * @param e
+     */
     public void leave(Event e) {
-        if (role.getRoleName().equals("creator")){
+        if (role.getRoleName().equals("creator")) {
             leave_server.setVisible(false);
             leaveServerLabel.setVisible(false);
         }
@@ -570,14 +670,19 @@ public class ServerSettingController {
         new AddChannels(this, channels_list_leave);
     }
 
-    public void renameDelete(Event e){
+    /**
+     * handles the event when the 'l' tab is selected
+     * gets necessary data from server and show is in the tab
+     * shows or hides some button in this tab based on user's role
+     * @param e
+     */
+    public void renameDelete(Event e) {
         // ability to rename server
-        if (role.getValues().charAt(5) == '1'){
+        if (role.getValues().charAt(5) == '1') {
             newServerName.setVisible(true);
             changeServerNameButton.setVisible(true);
             changeServerNameTitle.setVisible(true);
-        }
-        else{
+        } else {
             newServerName.setVisible(false);
             changeServerNameButton.setVisible(false);
             changeServerNameTitle.setVisible(false);
@@ -594,6 +699,9 @@ public class ServerSettingController {
 
 }
 
+/**
+ * this class is responsible for getting user role from server and disable/enable tabs based on it
+ */
 class GetRole extends Service<Void> {
     ServerSettingController ssc;
 
@@ -601,6 +709,10 @@ class GetRole extends Service<Void> {
         this.ssc = ssc;
     }
 
+    /**
+     * getting data from server
+     * @return
+     */
     @Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
@@ -614,6 +726,9 @@ class GetRole extends Service<Void> {
         };
     }
 
+    /**
+     * showing the data on user end
+     */
     @Override
     protected void succeeded() {
         ssc.leave.setDisable(false);
@@ -640,7 +755,11 @@ class GetRole extends Service<Void> {
     }
 }
 
-// for delete user from channel
+
+/**
+ * this class is responsible for getting channel list and channel members list from server
+ * and showing it on tab 'delete user from channel' on client end
+ */
 class AddChannelsAndChannelMembers extends Service<Void> {
 
     ServerSettingController ssc;
@@ -694,7 +813,12 @@ class AddChannelsAndChannelMembers extends Service<Void> {
     }
 }
 
-// for delete user from server
+
+
+/**
+ * this class is responsible for getting server members list from server
+ * and showing it on tab 'delete user from server' on client end
+ */
 class AddServerMembers extends Service<Void> {
 
     ServerSettingController ssc;
@@ -725,11 +849,16 @@ class AddServerMembers extends Service<Void> {
     }
 }
 
-// for add user to server
+
+
+/**
+ * this class is responsible for getting friends list from server
+ * and showing it on tab 'add user to server' on client end
+ */
 class AddFriends extends Service<Void> {
 
     ServerSettingController ssc;
-    HashMap<String , Role> membersAlreadyHere;
+    HashMap<String, Role> membersAlreadyHere;
 
     public AddFriends(ServerSettingController ssc) {
         this.ssc = ssc;
@@ -762,7 +891,12 @@ class AddFriends extends Service<Void> {
     }
 }
 
-// for delete channel and leave channel
+
+
+/**
+ * this class is responsible for getting channel list  from server
+ * and showing it on tab 'delete channel' and 'leave' on client end
+ */
 class AddChannels extends Service<Void> {
     ServerSettingController ssc;
     ChoiceBox channels;
@@ -792,15 +926,18 @@ class AddChannels extends Service<Void> {
         ssc.channels2.getItems().clear();
         ssc.channels2.getItems().addAll(ssc.channels);
         ssc.channels_list_leave.getItems().clear();
-        for(String channel : ssc.channels){
-            if(!channel.equals("general")){
+        for (String channel : ssc.channels) {
+            if (!channel.equals("general")) {
                 ssc.channels_list_leave.getItems().add(channel);
             }
         }
     }
 }
 
-// for add user to channel
+/**
+ * this class is responsible for getting channel list and friends list from server
+ * and showing it on tab 'add user to  channel' on client end
+ */
 class AddChannelsAndFriends extends Service<Void> {
 
     ServerSettingController ssc;
@@ -853,7 +990,7 @@ class OpenServerRoles extends Service<Void> {
                 Command cmd = Command.getServerMembers(ssc.currentUser, ssc.currentServer);
                 ssc.out.writeObject(cmd);
                 Data data = (Data) ssc.in.readObject();
-               ssc.serverMembers =(HashMap<String, Role>) data.getPrimary();
+                ssc.serverMembers = (HashMap<String, Role>) data.getPrimary();
                 return null;
             }
         };
@@ -868,51 +1005,52 @@ class OpenServerRoles extends Service<Void> {
         ssc.choicebox_createrole.setValue("none");
         ssc.changerole_member.getItems().clear();
         HashSet<String> roles = new HashSet<>();
-        for(HashMap.Entry<String,Role> entry : ssc.serverMembers.entrySet()){
-            ssc.members_grid.addColumn(0,new Text(entry.getKey()));
-            ssc.members_grid.addColumn(1,new Text(entry.getValue().getRoleName()));
-            if(!entry.getKey().equals(ssc.currentUser)) {
+        for (HashMap.Entry<String, Role> entry : ssc.serverMembers.entrySet()) {
+            ssc.members_grid.addColumn(0, new Text(entry.getKey()));
+            ssc.members_grid.addColumn(1, new Text(entry.getValue().getRoleName()));
+            if (!entry.getKey().equals(ssc.currentUser)) {
                 ssc.choicebox_createrole.getItems().add(entry.getKey());
                 ssc.changerole_member.getItems().add(entry.getKey());
             }
-            if(!entry.getValue().getRoleName().equals("creator")){
+            if (!entry.getValue().getRoleName().equals("creator")) {
                 roles.add(entry.getValue().getRoleName());
             }
         }
         ssc.changerole_role.getItems().clear();
         ssc.changerole_role.getItems().addAll(roles);
 
-        ssc.changerole_role.getSelectionModel().selectedItemProperty().addListener( (ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+        ssc.changerole_role.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             Role role = null;
-            if(newValue==null){
+            if (newValue == null) {
                 return;
             }
-            for(HashMap.Entry<String,Role> entry : ssc.serverMembers.entrySet()){
-                if (entry.getValue().getRoleName().equals(newValue)){
+            for (HashMap.Entry<String, Role> entry : ssc.serverMembers.entrySet()) {
+                if (entry.getValue().getRoleName().equals(newValue)) {
                     role = entry.getValue();
                     break;
                 }
             }
             ssc.role_desc.getChildren().clear();
-            for(int i=0;i<9;i++){
-                if(Role.abilities.get(i).equals("ban member")){
+            for (int i = 0; i < 9; i++) {
+                if (Role.abilities.get(i).equals("ban member")) {
                     continue;
                 }
-                ssc.role_desc.addColumn(0,new Text(Role.abilities.get(i)));
-                ssc.role_desc.addColumn(1, new Text(role.getValues().charAt(i)=='1' ? "yes" : "no"));
+                ssc.role_desc.addColumn(0, new Text(Role.abilities.get(i)));
+                ssc.role_desc.addColumn(1, new Text(role.getValues().charAt(i) == '1' ? "yes" : "no"));
             }
-        } );
+        });
     }
 }
 
 
-class AddMessages extends Service<Void>{
+class AddMessages extends Service<Void> {
     ServerSettingController cc;
     ArrayList<Message> msgs;
     ArrayList<UserShort> pics;
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss");
-    public AddMessages(ServerSettingController cc){
-        this.cc=cc;
+
+    public AddMessages(ServerSettingController cc) {
+        this.cc = cc;
     }
 
     @Override
@@ -921,9 +1059,9 @@ class AddMessages extends Service<Void>{
 
             @Override
             protected Void call() throws Exception {
-                Command cmd = Command.getChannelMsgs(cc.currentUser,cc.currentServer,cc.history_list.getValue(),Integer.parseInt(cc.history_num.getText()));
+                Command cmd = Command.getChannelMsgs(cc.currentUser, cc.currentServer, cc.history_list.getValue(), Integer.parseInt(cc.history_num.getText()));
                 cc.out.writeObject(cmd);
-                Data dt =(Data) cc.in.readObject();
+                Data dt = (Data) cc.in.readObject();
                 msgs = (ArrayList<Message>) dt.getPrimary();
                 pics = (ArrayList<UserShort>) dt.getSecondary();
                 return null;
@@ -935,19 +1073,19 @@ class AddMessages extends Service<Void>{
     protected void succeeded() {
         cc.messages_grid.getChildren().clear();
         cc.messages_grid.setVgap(5);
-        for (Message message : msgs){
-            TextFlow textFlow = new TextFlow(new Text(message.getSourceInfo().get(0)+" : ("+message.getDateTime().format(dateTimeFormatter)+")\n"+message.getText()+"\n"));
+        for (Message message : msgs) {
+            TextFlow textFlow = new TextFlow(new Text(message.getSourceInfo().get(0) + " : (" + message.getDateTime().format(dateTimeFormatter) + ")\n" + message.getText() + "\n"));
             ToggleGroup group = new ToggleGroup();
-            RadioButton like = new RadioButton("like: "+message.getLikes()+"      ");
-            RadioButton dislike = new RadioButton("dislike: "+message.getDislikes()+"      ");
-            RadioButton laugh = new RadioButton("laugh: "+message.getLaughs()+"       ");
-            group.getToggles().addAll(like,dislike,laugh);
-            textFlow.getChildren().addAll(like,dislike,laugh);
+            RadioButton like = new RadioButton("like: " + message.getLikes() + "      ");
+            RadioButton dislike = new RadioButton("dislike: " + message.getDislikes() + "      ");
+            RadioButton laugh = new RadioButton("laugh: " + message.getLaughs() + "       ");
+            group.getToggles().addAll(like, dislike, laugh);
+            textFlow.getChildren().addAll(like, dislike, laugh);
             textFlow.setStyle("-fx-background-color: rgb(176,223,255); -fx-border-radius: 5px;");
             textFlow.setPrefWidth(430);
             textFlow.setPadding(new Insets(5));
             textFlow.setBorder(Border.stroke(Color.BLACK));
-            cc.messages_grid.addColumn(1,textFlow);
+            cc.messages_grid.addColumn(1, textFlow);
         }
     }
 
