@@ -22,7 +22,7 @@ public class HelloApplication extends Application {
     private static ObjectOutputStream fout;
     private static ObjectInputStream fin;
     private static ObjectInputStream in;
-    
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
