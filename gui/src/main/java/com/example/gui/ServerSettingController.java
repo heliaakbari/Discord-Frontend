@@ -52,10 +52,10 @@ public class ServerSettingController {
     protected Tab chatHistory;
     @FXML
     protected Tab leave;
-//    @FXML
-//    protected Tab ;
-//    @FXML
-//    protected Tab ;
+    @FXML
+    protected Tab serverName;
+    @FXML
+    protected Tab deleteServer;
 
     @FXML
     protected ChoiceBox channels1;
@@ -165,25 +165,30 @@ class GetRole extends Service<Void>{
 
     @Override
     protected void succeeded() {
+        ssc.leave.setDisable(false);
+        ssc.addUserToServer.setDisable(false);
         ArrayList<String> abilities = ssc.role.getAvailableAbilities();
         for (String ability: abilities) {
-//            switch (ability){
-//                case "create channel" ->
-//                case "remove channel" ->
-//                case "remove channel" ->
-//                case "restrict member" ->
-//                case "ban member" ->
-//                case "change server name" ->
-//                case "see chat history" ->
-//                case "delete server" ->
-//                case
-//                case
-//
-//            }
+            switch (ability){
+                case "create channel" -> ssc.createChannel.setDisable(false);
+                case "remove channel" -> ssc.deleteChannel.setDisable(false);
+                case "remove member " -> ssc.deleteUserFromServer.setDisable(false);
+                case "restrict member from channel" -> ssc.deleteUserFromChannel.setDisable(false);
+                case "change server name" -> ssc.serverName.setDisable(false);
+                case "see chat history" -> ssc.chatHistory.setDisable(false);
+                case "delete server" -> ssc.deleteServer.setDisable(false);
+
+            }
+        }
+
+        if (ssc.role.getValues().length() == 9){
+            ssc.addUserToChannel.setDisable(false);
+            ssc.serverRoles.setDisable(false);
         }
 
     }
 }
+
 // for delete user from channel
 class AddChannelsAndChannelMembers extends Service<Void> {
 

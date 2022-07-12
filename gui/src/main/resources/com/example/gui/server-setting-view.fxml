@@ -406,7 +406,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="chatHistory" onSelectionChanged="#chatHistory" text="server's name">
+            <Tab fx:id="chatHistory" onSelectionChanged="#chatHistory" text="chat history">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" />
                </content>
@@ -415,6 +415,16 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" />
                </content>
+            </Tab>
+            <Tab fx:id="serverName" text="server's name">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab fx:id="deleteServer" text="delete server">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
             </Tab>
          </tabs>
       </TabPane>
