@@ -16,7 +16,7 @@
    <children>
       <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
          <tabs>
-            <Tab fx:id="tab1" onSelectionChanged="#addUserToChannel" text="add user to channel">
+            <Tab fx:id="addUserToChannel" onSelectionChanged="#addUserToChannel" text="add user to channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -48,7 +48,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab2" text="create channel">
+            <Tab fx:id="createChannel" text="create channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -75,7 +75,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab3" onSelectionChanged="#deleteChannel" text="delete channel">
+            <Tab fx:id="deleteChannel" onSelectionChanged="#deleteChannel" text="delete channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -101,7 +101,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab4" onSelectionChanged="#deleteUserFromServer" text="delete user from server">
+            <Tab fx:id="deleteUserFromServer" onSelectionChanged="#deleteUserFromServer" text="delete user from server">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -127,7 +127,7 @@
                      </children></AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab5" closable="false" onSelectionChanged="#deleteUserFromChannel" text="delete user from channel">
+            <Tab fx:id="deleteUserFromChannel" closable="false" onSelectionChanged="#deleteUserFromChannel" text="delete user from channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -161,7 +161,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab6" onSelectionChanged="#addUserToServer" text="add user to server">
+            <Tab fx:id="addUserToServer" onSelectionChanged="#addUserToServer" text="add user to server">
                <content>
                   <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0">
                      <children>
@@ -188,17 +188,17 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab7" onSelectionChanged="#serverRoles" text="server roles">
+            <Tab fx:id="serverRoles" onSelectionChanged="#serverRoles" text="server roles">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" />
                </content>
             </Tab>
-            <Tab fx:id="tab8" onSelectionChanged="#chatHistory" text="chat history">
+            <Tab fx:id="chatHistory" onSelectionChanged="#chatHistory" text="chat history">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" />
                </content>
             </Tab>
-            <Tab fx:id="tab9" onSelectionChanged="#leave" text="leave from channel/server">
+            <Tab fx:id="leave" onSelectionChanged="#leave" text="leave from channel/server">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" />
                </content>

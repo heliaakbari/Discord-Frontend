@@ -34,6 +34,28 @@ public class ServerSettingController {
     protected ArrayList<UserShort> channelMembers;
     protected ArrayList<UserShort> friends;
 
+    @FXML
+    protected Tab addUserToChannel;
+    @FXML
+    protected Tab deleteChannel;
+    @FXML
+    protected Tab createChannel;
+    @FXML
+    protected Tab deleteUserFromServer;
+    @FXML
+    protected Tab deleteUserFromChannel;
+    @FXML
+    protected Tab addUserToServer;
+    @FXML
+    protected Tab serverRoles;
+    @FXML
+    protected Tab chatHistory;
+    @FXML
+    protected Tab leave;
+//    @FXML
+//    protected Tab ;
+//    @FXML
+//    protected Tab ;
 
     @FXML
     protected ChoiceBox channels1;
@@ -143,7 +165,23 @@ class GetRole extends Service<Void>{
 
     @Override
     protected void succeeded() {
-        
+        ArrayList<String> abilities = ssc.role.getAvailableAbilities();
+        for (String ability: abilities) {
+//            switch (ability){
+//                case "create channel" ->
+//                case "remove channel" ->
+//                case "remove channel" ->
+//                case "restrict member" ->
+//                case "ban member" ->
+//                case "change server name" ->
+//                case "see chat history" ->
+//                case "delete server" ->
+//                case
+//                case
+//
+//            }
+        }
+
     }
 }
 // for delete user from channel
