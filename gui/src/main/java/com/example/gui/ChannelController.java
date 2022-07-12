@@ -351,7 +351,7 @@ public class ChannelController {
         stage.setScene(scene);
         stage.show();
     }
-    
+
     public void addChannels(){
         channels_grid.getChildren().clear();
         channels_grid.setVgap(5);
