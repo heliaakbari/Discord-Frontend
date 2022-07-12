@@ -1,3 +1,8 @@
+
+/**
+ * a seperated thread to fetch file messages from server and saves it to local memory
+ */
+
 package com.example.gui;
 
 import com.example.mutual.*;
@@ -6,9 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-/**
- * a seperated thread to fetch file messages from server and saves it to local memory
- */
 public class FileDownloader extends Thread {
 
     private ObjectInputStream fin;
@@ -20,7 +22,10 @@ public class FileDownloader extends Thread {
     @Override
     public void run() {
 
-        // getting fileBytes object from server
+        /**
+         *    getting fileBytes object from server
+         */
+
         FileBytes fileBytes = null;
         try {
             fileBytes = (FileBytes) fin.readObject();
@@ -30,7 +35,9 @@ public class FileDownloader extends Thread {
             e.printStackTrace();
         }
 
-        // choosing a path and saving the file in it
+        /**
+         * choosing a path and saving the file in it
+         */
         String filePath = "C:\\discord";
         filePath = filePath + "\\" + fileBytes.getFileName();
         File file = new File(filePath);
