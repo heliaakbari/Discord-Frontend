@@ -33,7 +33,7 @@
                            <children>
                               <ChoiceBox fx:id="friends1" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <ChoiceBox fx:id="channels1" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" />
-                              <Button mnemonicParsing="false" prefHeight="30.0" text="add to channel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" text="add " GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose the channel" wrappingWidth="210.4564220905304">
                                  <font>
                                     <Font size="18.0" />
@@ -48,7 +48,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab fx:id="tab_all" onSelectionChanged="#createChannel" text="create channel">
+            <Tab fx:id="tab_all" text="create channel">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
@@ -116,7 +116,7 @@
                            </rowConstraints>
                            <children>
                               <ChoiceBox fx:id="serverMembers1" prefWidth="150.0" GridPane.columnIndex="1" />
-                              <Button mnemonicParsing="false" prefHeight="30.0" text="delete user" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" text="remove" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose user">
                                  <font>
                                     <Font size="18.0" />
@@ -144,13 +144,13 @@
                            <children>
                               <ChoiceBox fx:id="channelMembers1" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <ChoiceBox fx:id="channels3" prefHeight="30.0" prefWidth="150.0" GridPane.columnIndex="1" />
-                              <Button mnemonicParsing="false" prefHeight="30.0" text="add to channel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                              <Button mnemonicParsing="false" prefHeight="30.0" text="remove" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose the channel" wrappingWidth="210.4564220905304">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Text>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose your friend" GridPane.rowIndex="1">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="choose user" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="18.0" />
                                  </font>

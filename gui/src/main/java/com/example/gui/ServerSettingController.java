@@ -14,6 +14,8 @@ import javafx.scene.control.Tab;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerSettingController {
 
@@ -28,7 +30,7 @@ public class ServerSettingController {
     protected ObjectInputStream fin;
 
     protected ArrayList<String> channels;
-    protected ArrayList<Role> serverMembers;
+    protected ArrayList<HashMap<String, Role>> serverMembers;
     protected ArrayList<UserShort> channelMembers;
     protected ArrayList<UserShort> friends;
 
@@ -63,36 +65,36 @@ public class ServerSettingController {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
-    }
 
-    public void createChannel(Event e){
-        Tab tab = (Tab) e.getSource();
-        if (!tab.isSelected())
-            return;
+        new AddChannelsAndFriends(this).restart();
     }
 
     public void deleteChannel(Event e){
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
+        new AddChannels(this).restart();
     }
 
     public void deleteUserFromServer(Event e){
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
+        new AddServerMembers(this).restart();
     }
 
     public void deleteUserFromChannel(Event e){
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
+        new AddChannelsAndChannelMembers(this).restart();
     }
 
     public void addUserToServer(Event e){
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
+        new AddFriends(this).restart();
     }
 
     public void serverRoles(Event e){
@@ -114,11 +116,12 @@ public class ServerSettingController {
     }
 }
 
-class AddChannelMembers extends Service<Void> {
+// for delete user from channel
+class AddChannelsAndChannelMembers extends Service<Void> {
 
     ServerSettingController ssc;
 
-    public AddChannelMembers(ServerSettingController ssc) {
+    public AddChannelsAndChannelMembers(ServerSettingController ssc) {
         this.ssc = ssc;
     }
 
@@ -127,8 +130,13 @@ class AddChannelMembers extends Service<Void> {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                ssc.out.writeObject(Command.getChannelMembers(ssc.currentUser, ssc.currentServer, ssc.currentChannel));
+                ssc.out.writeObject(Command.userChannels(ssc.currentUser, ssc.currentServer));
                 Data data = (Data) ssc.in.readObject();
+                ssc.channels = (ArrayList<String>) data.getPrimary();
+
+
+                ssc.out.writeObject(Command.getChannelMembers(ssc.currentUser, ssc.currentServer, ssc.currentChannel));
+                data = (Data) ssc.in.readObject();
                 ssc.channelMembers = (ArrayList<UserShort>) data.getPrimary();
                 return null;
             }
@@ -137,19 +145,23 @@ class AddChannelMembers extends Service<Void> {
 
     @Override
     protected void succeeded() {
+        ssc.channels3.getItems().clear();
+        ssc.channels3.getItems().addAll(ssc.channels);
+
         ssc.channelMembers1.getItems().clear();
-        ssc.channelMembers1.getItems().addAll(ssc.channelMembers);
+        for (UserShort user: ssc.channelMembers) {
+            ssc.channels3.getItems().add(user.getUsername());
+        }
     }
 }
 
+// for delete user from server
 class AddServerMembers extends Service<Void>{
 
     ServerSettingController ssc;
-    ChoiceBox serverMembers;
 
-    public AddServerMembers(ServerSettingController ssc, ChoiceBox serverMembers) {
+    public AddServerMembers(ServerSettingController ssc) {
         this.ssc = ssc;
-        this.serverMembers = serverMembers;
     }
 
     @Override
@@ -159,7 +171,7 @@ class AddServerMembers extends Service<Void>{
             protected Void call() throws Exception {
                 ssc.out.writeObject(Command.getServerMembers(ssc.currentUser, ssc.currentServer));
                 Data data = (Data) ssc.in.readObject();
-                ssc.serverMembers = (ArrayList<Role>) data.getPrimary();
+                ssc.serverMembers = (ArrayList<HashMap<String, Role>>) data.getPrimary();
                 return null;
             }
         };
@@ -167,19 +179,22 @@ class AddServerMembers extends Service<Void>{
 
     @Override
     protected void succeeded() {
-        serverMembers.getItems().clear();
-        serverMembers.getItems().addAll(ssc.serverMembers);
+        ssc.serverMembers1.getItems().clear();
+        for (HashMap<String ,Role> user: ssc.serverMembers) {
+            for (Map.Entry<String,Role> entry : user.entrySet()) {
+                ssc.serverMembers1.getItems().add(entry.getKey());
+            }
+        }
     }
 }
 
+// for add user to server
 class AddFriends extends Service<Void>{
 
     ServerSettingController ssc;
-    ChoiceBox friends;
 
-    public AddFriends(ServerSettingController ssc, ChoiceBox friends) {
+    public AddFriends(ServerSettingController ssc) {
         this.ssc = ssc;
-        this.friends = friends;
     }
 
     @Override
@@ -197,19 +212,19 @@ class AddFriends extends Service<Void>{
 
     @Override
     protected void succeeded() {
-        friends.getItems().clear();
-        friends.getItems().addAll(ssc.friends);
+        ssc.friends2.getItems().clear();
+        for (UserShort user: ssc.friends) {
+            ssc.friends2.getItems().add(user.getUsername());
+        }
     }
 }
 
+// for delete channel
 class AddChannels extends Service<Void>{
-
     ServerSettingController ssc;
-    ChoiceBox channels;
 
-    public AddChannels(ServerSettingController ssc, ChoiceBox channels) {
+    public AddChannels(ServerSettingController ssc) {
         this.ssc = ssc;
-        this.channels = channels;
     }
 
     @Override
@@ -219,7 +234,7 @@ class AddChannels extends Service<Void>{
             protected Void call() throws Exception {
                 ssc.out.writeObject(Command.userChannels(ssc.currentUser, ssc.currentServer));
                 Data data = (Data) ssc.in.readObject();
-                ssc.channels = (ArrayList<String >) data.getPrimary();
+                ssc.channels = (ArrayList<String>) data.getPrimary();
                 return null;
             }
         };
@@ -227,8 +242,47 @@ class AddChannels extends Service<Void>{
 
     @Override
     protected void succeeded() {
-        channels.getItems().clear();
-        channels.getItems().addAll(ssc.channels);
+        ssc.channels2.getItems().clear();
+        ssc.channels2.getItems().addAll(ssc.channels);
+
+    }
+}
+
+// for add user to channel
+class AddChannelsAndFriends extends Service<Void>{
+
+    ServerSettingController ssc;
+
+    public AddChannelsAndFriends(ServerSettingController ssc) {
+        this.ssc = ssc;
+    }
+
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                ssc.out.writeObject(Command.userChannels(ssc.currentUser, ssc.currentServer));
+                Data data = (Data) ssc.in.readObject();
+                ssc.channels = (ArrayList<String>) data.getPrimary();
+
+                ssc.out.writeObject(Command.getFriends(ssc.currentUser));
+                data = (Data) ssc.in.readObject();
+                ssc.friends = (ArrayList<UserShort>) data.getPrimary();
+                return null;
+            }
+        };
+    }
+
+    @Override
+    protected void succeeded() {
+        ssc.channels1.getItems().clear();
+        ssc.channels1.getItems().addAll(ssc.channels);
+
+        ssc.friends1.getItems().clear();
+        for (UserShort user: ssc.friends) {
+            ssc.friends1.getItems().add(user.getUsername());
+        }
     }
 }
 
