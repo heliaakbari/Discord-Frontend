@@ -105,10 +105,10 @@ public class ServerSettingController {
     protected ChoiceBox<String> choicebox_createrole;
     @FXML
     protected Button create_role;
-//    @FXML
-//    protected Tab ;
-//    @FXML
-//    protected Tab ;
+    @FXML
+    protected Label leaveServerLabel;
+    @FXML
+    protected Button leave_server;
 
 
     @FXML
@@ -535,6 +535,10 @@ public class ServerSettingController {
     }
 
     public void leave(Event e) {
+        if (role.getValues().length() == 9){
+            leave_server.setVisible(false);
+            leaveServerLabel.setVisible(false);
+        }
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;

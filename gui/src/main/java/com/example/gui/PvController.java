@@ -268,7 +268,7 @@ public class PvController {
                     e.printStackTrace();
                 }
             }
-            
+
             System.out.println("clicked");
 
             Dialog<Boolean> dialog = new Dialog<>();

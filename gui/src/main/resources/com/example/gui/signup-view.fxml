@@ -46,7 +46,7 @@
             <PasswordField fx:id="password" promptText="password" />
             <Text fx:id="login_username_description1" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0" />
             <TextField fx:id="username1" promptText="email" />
-            <Text fx:id="login_username_description11" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0" />
+            <Text fx:id="emailWarning" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0" />
             <TextField fx:id="password1" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0" promptText="phoneNumber(optional)" />
             <Text fx:id="login_username_description111" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0" />
             <ChoiceBox fx:id="statusChoiceBox" prefWidth="150.0" />
