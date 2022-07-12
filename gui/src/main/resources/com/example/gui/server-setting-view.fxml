@@ -338,12 +338,12 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Text>
-                                    <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" text="create role" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.rowIndex="10">
+                                    <Button fx:id="create_role" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" text="create role" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.rowIndex="10">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Button>
-                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                    <ToggleButton fx:id="create_channel" mnemonicParsing="false" selected="true" text="on" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="one" />
                                        </toggleGroup>
@@ -389,13 +389,13 @@
                                           <ToggleGroup fx:id="eight" />
                                        </toggleGroup>
                                     </ToggleButton>
-                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$two" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$three" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$four" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$five" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$six" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
-                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$seven" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
-                                    <ToggleButton mnemonicParsing="false" selected="true" text="on" toggleGroup="$eight" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
+                                    <ToggleButton fx:id="delete_channel" mnemonicParsing="false" selected="true" text="on" toggleGroup="$two" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                                    <ToggleButton fx:id="delete_from_server" mnemonicParsing="false" selected="true" text="on" toggleGroup="$three" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                                    <ToggleButton fx:id="delete_from_channel" mnemonicParsing="false" selected="true" text="on" toggleGroup="$four" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                                    <ToggleButton fx:id="add_to_server" mnemonicParsing="false" selected="true" text="on" toggleGroup="$five" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                                    <ToggleButton fx:id="chat_history" mnemonicParsing="false" selected="true" text="on" toggleGroup="$six" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+                                    <ToggleButton fx:id="change_name" mnemonicParsing="false" selected="true" text="on" toggleGroup="$seven" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+                                    <ToggleButton fx:id="pin_msg" mnemonicParsing="false" selected="true" text="on" toggleGroup="$eight" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
                                  </children>
                                  <HBox.margin>
                                     <Insets left="10.0" />
