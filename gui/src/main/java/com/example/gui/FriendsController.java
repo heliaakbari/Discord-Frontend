@@ -485,7 +485,7 @@ class AddAllFriends extends Thread {
                     try {
                         fc.out.writeObject(Command.newRelation(Relationship.Block, fc.currentUser, otherUser));
                         fc.in.readObject();
-                        new AddAllFriends(fc).start();
+                        new GetServers(fc).restart();
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     } catch (ClassNotFoundException ex) {
