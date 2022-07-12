@@ -27,19 +27,13 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-
-
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static java.nio.file.Files.readAllBytes;
 
 public class ChannelController {
 
@@ -156,9 +150,9 @@ public class ChannelController {
             }
         }
         FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("server-setting-view.fxml"));
-        ServerSettingController serverSettingController = new ServerSettingController(currentRole,currentUser,currentServer,out,in,fout,fin);
-        fxmlLoader.setController(serverSettingController);
         Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        ServerSettingController serverSettingController = new ServerSettingController(currentRole,currentUser,currentServer,out,in,fout,fin, stage);
+        fxmlLoader.setController(serverSettingController);
         Scene scene = null;
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);
@@ -252,15 +246,15 @@ public class ChannelController {
             Dialog<Boolean> dialog = new Dialog<Boolean>();
             dialog.setTitle("CREATING SERVER");
             dialog.setHeight(240);
-            dialog.setWidth(400);
+            dialog.setWidth(440);
 
             DialogPane dialogPane = new DialogPane();
             dialogPane.setPrefHeight(240);
-            dialogPane.setPrefWidth(400);
+            dialogPane.setPrefWidth(440);
 
             Pane pane = new Pane();
             pane.setPrefHeight(240);
-            pane.setPrefWidth(400);
+            pane.setPrefWidth(440);
 
             Text text = new Text("type the name of the server in the field below");
             text.setWrappingWidth(360);
@@ -321,9 +315,18 @@ public class ChannelController {
             ok.setLayoutX(320);
             ok.setLayoutY(110);
 
-            // close via rex X button  later
+            Button cancel = new Button("cancel");
+            cancel.setOnAction((ActionEvent cancelEvent) -> {
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+                changeToFriendsView(cancelEvent);
+            });
+            cancel.setPrefHeight(25);
+            cancel.setPrefWidth(50);
+            cancel.setLayoutX(375);
+            cancel.setLayoutY(110);
 
-            pane.getChildren().addAll(new ArrayList<>(Arrays.asList(text, serverName, ok, warning)));
+            pane.getChildren().addAll(new ArrayList<>(Arrays.asList(text, serverName, ok, warning, cancel)));
             dialogPane.setContent(pane);
             dialog.setDialogPane(dialogPane);
             dialog.show();
@@ -333,6 +336,21 @@ public class ChannelController {
         btn.setPrefWidth(servers_grid.getPrefWidth());
         servers_grid.addColumn(0,btn);
 
+    }
+
+    public void changeToFriendsView(Event event){
+        FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
+        FriendsController friendsController = new FriendsController(in, out, fin, fout, currentUser);
+        fxmlLoader.setController(friendsController);
+        Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void addChannels(){

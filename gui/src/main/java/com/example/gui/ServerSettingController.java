@@ -3,7 +3,6 @@ package com.example.gui;
 import com.example.mutual.*;
 import com.example.mutual.Data;
 import com.example.mutual.Role;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
@@ -29,16 +28,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class ServerSettingController {
 
@@ -50,6 +48,7 @@ public class ServerSettingController {
     protected ObjectInputStream in;
     protected ObjectOutputStream fout;
     protected ObjectInputStream fin;
+    protected Stage myStage;
 
     protected ArrayList<String> channels;
     protected HashMap<String, Role> serverMembers;
@@ -107,10 +106,10 @@ public class ServerSettingController {
     protected ChoiceBox<String> choicebox_createrole;
     @FXML
     protected Button create_role;
-//    @FXML
-//    protected Tab ;
-//    @FXML
-//    protected Tab ;
+    @FXML
+    protected Label leaveServerLabel;
+    @FXML
+    protected Button leave_server;
 
 
     @FXML
@@ -127,8 +126,6 @@ public class ServerSettingController {
     protected ChoiceBox channels2;
     @FXML
     protected ChoiceBox channels3;
-    @FXML
-    protected ChoiceBox channels4;
     @FXML
     protected TextField role_name;
     @FXML
@@ -149,7 +146,9 @@ public class ServerSettingController {
     @FXML
     protected Text serverNameWarning;
     @FXML
-    protected Button changeServerName;
+    protected Text changeServerNameTitle;
+    @FXML
+    protected Button changeServerNameButton;
     @FXML
     protected Button deleteServerButton;
 
@@ -162,7 +161,7 @@ public class ServerSettingController {
     @FXML
     protected TextField history_num;
 
-    public ServerSettingController(Role role, String currentUser, String currentServer, ObjectOutputStream out, ObjectInputStream in, ObjectOutputStream fout, ObjectInputStream fin) {
+    public ServerSettingController(Role role, String currentUser, String currentServer, ObjectOutputStream out, ObjectInputStream in, ObjectOutputStream fout, ObjectInputStream fin, Stage myStage) {
         this.in = in;
         this.out = out;
         this.role = role;
@@ -170,6 +169,7 @@ public class ServerSettingController {
         this.currentUser = currentUser;
         this.fin = fin;
         this.fout = fout;
+        this.myStage = myStage;
     }
 
     @FXML
@@ -197,6 +197,7 @@ public class ServerSettingController {
         });
 
         new GetRole(this).restart();
+
     }
 
     public void changeRole(Event e){
@@ -371,9 +372,11 @@ public class ServerSettingController {
     @FXML
     public void deleteFromServerOnButton(Event e) {
         String person = (String) serverMembers1.getSelectionModel().getSelectedItem();
+
         if(role.getRoleName().equals("creator")){
             return;
         }
+
         try {
             out.writeObject(Command.banFromServer(person, currentServer));
             Data data = (Data) in.readObject();
@@ -391,6 +394,7 @@ public class ServerSettingController {
        if(channel.equals("general")){
            return;
        }
+
         try {
             out.writeObject(Command.banFromChannel(person, currentServer, channel));
             Data data = (Data) in.readObject();
@@ -406,13 +410,18 @@ public class ServerSettingController {
         if(channels_list_leave.getValue()==null){
             return;
         }
+
+        if(channels_list_leave.getValue()=="general") {
+            return;
+
+        }
         try{
             System.out.println("ban");
 
             out.writeObject(Command.banFromChannel(currentUser, currentServer,channels_list_leave.getValue()));
 
             Data data = (Data) in.readObject();
-        } catch (IOException | ClassNotFoundException ex){
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
         try {
@@ -484,7 +493,6 @@ public class ServerSettingController {
     }
 
 
-    @FXML
     public void addUserToChannel(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -558,6 +566,10 @@ public class ServerSettingController {
     }
 
     public void leave(Event e) {
+        if (role.getValues().length() == 9){
+            leave_server.setVisible(false);
+            leaveServerLabel.setVisible(false);
+        }
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
@@ -568,11 +580,14 @@ public class ServerSettingController {
         // ability to rename server
         if (role.getValues().charAt(5) == '1'){
             newServerName.setVisible(true);
-            changeServerName.setVisible(true);
+            changeServerNameButton.setVisible(true);
+            changeServerNameTitle.setVisible(true);
         }
         else{
             newServerName.setVisible(false);
-            changeServerName.setVisible(false);
+            changeServerNameButton.setVisible(false);
+            changeServerNameTitle.setVisible(false);
+            serverNameWarning.setVisible(false);
         }
 
         // ability to delete server

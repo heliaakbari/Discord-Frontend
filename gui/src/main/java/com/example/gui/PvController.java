@@ -20,7 +20,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
@@ -254,11 +256,131 @@ public class PvController {
         }
 
         btn = new Button("add server");
-        //add eventhandler
+
+        btn.setOnAction((ActionEvent event) -> {
+            if(isMessageReader) {
+                try {
+                    out.writeObject(Command.lastseenPv(currentUser,otherPerson));
+                    Thread.sleep(100);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println("clicked");
+
+            Dialog<Boolean> dialog = new Dialog<>();
+            dialog.setTitle("CREATING SERVER");
+            dialog.setHeight(240);
+            dialog.setWidth(440);
+
+            DialogPane dialogPane = new DialogPane();
+            dialogPane.setPrefHeight(240);
+            dialogPane.setPrefWidth(440);
+
+            Pane pane = new Pane();
+            pane.setPrefHeight(240);
+            pane.setPrefWidth(440);
+
+            Text text = new Text("type the name of the server in the field below");
+            text.setWrappingWidth(360);
+            text.setFont(Font.font(17));
+            text.setLayoutX(20);
+            text.setLayoutY(70);
+            text.setTextAlignment(TextAlignment.CENTER);
+
+            TextField serverName = new TextField();
+            serverName.setLayoutX(35);
+            serverName.setLayoutY(110);
+            serverName.setPrefHeight(25);
+            serverName.setPrefWidth(280);
+
+            Text warning = new Text();
+            warning.setWrappingWidth(360);
+            warning.setFont(Font.font(14));
+            warning.setFill(Color.RED);
+            warning.setLayoutX(40);
+            warning.setLayoutY(160);
+            text.setTextAlignment(TextAlignment.CENTER);
+
+            Button ok= new Button("ok");
+            ok.setOnAction((ActionEvent event2) -> {
+                try {
+                    if (serverName.getText().equals("")){
+                        warning.setText("type a name first!");
+                    }
+                    else {
+                        out.writeObject(Command.newServer(currentUser, serverName.getText()));
+                        Data data = (Data) in.readObject();
+                        if (!(boolean) data.getPrimary())
+                            warning.setText("this name is already taken!");
+                        else {
+                            dialog.setResult(Boolean.TRUE);
+                            dialog.close();
+                            changeToServerSetting(serverName.getText(), event);
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException ex){
+                    ex.printStackTrace();
+                }
+
+            });
+            ok.setPrefHeight(25);
+            ok.setPrefWidth(50);
+            ok.setLayoutX(320);
+            ok.setLayoutY(110);
+
+            Button cancel = new Button("cancel");
+            cancel.setOnAction((ActionEvent cancelEvent) -> {
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+                changeToFriendsView(cancelEvent);
+            });
+            cancel.setPrefHeight(25);
+            cancel.setPrefWidth(50);
+            cancel.setLayoutX(375);
+            cancel.setLayoutY(110);
+
+            pane.getChildren().addAll(new ArrayList<>(Arrays.asList(text, serverName, ok, warning, cancel)));
+            dialogPane.setContent(pane);
+            dialog.setDialogPane(dialogPane);
+            dialog.show();
+        });
         btn.setPrefHeight(40);
         btn.setPrefWidth(servers_grid.getPrefWidth());
         servers_grid.addColumn(0,btn);
 
+    }
+
+    public void changeToServerSetting(String serverName, Event event){
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("server-setting-view.fxml"));
+        Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        fxmlLoader.setController(new ServerSettingController(null, currentUser, serverName, out, in, fout, fin, stage));
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void changeToFriendsView(Event event){
+        FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
+        FriendsController friendsController = new FriendsController(in, out, fin, fout, currentUser);
+        fxmlLoader.setController(friendsController);
+        Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 1000, 600);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void addMessages(){

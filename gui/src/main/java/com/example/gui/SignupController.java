@@ -65,6 +65,9 @@ public class SignupController implements Initializable {
     @FXML
     private Text image_warning;
 
+    @FXML
+    private Text emailWarning;
+
     private byte[] photo;
     private String photoFormat = new String("");
 
@@ -103,6 +106,11 @@ public class SignupController implements Initializable {
             // tell user
             login_username_description1.setText("password must be at least 8 and at most 20 characters and contain capital and small english alphabets and numbers");
             login_username_description1.setFill(Color.RED);
+            ableToSignup = false;
+        }
+        if (username1.getText().equals("")){
+            emailWarning.setText("this field can't be empty");
+            emailWarning.setFill(Color.RED);
             ableToSignup = false;
         }
 
