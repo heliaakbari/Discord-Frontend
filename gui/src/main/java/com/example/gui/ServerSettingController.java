@@ -206,7 +206,7 @@ public class ServerSettingController {
         new GetRole(this).restart();
 
     }
-
+    
     public void changeRole(Event e) {
         Button btn = (Button) e.getSource();
         Role role = null;
@@ -975,6 +975,10 @@ class AddChannelsAndFriends extends Service<Void> {
     }
 }
 
+/**
+ * this class is responsible for getting members roles from server
+ * and showing it on tab 'server roles' on client end
+ */
 class OpenServerRoles extends Service<Void> {
     ServerSettingController ssc;
 
@@ -1042,7 +1046,10 @@ class OpenServerRoles extends Service<Void> {
     }
 }
 
-
+/**
+ * this class is responsible for getting messages history in different channels  from server
+ * and showing it on tab 'chat history' on client end
+ */
 class AddMessages extends Service<Void> {
     ServerSettingController cc;
     ArrayList<Message> msgs;
