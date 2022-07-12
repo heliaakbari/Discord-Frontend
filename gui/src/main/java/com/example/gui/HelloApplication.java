@@ -22,13 +22,14 @@ public class HelloApplication extends Application {
     private static ObjectOutputStream fout;
     private static ObjectInputStream fin;
     private static ObjectInputStream in;
+    
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
         fxmlLoader.setController(new LoginController(in,out,fin,fout));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
         stage.setTitle("Discord");
-        stage.getIcons().add(new Image("C:\\DiscordFiles\\logo.png"));
+        stage.getIcons().add(new Image("C:\\discord\\logo.png"));
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
