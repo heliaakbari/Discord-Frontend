@@ -255,6 +255,14 @@
                                           </Label>
                                        </children>
                                     </GridPane>
+                                    <Label text="role's abilities:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets left="10.0" />
+                                       </VBox.margin>
+                                    </Label>
                                     <GridPane fx:id="role_desc">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="273.33335876464844" minWidth="10.0" prefWidth="232.0" />
@@ -264,14 +272,6 @@
                                         <RowConstraints vgrow="SOMETIMES" />
                                       </rowConstraints>
                                     </GridPane>
-                                    <Label text="role's abilities:">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets left="10.0" />
-                                       </VBox.margin>
-                                    </Label>
                                  </children>
                               </VBox>
                               <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="330.0">

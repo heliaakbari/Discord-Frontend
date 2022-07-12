@@ -1,3 +1,7 @@
+/**
+ * this is shown when user is in a pv
+ * it correspondes to pv-view.fxml
+ */
 package com.example.gui;
 
 import com.example.mutual.*;
@@ -37,16 +41,37 @@ public class PvController {
 
     protected String otherPerson;
     protected String currentUser;
+    /**
+     * current user's usershort
+     */
     protected UserShort meShort;
+    /**
+     * the other person's usershort
+     */
     protected UserShort youShort;
+    /**
+     * all friends of the current user
+     */
     protected ArrayList<UserShort> allFriends = new ArrayList<>();
+    /**
+     * all friend with a chat history with user
+     */
     protected ArrayList<UserShort> directChats = new ArrayList<>();
+    /**
+     * servers the user is in
+     */
     protected ArrayList<String> servers= new ArrayList<>();
+    /**
+     * messages between the two
+     */
     protected ArrayList<Message> messages= new ArrayList<>();
     protected ObjectOutputStream out;
     protected ObjectInputStream in;
     protected ObjectOutputStream fout;
     protected ObjectInputStream fin;
+    /**
+     * is message reader thread working or not
+     */
     protected Boolean isMessageReader=false;
 
     @FXML
@@ -99,11 +124,10 @@ public class PvController {
         new GoToPv(this).restart();
     }
 
-    public void addnewServer(){
-        ;
-    }
-
-
+    /**
+     * opens a new direct from search tab
+     * @param event
+     */
     public void newDirectFromSearch(Event event){
         String text = search_text.getText();
         search_text.clear();
@@ -138,7 +162,9 @@ public class PvController {
         }
     }
 
-
+    /**
+     * add the directs from field to the Gui
+     */
     void addDirects() {
         directs_grid.getChildren().clear();
         directs_grid.setVgap(3);
@@ -180,7 +206,9 @@ public class PvController {
         }
     }
 
-
+    /**
+     * adds servers from field to GUI
+     */
     public void addServers(){
         servers_grid.getChildren().clear();
         servers_grid.setVgap(5);
@@ -354,6 +382,11 @@ public class PvController {
 
     }
 
+    /**
+     * when the server setting button is pressed, this method is called
+     * @param serverName
+     * @param event
+     */
     public void changeToServerSetting(String serverName, Event event){
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("server-setting-view.fxml"));
         Stage stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
@@ -368,6 +401,10 @@ public class PvController {
         stage.show();
     }
 
+    /**
+     * if discord button is pressed, this method will be called
+     * @param event
+     */
     public void changeToFriendsView(Event event){
         FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
         FriendsController friendsController = new FriendsController(in, out, fin, fout, currentUser);
@@ -383,6 +420,9 @@ public class PvController {
         stage.show();
     }
 
+    /**
+     * adds messages from field to GUI
+     */
     public void addMessages(){
         messages_grid.getChildren().clear();
         messages_grid.setVgap(5);
@@ -419,6 +459,10 @@ public class PvController {
         messages_scroll.setVvalue(1.0);
     }
 
+    /**
+     * adds the new instant message to GUI
+     * @param message
+     */
     public void addNewMessage(Message message){
         TextFlow textFlow = new TextFlow();
         textFlow.getChildren().add(new Text(message.getSourceInfo().get(0)+" :\n"+message.getText()+"\n"));
@@ -451,11 +495,17 @@ public class PvController {
         messages_scroll.setVvalue(1.0);
     }
 
+    /**
+     * when the send button is pressed, this method is called
+     */
     public void sendTextMessage(){
         new SendTextPv(this,message_textField.getText()).restart();
         message_textField.clear();
     }
 
+    /**
+     * when the file button is pressed, this method will be called
+     */
     public void sendFileMessage(){
         Command cmd = null;
         cmd = Command.upload(otherPerson,null,null,false);
@@ -469,6 +519,10 @@ public class PvController {
         fileUploader.start();
     }
 
+    /**
+     * when download is pressed, this method is called
+     * @param filename
+     */
     private void downloadFile(String filename) {
         try {
             Command  cmd = Command.download(currentUser,otherPerson ,filename, false);
@@ -483,7 +537,9 @@ public class PvController {
     }
 }
 
-
+/**
+ * this class extends service and is called for sending a message to server
+ */
 class SendTextPv extends Service<Void>{
     private PvController pc;
     private String body;
@@ -493,6 +549,10 @@ class SendTextPv extends Service<Void>{
         this.body = body;
     }
 
+    /**
+     * this method is ran in another thread than main
+     * @return
+     */
     @Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
@@ -507,6 +567,10 @@ class SendTextPv extends Service<Void>{
     }
 }
 
+/**
+ * this is called when user goes to another pv
+ * or when we want to update infos
+ */
 class GoToPv extends Service<Void>{
 
     private PvController pc;
@@ -515,6 +579,10 @@ class GoToPv extends Service<Void>{
         this.pc = pc;
     }
 
+    /**
+     * gets infos from server
+     * @return
+     */
     @Override
     protected Task<Void> createTask() {
         return new Task<Void>() {
@@ -550,6 +618,9 @@ class GoToPv extends Service<Void>{
         };
     }
 
+    /**
+     * shows info in gui
+     */
     @Override
     protected void succeeded() {
         pc.pv_name.setText(pc.otherPerson);
@@ -563,7 +634,10 @@ class GoToPv extends Service<Void>{
     }
 }
 
-
+/**
+ * reads instant messages
+ * also if an exit data is sent, it will stop
+ */
 class MessageReaderPv extends Thread {
 
     private PvController pc;
