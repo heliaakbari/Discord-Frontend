@@ -25,6 +25,9 @@ import java.util.ResourceBundle;
 
 import static java.nio.file.Files.readAllBytes;
 
+/**
+ * this class is responsible for handling events in signup-view.fxml file such as pressing buttons and ...
+ */
 public class SignupController implements Initializable {
 
     private Stage stage;
@@ -34,37 +37,26 @@ public class SignupController implements Initializable {
 
     @FXML
     private ChoiceBox<String> statusChoiceBox;
-
     @FXML
     private Text login_signup;
-
     @FXML
     private TextField username;
-
     @FXML
     private PasswordField password;
-
     @FXML
     private TextField username1;
-
     @FXML
     private TextField password1;
-
     @FXML
     private Button signup_button;
-
     @FXML
     private Button imageButton;
-
     @FXML
     private Text login_username_description;
-
     @FXML
     private Text login_username_description1;
-
     @FXML
     private Text image_warning;
-
     @FXML
     private Text emailWarning;
 
@@ -76,19 +68,25 @@ public class SignupController implements Initializable {
     private ObjectInputStream fin;
     private ObjectOutputStream fout;
 
-    private String[] statuses = {"online","idle","do_not_disturb","invisible","none"};
+    private String[] statuses = {"online", "idle", "do_not_disturb", "invisible", "none"};
 
-    public SignupController(){
+    public SignupController() {
 
     }
 
-    public SignupController(ObjectInputStream in, ObjectOutputStream out,ObjectInputStream fin, ObjectOutputStream fout){
+    public SignupController(ObjectInputStream in, ObjectOutputStream out, ObjectInputStream fin, ObjectOutputStream fout) {
         this.in = in;
         this.out = out;
         this.fin = fin;
         this.fout = fout;
     }
 
+    /**
+     * handles the event when signup on button is pressed
+     * read data from text fields, shows errors if and information isn't in correct format
+     * at the end transfers command and data to and from server and opens friends-view if signup was successful
+     * @param event
+     */
     @FXML
     public void signupOnButton(Event event) {
         ableToSignup = true;
@@ -108,7 +106,7 @@ public class SignupController implements Initializable {
             login_username_description1.setFill(Color.RED);
             ableToSignup = false;
         }
-        if (username1.getText().equals("")){
+        if (username1.getText().equals("")) {
             emailWarning.setText("this field can't be empty");
             emailWarning.setFill(Color.RED);
             ableToSignup = false;
@@ -133,39 +131,44 @@ public class SignupController implements Initializable {
                 newUser.setProfilePhoto(photo, photoFormat);
                 newUser.setPhoneNum(password1.getText());
 
-            out.writeObject(Command.newUser(newUser));
-            Data data = (Data) in.readObject();
+                out.writeObject(Command.newUser(newUser));
+                Data data = (Data) in.readObject();
 
-            if (!((boolean) data.getPrimary())) {
-                System.out.println("not successful");
-                login_username_description.setText("this username is taken, try another one");
-                login_username_description.setFill(Color.RED);
-            } else {
-                System.out.println("correct");
-                FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
-                FriendsController friendsController = new FriendsController(in, out, fin, fout, username.getText());
-                fxmlLoader.setController(friendsController);
-                stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
-                try {
-                    scene = new Scene(fxmlLoader.load(), 1000, 600);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (!((boolean) data.getPrimary())) {
+                    System.out.println("not successful");
+                    login_username_description.setText("this username is taken, try another one");
+                    login_username_description.setFill(Color.RED);
+                } else {
+                    System.out.println("correct");
+                    FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("friends-view.fxml"));
+                    FriendsController friendsController = new FriendsController(in, out, fin, fout, username.getText());
+                    fxmlLoader.setController(friendsController);
+                    stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+                    try {
+                        scene = new Scene(fxmlLoader.load(), 1000, 600);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    stage.setScene(scene);
+                    stage.show();
                 }
-                stage.setScene(scene);
-                stage.show();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+
         }
-
     }
-}
 
+    /**
+     * handles the event when the blue login button is pressed
+     * change the scene to login-view in the same stage
+     * @param event
+     */
     @FXML
-    public void changeToLogin(Event event){
+    public void changeToLogin(Event event) {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("login-view.fxml"));
-        fxmlLoader.setController(new LoginController(in,out,fin,fout));
-        stage = (Stage)(((Node) event.getSource()).getScene().getWindow());
+        fxmlLoader.setController(new LoginController(in, out, fin, fout));
+        stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
         try {
             scene = new Scene(fxmlLoader.load(), 1000, 600);
         } catch (IOException e) {
@@ -175,8 +178,13 @@ public class SignupController implements Initializable {
         stage.show();
     }
 
+    /**
+     * handles the event when the choose-image button is pressed
+     * opens a dialog for user to choose the image, sends the image to server, shows an error if the image size is bigger than 100kb
+     * @param event
+     */
     @FXML
-    public void imageOnButton(Event event){
+    public void imageOnButton(Event event) {
 
         FileDialog dialog = new FileDialog((Frame) null, "Select File to Open");
         dialog.setMode(FileDialog.LOAD);
@@ -184,7 +192,7 @@ public class SignupController implements Initializable {
 
         String fileNameAndType = dialog.getFile();
         String path = dialog.getDirectory() + "//" + dialog.getFile();
-        if(path.contains("null")){
+        if (path.contains("null")) {
             photo = null;
             return;
         }
@@ -194,18 +202,22 @@ public class SignupController implements Initializable {
             e.printStackTrace();
             return;
         }
-        if(photo.length > 100000){
+        if (photo.length > 100000) {
             image_warning.setText("your image size is more than 100kB");
             image_warning.setFill(Color.RED);
             photo = null;
-        }
-        else {
+        } else {
             image_warning.setText("");
             String[] splitName = fileNameAndType.split("\\.");
             photoFormat = splitName[splitName.length - 1];
         }
     }
 
+    /**
+     * does any necessary jobs when first entering the scene including setting options for status choice box
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         statusChoiceBox.getItems().addAll(statuses);
