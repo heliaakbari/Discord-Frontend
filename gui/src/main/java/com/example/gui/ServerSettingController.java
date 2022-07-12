@@ -8,9 +8,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.fxml.FXMLLoader;
@@ -22,11 +26,13 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -146,6 +152,14 @@ public class ServerSettingController {
     @FXML
     protected Button deleteServerButton;
 
+    @FXML
+    protected GridPane messages_grid;
+
+    @FXML
+    protected ChoiceBox<String> history_list;
+
+    @FXML
+    protected TextField history_num;
 
     public ServerSettingController(Role role, String currentUser, String currentServer, ObjectOutputStream out, ObjectInputStream in, ObjectOutputStream fout, ObjectInputStream fin) {
         this.in = in;
@@ -371,7 +385,9 @@ public class ServerSettingController {
         }
         new AddChannels(this,channels_list_leave).restart();
     }
-
+    public void showMessages(){
+        new AddMessages(this).restart();
+    }
     @FXML
     public void leaveFromServerOnButton(Event e){
         try{
@@ -481,6 +497,13 @@ public class ServerSettingController {
         new AddChannelsAndChannelMembers(this).restart();
     }
 
+    public void OpenHistoryTab(Event e) {
+        Tab tab = (Tab) e.getSource();
+        if (!tab.isSelected())
+            return;
+        new AddChannels(this,history_list).restart();
+    }
+
     public void addUserToServer(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
@@ -489,12 +512,6 @@ public class ServerSettingController {
     }
 
     public void serverRoles(Event e) {
-        Tab tab = (Tab) e.getSource();
-        if (!tab.isSelected())
-            return;
-    }
-
-    public void chatHistory(Event e) {
         Tab tab = (Tab) e.getSource();
         if (!tab.isSelected())
             return;
@@ -836,5 +853,57 @@ class OpenServerRoles extends Service<Void> {
                 ssc.role_desc.addColumn(1, new Text(role.getValues().charAt(i)=='1' ? "yes" : "no"));
             }
         } );
+    }
+}
+
+
+class AddMessages extends Service<Void>{
+    ServerSettingController cc;
+    ArrayList<Message> msgs;
+    ArrayList<UserShort> pics;
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss");
+    public AddMessages(ServerSettingController cc){
+        this.cc=cc;
+    }
+
+    @Override
+    protected Task<Void> createTask() {
+        return new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+                Command cmd = Command.getChannelMsgs(cc.currentUser,cc.currentServer,cc.history_list.getValue(),Integer.parseInt(cc.history_num.getText()));
+                cc.out.writeObject(cmd);
+                Data dt =(Data) cc.in.readObject();
+                msgs = (ArrayList<Message>) dt.getPrimary();
+                pics = (ArrayList<UserShort>) dt.getSecondary();
+                return null;
+            }
+        };
+    }
+
+    @Override
+    protected void succeeded() {
+        cc.messages_grid.getChildren().clear();
+        cc.messages_grid.setVgap(5);
+        for (Message message : msgs){
+            TextFlow textFlow = new TextFlow(new Text(message.getSourceInfo().get(0)+" : ("+message.getDateTime().format(dateTimeFormatter)+")\n"+message.getText()+"\n"));
+            ToggleGroup group = new ToggleGroup();
+            RadioButton like = new RadioButton("like: "+message.getLikes()+"      ");
+            RadioButton dislike = new RadioButton("dislike: "+message.getDislikes()+"      ");
+            RadioButton laugh = new RadioButton("laugh: "+message.getLaughs()+"       ");
+            group.getToggles().addAll(like,dislike,laugh);
+            textFlow.getChildren().addAll(like,dislike,laugh);
+            textFlow.setStyle("-fx-background-color: rgb(176,223,255); -fx-border-radius: 5px;");
+            textFlow.setPrefWidth(430);
+            textFlow.setPadding(new Insets(5));
+            textFlow.setBorder(Border.stroke(Color.BLACK));
+            cc.messages_grid.addColumn(1,textFlow);
+        }
+    }
+
+    @Override
+    protected void failed() {
+        System.out.println("failed");
     }
 }
