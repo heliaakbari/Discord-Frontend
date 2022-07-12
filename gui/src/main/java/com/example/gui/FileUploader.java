@@ -1,3 +1,8 @@
+
+/**
+ * a seperated thread to transfer fileBytes from client to server to be saved in database and sent to all other users
+ */
+
 package com.example.gui;
 
 import com.example.mutual.*;
@@ -9,9 +14,6 @@ import java.util.ArrayList;
 
 import static java.nio.file.Files.readAllBytes;
 
-/**
- * a seperated thread to transfer fileBytes from client to server to be saved in database and sent to all other users
- */
 public class FileUploader extends Thread {
     private ObjectOutputStream fout;
     private ArrayList<String> senderInfo;
@@ -24,14 +26,19 @@ public class FileUploader extends Thread {
     @Override
     public void run() {
 
-        // opening a file dialog for user to choose a file for upload
+        /**
+         * opening a file dialog for user to choose a file for upload
+         */
+
         FileDialog dialog = new FileDialog((Frame) null, "Select File to Open");
         dialog.setMode(FileDialog.LOAD);
         dialog.setVisible(true);
         String fileNameAndType = dialog.getFile();
         String path = dialog.getDirectory() + "//" + dialog.getFile();
 
-        // converting the file to byte array
+        /**
+         * converting the file to byte array
+         */
         byte[] bytes = new byte[0];
         try {
             bytes = readAllBytes(Paths.get(path));
