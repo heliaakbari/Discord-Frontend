@@ -93,6 +93,7 @@ public class ServerSettingController {
 //    protected Tab ;
 
 
+    @FXML
     protected Tab serverName;
     @FXML
     protected Tab deleteServer;

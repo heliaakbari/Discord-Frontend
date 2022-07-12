@@ -245,6 +245,7 @@ public class FriendsController {
                             warning.setText("this name is already taken!");
                         else {
                             dialog.setResult(Boolean.TRUE);
+                            new GetServers(this).restart();
                             dialog.close();
                         }
                     }
@@ -265,6 +266,7 @@ public class FriendsController {
             dialog.setDialogPane(dialogPane);
             dialog.show();
         });
+
         //add eventhandler
         btn.setPrefHeight(40);
         btn.setPrefWidth(servers_grid.getPrefWidth());
