@@ -49,6 +49,7 @@ public class ChannelController {
     protected ArrayList<String> servers= new ArrayList<>();
     protected ArrayList<String> channels = new ArrayList<>();
     protected ArrayList<Message> messages= new ArrayList<>();
+    protected ArrayList<UserShort> messagesPic= new ArrayList<>();
     protected ArrayList<UserShort> members= new ArrayList<>();
     protected ObjectOutputStream out;
     protected ObjectInputStream in;
@@ -367,21 +368,19 @@ public class ChannelController {
         messages_grid.getChildren().clear();
         messages_grid.setVgap(5);
 
-
-        for (Message message : messages){
-            for(UserShort userShort : members){
-                if(message.getSourceInfo().get(0).equals(userShort.getUsername())){
-                    if(message.getSourceInfo().get(0).equals(currentUser)){
-                        messages_grid.addColumn(0,new Text(""));
-                        messages_grid.addColumn(2, userShort.profileStatus(25.0));
-                    }
-                    else {
-                        messages_grid.addColumn(0, userShort.profileStatus(25.0));
-                        messages_grid.addColumn(2,new Text(""));
-                    }
-                    break;
-                }
+        for(int i =0;i<messages.size();i++){
+            Message message = messages.get(i);
+            UserShort userShort = messagesPic.get(i);
+            if(message.getSourceInfo().get(0).equals(currentUser)){
+                messages_grid.addColumn(0,new Text(""));
+                messages_grid.addColumn(2, userShort.profileStatus(25.0));
             }
+            else {
+                messages_grid.addColumn(0, userShort.profileStatus(25.0));
+                messages_grid.addColumn(2,new Text(""));
+            }
+
+
             TextFlow textFlow = new TextFlow(new Text(message.getSourceInfo().get(0)+" :\n"+message.getText()+"\n"));
             ToggleGroup group = new ToggleGroup();
             RadioButton like = new RadioButton("like: "+message.getLikes()+"      ");
@@ -642,7 +641,7 @@ class GoToServer extends Service<Void>{
                 dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword());
                 cc.messages = (ArrayList<Message>) dt.getPrimary();
-
+                cc.messagesPic= (ArrayList<UserShort>)dt.getSecondary();
                 cc.out.writeObject(Command.getRole(cc.currentUser,servername));
                 dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword());
@@ -692,6 +691,7 @@ class GoToChannel extends Service<Void>{
                 Data dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword());
                 cc.messages = (ArrayList<Message>) dt.getPrimary();
+                cc.messagesPic= (ArrayList<UserShort>)dt.getSecondary();
                 cc.out.writeObject(Command.getRole(cc.currentUser,cc.currentServer));
                 dt =(Data) cc.in.readObject();
                 System.out.println(dt.getKeyword());
