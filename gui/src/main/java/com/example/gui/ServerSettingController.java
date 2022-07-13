@@ -155,15 +155,21 @@ public class ServerSettingController {
     protected Button changeServerNameButton;
     @FXML
     protected Button deleteServerButton;
+    @FXML
+    protected Text deleteChannelWarning;
+    @FXML
+    protected Text deleteFromServerWarning;
+    @FXML
+    protected Text deleteFromChannelWarning;
 
     @FXML
     protected GridPane messages_grid;
-
     @FXML
     protected ChoiceBox<String> history_list;
-
     @FXML
     protected TextField history_num;
+    @FXML
+    protected Text addToChannelWarning;
 
     public ServerSettingController(Role role, String currentUser, String currentServer, ObjectOutputStream out, ObjectInputStream in, ObjectOutputStream fout, ObjectInputStream fin, Stage myStage) {
         this.in = in;
@@ -370,6 +376,11 @@ public class ServerSettingController {
         try {
             out.writeObject(Command.addOneMemberToChannel(currentUser, person, currentServer, channel));
             Data data = (Data) in.readObject();
+            if ((boolean) data.getPrimary()) {
+                addToChannelWarning.setText("successfully added to channel");
+                addToChannelWarning.setFill(Color.GREEN);
+
+            }
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -387,7 +398,10 @@ public class ServerSettingController {
         try {
             out.writeObject(Command.deleteChannel(currentUser, currentServer, channel));
             Data data = (Data) in.readObject();
-
+            if ((boolean)data.getPrimary()) {
+                deleteChannelWarning.setText("channel deleted successfully");
+                deleteChannelWarning.setFill(Color.GREEN);
+            }
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -402,14 +416,14 @@ public class ServerSettingController {
     public void deleteFromServerOnButton(Event e) {
         String person = (String) serverMembers1.getSelectionModel().getSelectedItem();
 
-        if (role.getRoleName().equals("creator")) {
-            return;
-        }
-
+        System.out.println(person);
         try {
             out.writeObject(Command.banFromServer(person, currentServer));
             Data data = (Data) in.readObject();
-
+            if ((boolean) data.getPrimary()){
+                deleteFromServerWarning.setText("user is successfully deleted from server");
+                deleteFromServerWarning.setFill(Color.GREEN);
+            }
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -432,6 +446,10 @@ public class ServerSettingController {
         try {
             out.writeObject(Command.banFromChannel(person, currentServer, channel));
             Data data = (Data) in.readObject();
+            if ((boolean) data.getPrimary()){
+                deleteChannelWarning.setText("user is successfully deleted from channel");
+                deleteFromChannelWarning.setFill(Color.GREEN);
+            }
 
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -795,7 +813,7 @@ class AddChannelsAndChannelMembers extends Service<Void> {
 
                         ssc.channelMembers1.getItems().clear();
                         for (UserShort user : ssc.channelMembers) {
-                            ssc.channels3.getItems().add(user.getUsername());
+                            ssc.channelMembers1.getItems().add(user.getUsername());
                         }
 
                     }
