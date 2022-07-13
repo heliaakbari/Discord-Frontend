@@ -532,7 +532,10 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="newServerName" layoutX="376.0" layoutY="256.0" prefHeight="59.0" prefWidth="227.0" />
+                        <TextField fx:id="newServerName" layoutX="376.0" layoutY="256.0" prefHeight="59.0" prefWidth="227.0">
+                           <font>
+                              <Font size="18.0" />
+                           </font></TextField>
                         <Text fx:id="serverNameWarning" layoutX="376.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="377.13671875">
                            <font>
                               <Font size="16.0" />
@@ -543,7 +546,7 @@
                               <Font size="27.0" />
                            </font>
                         </Button>
-                        <Button fx:id="deleteServerButton" layoutX="22.0" layoutY="37.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="140.0" text="Delete Server" textAlignment="CENTER" textFill="#ee1111">
+                        <Button fx:id="deleteServerButton" layoutX="22.0" layoutY="37.0" mnemonicParsing="false" onAction="#deleteServerOnButton" prefHeight="48.0" prefWidth="140.0" text="Delete Server" textAlignment="CENTER" textFill="#ee1111">
                            <font>
                               <Font size="19.0" />
                            </font>

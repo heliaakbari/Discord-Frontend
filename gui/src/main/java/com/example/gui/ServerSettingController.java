@@ -738,14 +738,15 @@ class GetRole extends Service<Void> {
             switch (ability) {
                 case "create channel" -> ssc.createChannel.setDisable(false);
                 case "remove channel" -> ssc.deleteChannel.setDisable(false);
-                case "remove member from server " -> ssc.deleteUserFromServer.setDisable(false);
-                case "remove member from channel" -> ssc.deleteUserFromChannel.setDisable(false);
+                case "remove member from server" -> ssc.deleteUserFromServer.setDisable(false);
+                case "remove member from channel " -> ssc.deleteUserFromChannel.setDisable(false);
                 case "change server name" -> ssc.rename_delete_server.setDisable(false);
                 case "see chat history" -> ssc.chatHistory.setDisable(false);
                 case "delete server" -> ssc.rename_delete_server.setDisable(false);
 
             }
         }
+        System.out.println(abilities);
 
         if (ssc.role.getRoleName().equals("creator")) {
             ssc.addUserToChannel.setDisable(false);
